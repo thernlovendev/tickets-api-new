@@ -38,6 +38,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	});
 
 	Route::prefix('cities')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.create')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CitiesController@store')->name('cities.create')->middleware();
 	});
@@ -52,4 +53,18 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 	});
 
+	Route::prefix('reservations')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\ReservationsController@index')->name('reservation.index')->middleware();
+		Route::get('/{reservation}', 'App\Http\Controllers\API\ReservationsController@show')->name('reservation.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\ReservationsController@store')->name('reservations.create')->middleware();
+		Route::put('/{reservation}', 'App\Http\Controllers\API\ReservationsController@update')->name('reservations.update')->middleware();
+		// Route::post('/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
+	});
+
+	Route::prefix('price-lists')->group(function() {
+		Route::post('/', 'App\Http\Controllers\API\PriceListsController@store')->name('price.lists.create')->middleware();
+	});
+
 });
+
+Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();

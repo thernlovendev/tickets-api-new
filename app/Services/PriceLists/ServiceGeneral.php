@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Tickets;
+namespace App\Services\PriceLists;
 
 class ServiceGeneral
 {
@@ -23,6 +23,7 @@ class ServiceGeneral
     }
 
     public static function filterCustom($filters, $models){
+        //filer by razon social
         
         return $models;
     }

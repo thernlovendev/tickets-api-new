@@ -16,6 +16,7 @@
         "laravel/ui": "^3.4",
         "socialiteproviders/naver": "^4.1",
         "socialiteproviders/zoho": "*",
+        "stripe/stripe-php": "^10.11",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {

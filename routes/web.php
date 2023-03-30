@@ -30,3 +30,7 @@ Route::get('reset-password/{token}', 'App\Http\Controllers\RestorePasswordContro
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/stripe', function () {
+    return view('stripe');
+})->name('stripe');

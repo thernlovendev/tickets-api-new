@@ -14,9 +14,15 @@ class City extends Model
     
     protected $table = 'cities';
 
+    const STATUS = [
+        'PUBLISH' => 'Publish',
+        'UNPUBLISH' => 'Unpublish',
+    ];
+
     protected $fillable = [
         'company_id',
         'name',
+        'status'
     ];
 
     public function categories()

@@ -23,6 +23,13 @@ class Ticket extends Model
         'OUT_OF_STOCK' => 'Out Of Stock'
     ];
 
+    const TYPE = [
+        'REGULAR' => 'Regular',
+        'BAR_QR' => 'Bar/QR',
+        'TOUR_TICKET' => 'Tour Ticket',
+        'HARD_COPY' => 'Hard Copy'
+    ];
+
     protected $fillable = [
         'company_id',
         'city_id',

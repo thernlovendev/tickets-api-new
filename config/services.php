@@ -40,5 +40,10 @@ return [
         'client_secret' => env('NAVER_CLIENT_SECRET'),
         'redirect' => env('NAVER_REDIRECT_URI'),
       ],
+      'stripe' => [
+        'base_uri' => env('STRIPE_URL'),
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET')
+      ]
 
 ];

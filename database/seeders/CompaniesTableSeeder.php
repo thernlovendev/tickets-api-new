@@ -15,7 +15,7 @@ class CompaniesTableSeeder extends Seeder
      */
     public function run()
     {
-        Company::updateOrCreate(['name' => 'Tamice'], ['name' => 'Tamice']); 
-        Company::updateOrCreate(['name' => 'Hinewyorking'], ['name' => 'Hinewyorking']); 
+        Company::updateOrCreate(['name' => 'Tamice'], ['name' => 'Tamice', 'status' => Company::STATUS['ACTIVE']]); 
+        Company::updateOrCreate(['name' => 'Hinewyorking'], ['name' => 'Hinewyorking', 'status' => Company::STATUS['UNACTIVE']]); 
     }
 }

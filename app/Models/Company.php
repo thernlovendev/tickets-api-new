@@ -13,8 +13,14 @@ class Company extends Model
     
     protected $table = 'companies';
 
+    const STATUS = [
+        'ACTIVE' => 'Active',
+        'UNACTIVE' => 'Unactive',
+    ];
+
     protected $fillable = [
         'name',
+        'status'
     ];
     
     public function cities()

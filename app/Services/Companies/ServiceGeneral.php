@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Tickets;
+namespace App\Services\Companies;
 
 class ServiceGeneral
 {
@@ -10,7 +10,11 @@ class ServiceGeneral
 
         $mapCollection = $data_map->map( function($item){
 
-            return $item;
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'status' => $item->status
+            ];
         });
 
         if(isset($request->per_page)){

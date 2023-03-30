@@ -19,8 +19,8 @@ class CitiesSeeder extends Seeder
         $companies = Company::pluck('id');
 
         foreach ($companies as $company) {
-            City::updateOrCreate(['name' => 'New York', 'company_id' =>  $company], ['name' => 'New York', 'company_id' =>  $company]); 
-            City::updateOrCreate(['name' => 'San Fransisco', 'company_id' =>  $company], ['name' => 'San Fransisco', 'company_id' =>  $company]);
+            City::updateOrCreate(['name' => 'New York', 'company_id' =>  $company], ['name' => 'New York', 'company_id' =>  $company, 'status' =>  City::STATUS['PUBLISH']]); 
+            City::updateOrCreate(['name' => 'San Fransisco', 'company_id' =>  $company], ['name' => 'San Fransisco', 'company_id' =>  $company, 'status' =>  City::STATUS['PUBLISH']]);
         }
     }
 }
