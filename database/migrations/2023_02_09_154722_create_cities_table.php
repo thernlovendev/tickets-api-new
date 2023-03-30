@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('status');
             $table->bigInteger('company_id')->unsigned();
 
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
