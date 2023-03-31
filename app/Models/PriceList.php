@@ -16,7 +16,8 @@ class PriceList extends Model
         'category_id',
         'subcategory_id',
         'product_type',
-        'comission_amount',
+        'child_price',
+        'adult_price',
         'quantity',
     ];
 
