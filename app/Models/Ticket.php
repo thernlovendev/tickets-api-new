@@ -30,6 +30,12 @@ class Ticket extends Model
         'HARD_COPY' => 'Hard Copy'
     ];
 
+    const ADDITIONAL_PRICE_TYPE = [
+        'NONE' => 'None',
+        'PREMIUM' => 'Premium',
+        'PREMIUM_S' => 'Premium S'
+    ];
+
     protected $fillable = [
         'company_id',
         'city_id',

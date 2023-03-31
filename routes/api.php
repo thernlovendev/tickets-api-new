@@ -48,9 +48,10 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 	});
 
 	Route::prefix('tickets')->group(function() {
-		Route::post('/', 'App\Http\Controllers\API\TicketsController@store')->name('tickets.create')->middleware();
 		Route::get('/', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 		Route::get('/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\TicketsController@store')->name('tickets.create')->middleware();
+		Route::put('/{ticket}', 'App\Http\Controllers\API\TicketsController@update')->name('tickets.update')->middleware();
 	});
 
 	Route::prefix('reservations')->group(function() {

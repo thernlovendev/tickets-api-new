@@ -121,11 +121,7 @@ class ServiceCrud
 		try{
             DB::beginTransaction();
 
-            // $ticket->update([
-            //     'name' => $data['name']
-            // ]); 
-
-            // ModelCrud::deleteUpdateOrCreate($ticket->subcategories(), $data['subcategories']);
+            dd($data);
 
             DB::commit();
             return $data;

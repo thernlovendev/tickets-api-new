@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Ticket;
 use App\Models\TicketSchedule;
 class TicketRequest extends FormRequest
 {
@@ -24,6 +25,9 @@ class TicketRequest extends FormRequest
      */
     public function rules()
     {
+        $days = TicketSchedule::DAYS;
+        $status = Ticket::STATUS;
+        $additional_type = Ticket::ADDITIONAL_PRICE_TYPE;
         switch($this->method()) {
             case 'GET':
                 {
@@ -32,7 +36,6 @@ class TicketRequest extends FormRequest
 
             case 'POST':
                 {
-                    $days = TicketSchedule::DAYS;
                     return [
                         'company_id' => ['required','exists:companies,id'],
                         'city_id' => ['required','exists:cities,id'],
@@ -40,11 +43,11 @@ class TicketRequest extends FormRequest
                         'title_kr' => ['required','unique:tickets,title_kr'],
                         'ticket_template' => ['required'],
                         'ticket_type' => ['required'],
-                        'status' => ['required'],
+                        'status' => ['required', Rule::in($status)],
                         'out_of_stock_alert' => ['required'],
                         'currency' => ['required'],
-                        'announcement' => ['required'],
-                        'additional_price_type' => ['required'],
+                        'announcement' => ['nullable','max:100'],
+                        'additional_price_type' => ['required',Rule::in($additional_type)],
                         'additional_price_amount' => ['nullable'],
                         'additional_price_image' => ['nullable'],
                         'show_in_schedule_page' => ['required','boolean'],
@@ -76,7 +79,44 @@ class TicketRequest extends FormRequest
                 } break;
 
             case 'PUT':{
-                return [];
+                return [
+                        'title_en' => ['unique:tickets,title_en'],
+                        'title_kr' => ['unique:tickets,title_kr'],
+                        'ticket_template' => ['required'],
+                        'ticket_type' => ['required'],
+                        'status' => ['required', Rule::in($status)],
+                        'out_of_stock_alert' => ['required'],
+                        'currency' => ['required'],
+                        'announcement' => ['nullable','max:200'],
+                        'additional_price_type' => ['required',Rule::in($additional_type)],
+                        'additional_price_amount' => ['nullable'],
+                        'additional_price_image' => ['nullable'],
+                        'show_in_schedule_page' => ['required','boolean'],
+                        'card_image' => ['required'],
+                        'card_image.id' => ['required','exists:images,id'],
+                        'card_image.priority_type' => ['required'],
+                        'wide_images' => ['required'],
+                        'wide_images.*.id' => ['required','exists:images,id'],
+                        'wide_images.*.priority' => ['required'],
+                        'wide_images.*.priority_type' => ['required'],
+                        'gallery_images' => ['required'],
+                        'gallery_images.*.id' => ['required','exists:images,id'],
+                        'gallery_images.*.priority' => ['required'],
+                        'gallery_images.*.priority_type' => ['required'],
+                        'tickets_prices' => ['required'],
+                        'tickets_prices.*.type' => ['required'],
+                        'tickets_prices.*.age_limit' => ['nullable'],
+                        'tickets_prices.*.window_price' => ['nullable'],
+                        'tickets_prices.*.sale_price' => ['required'],
+                        'tickets_content' => ['nullable'],
+                        'tickets_content.*.name' => ['required','distinct'],
+                        'tickets_content.*.content' => ['required'],
+                        'tickets_schedule' => ['required_if:show_in_schedule_page,true'],
+                        'tickets_schedule.*.date_start' => 'date|required_if:show_in_schedule_page,true',
+                        'tickets_schedule.*.date_end' => 'date|required_if:show_in_schedule_page,true',
+                        'tickets_schedule.*.max_people' => 'integer|required_if:show_in_schedule_page,true',
+                        'tickets_schedule.*.week_days' => ['array','required_if:show_in_schedule_page,true', Rule::in($days)],
+                ];
             } break;
 
             case 'DELETE': break;

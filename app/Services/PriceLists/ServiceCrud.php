@@ -16,7 +16,11 @@ class ServiceCrud
             $prices = [];
             foreach ($data->prices as $price) {
                 $item = PriceList::create([
-                    'category_id'=> $data->category_id,'subcategory_id'=> $data->subcategory_id, 'product_type' => $price['product_type'], 'adult_price' => $price['adult_price'], 'child_price' => $price['child_price'],
+                    'category_id'=> $data->category_id,
+                    'subcategory_id'=> $price['subcategory_id'],
+                    'product_type' => $price['product_type'],
+                    'adult_price' => $price['adult_price'], 
+                    'child_price' => $price['child_price'],
                     'quantity' => $price['quantity']]
                 ); 
                 

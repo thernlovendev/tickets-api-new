@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
 use App\Services\Tickets\ServiceGeneral;
+use DB;
 
 class TicketsController extends Controller
 {
@@ -34,11 +35,22 @@ class TicketsController extends Controller
         return Response($response, 200);
     }
 
-    public function update(TicketRequest $request, Ticket $ticket)
-    {
-        $ticket = ServiceCrud::update($request);
-        return Response($ticket, 200);
-    }
+    public function update(TicketRequest $request, Ticket $ticket){
+        try{
+            DB::beginTransaction();
+                $data = $request->validated();
+                $ticket_updated = ServiceCrud::update($data, $ticket);
+               
+                DB::commit();
+                return Response($ticket_updated, 200);
+    
+            } catch (\Exception $e){
+                
+                DB::rollback();
+                return Response($e->errors(), 422);
+            }
+    
+        }
 
 
 }
