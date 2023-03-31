@@ -18,7 +18,7 @@ class CategoriesController extends Controller
     public function index()
     {
         $category = Category::get();
-        return Response($category, 200);
+        return Response($category->load('subCategories'), 200);
     }
 
     /**
