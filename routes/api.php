@@ -19,7 +19,7 @@ Route::post('register', 'App\Http\Controllers\API\Auth\UserController@register')
 Route::post('forgot-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@forgotPassword')->name('forgot.password'); 
 Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password'); 
 
-Route::group(['middleware' => ['jwt.verify']], function() {    
+// Route::group(['middleware' => ['jwt.verify']], function() {    
     Route::get('profile','App\Http\Controllers\API\Auth\UserController@getAuthenticatedUser')->name('profile');
     Route::post('profile-update', 'App\Http\Controllers\API\Auth\UserController@updateProfile')->name('profile.update');
     Route::post('logout', 'App\Http\Controllers\API\Auth\UserController@logout')->name('logout');
@@ -65,6 +65,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/', 'App\Http\Controllers\API\PriceListsController@store')->name('price.lists.create')->middleware();
 	});
 
-});
+// });
 
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
