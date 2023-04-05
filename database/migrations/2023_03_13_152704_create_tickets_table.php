@@ -27,7 +27,6 @@ return new class extends Migration
             $table->integer('additional_price_amount')->default(0);
             $table->string('additional_price_image')->nullable();
             $table->boolean('show_in_schedule_page')->default(false);
-            $table->string('card_image')->nullable();
             $table->string('announcement');
             $table->bigInteger('company_id')->unsigned();
             $table->bigInteger('city_id')->unsigned();

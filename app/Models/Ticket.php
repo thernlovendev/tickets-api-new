@@ -36,6 +36,12 @@ class Ticket extends Model
         'PREMIUM_S' => 'Premium S'
     ];
 
+    const TYPE_IMAGES = [
+        'WIDE' => 'wide',
+        'CARD_IMAGE' => 'card_image',
+        'GALLERY' => 'gallery'
+    ];
+
     protected $fillable = [
         'company_id',
         'city_id',
@@ -51,7 +57,6 @@ class Ticket extends Model
         'additional_price_amount',
         'additional_price_image',
         'show_in_schedule_page',
-        'card_image',
         'announcement'
     ];
 

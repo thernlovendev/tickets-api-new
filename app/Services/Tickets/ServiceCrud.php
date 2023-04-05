@@ -20,7 +20,7 @@ class ServiceCrud
 		try {
             DB::beginTransaction();
 
-            $company = Company::find($data->company_id);
+            $company = Company::find($data['company_id']);
 
             $words = explode(" ", $company->name);
             $prefix = "";
@@ -37,77 +37,63 @@ class ServiceCrud
 
             $ticket = Ticket::create(
                 [
-                    'company_id' => $data->company_id,
-                    'city_id' => $data->city_id,
-                    'title_en' => $data->title_en,
-                    'title_kr' => $data->title_kr,
-                    'ticket_template' => $data->ticket_template,
-                    'ticket_type' => $data->ticket_type,
-                    'status' => $data->status,
-                    'out_of_stock_alert' => $data->out_of_stock_alert,
-                    'currency' => $data->currency,
+                    'company_id' => $data['company_id'],
+                    'city_id' => $data['city_id'],
+                    'title_en' => $data['title_en'],
+                    'title_kr' => $data['title_kr'],
+                    'ticket_template' => $data['ticket_template'],
+                    'ticket_type' => $data['ticket_type'],
+                    'status' => $data['status'],
+                    'out_of_stock_alert' => $data['out_of_stock_alert'],
+                    'currency' => $data['currency'],
                     'product_code' => $code,
-                    'additional_price_type' => $data->additional_price_type,
-                    'additional_price_amount' => $data->additional_price_amount,
-                    'show_in_schedule_page' => $data->show_in_schedule_page,
-                    'announcement' =>$data->announcement,
+                    'additional_price_type' => $data['additional_price_type'],
+                    'additional_price_amount' => $data['additional_price_amount'],
+                    'show_in_schedule_page' => $data['show_in_schedule_page'],
+                    'announcement' =>$data['announcement'],
                 ]);
 
-            foreach($data->tickets_categories as $category){
+            foreach($data['tickets_categories'] as $category){
                 $ticket->categories()->attach($category['category_id']);
             }
 
-            foreach($data->tickets_subcategories as $subcategory){
+            foreach($data['tickets_subcategories'] as $subcategory){
                 $ticket->subcategories()->attach($subcategory['subcategory_id']);
             }
             
 
-            $prices_counter = [];
 
-            foreach ($data->tickets_prices as $price) {
-                $item = TicketPrice::create(['ticket_id'=> $ticket->id,'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
+            foreach ($data['tickets_prices'] as $price) {
+                $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
                 
-                $prices_counter[] = $item;
             }
             
-            $prices['prices'] = $prices_counter;
-            
-            $coments_counter = [];
-            
-            foreach ($data->tickets_content as $article) {
-                $item = TicketContent::create(['ticket_id'=> $ticket->id,'name' => $article['name'], 'content' => $article['content']]); 
-            
-                $coments_counter[] = $item;
+            foreach ($data['tickets_content'] as $article) {
+                $item = TicketContent::create(['ticket_id'=> $ticket['id'],'name' => $article['name'], 'content' => $article['content']]); 
             }
 
-            $contents['contents'] = $coments_counter;
-
-
-            $schedule_counter = [];
-            if($data->show_in_schedule_page == true){
-                foreach ($data->tickets_schedule as $schedule) {
+            if($data['show_in_schedule_page'] == true){
+                foreach ($data['tickets_schedule'] as $schedule) {
                     
-                    $item = TicketSchedule::create(['ticket_id'=> $ticket->id,'date_start' => $schedule['date_start'], 'date_end' => $schedule['date_end'], 'max_people' => $schedule['max_people'], 'week_days' => collect($schedule['week_days'])]); 
+                    $item = TicketSchedule::create(['ticket_id'=> $ticket['id'],'date_start' => $schedule['date_start'], 'date_end' => $schedule['date_end'], 'max_people' => $schedule['max_people'], 'week_days' => collect($schedule['week_days'])]); 
                     
-                    $schedule_counter[] = $item;
                 }
             }
-            $schedules['schedule'] = $schedule_counter;
-
-            foreach($data->wide_images as $image){
+            foreach($data['wide_images'] as $image){
                 ImageService::attach($image, $ticket);
             }
 
-            foreach($data->gallery_images as $image){
+            foreach($data['gallery_images'] as $image){
                 ImageService::attach($image, $ticket);
             }
 
-            ImageService::attach($data->card_image, $ticket);
+            ImageService::attach($data['card_image'], $ticket);
             
                 
             DB::commit();
 
-            return [$ticket, $prices, $contents, $schedules];
+            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContents', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage',
+            );
 
         } catch (\Exception $e){
             DB::rollback();
@@ -121,10 +107,81 @@ class ServiceCrud
 		try{
             DB::beginTransaction();
 
-            dd($data);
+            $ticket->update($data);
+
+            ModelCrud::deleteUpdateOrCreate($ticket->ticketContents(), $data['tickets_content']);
+            ModelCrud::deleteUpdateOrCreate($ticket->ticketPrices(), $data['tickets_prices']);
+            ModelCrud::deleteUpdateOrCreate($ticket->ticketSchedules(), $data['tickets_schedule']);
+
+            $categories = collect($data['tickets_categories'])->pluck('category_id');
+            $ticket->categories()->sync($categories);
+
+            $subcategories = collect($data['tickets_subcategories'])->pluck('subcategory_id');
+            $ticket->subcategories()->sync($subcategories);
+            
+            $card_image = collect($data['card_image']);
+            
+            if($ticket->cardImage->id !== $card_image['id']){
+                $ticket->cardImage->delete();
+                ImageService::attach($card_image, $ticket);
+            }
+
+            $wide_images = collect($data['wide_images']);
+
+            $wide_image_old = $ticket->wideImages()->pluck('id');
+
+            $wide_image_request = collect($wide_images)->whereNotNull('id')->pluck('id');
+            
+            $wide_images_to_delete = $wide_image_old->diff($wide_image_request)->all();
+            
+            //delete images gone
+
+            foreach($wide_images_to_delete as $wide_image_id) {
+                $ticket->wideImages()->where('id', $wide_image_id)->delete();
+            }
+
+            //Create or update
+            foreach ($data['wide_images'] as $wide_image) {
+                $wide_image_update = $ticket->wideImages()->find($wide_image['id']);
+                if($wide_image_update){
+                    $wide_image_update->update([
+                        'priority' => $wide_image['priority'],
+                        'priority_type' => $wide_image['priority_type'],
+                    ]); 
+                } else {
+                    ImageService::attach($wide_image, $ticket);
+                }
+            }
+
+            $gallery_images = collect($data['gallery_images']);
+
+            $gallery_image_old = $ticket->galleryImages()->pluck('id');
+
+            $gallery_image_request = collect($gallery_images)->whereNotNull('id')->pluck('id');
+            
+            $gallery_images_to_delete = $gallery_image_old->diff($gallery_image_request)->all();
+            
+            //delete images gone
+
+            foreach($gallery_images_to_delete as $gallery_image_id) {
+                $ticket->galleryImages()->where('id', $gallery_image_id)->delete();
+            }
+
+            //Create or update
+            foreach ($data['gallery_images'] as $gallery_image) {
+                $gallery_image_update = $ticket->galleryImages()->find($gallery_image['id']);
+                if($gallery_image_update){
+                    $gallery_image_update->update([
+                        'priority' => $gallery_image['priority'],
+                        'priority_type' => $gallery_image['priority_type'],
+                    ]); 
+                } else {
+                    ImageService::attach($gallery_image, $ticket);
+                }
+            }
 
             DB::commit();
-            return $data;
+            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketContents', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage');
 
         } catch (\Exception $e){
             DB::rollback();

@@ -25,7 +25,8 @@ class TicketsController extends Controller
 
     public function store(TicketRequest $request)
     {
-        $ticket = ServiceCrud::create($request);
+        $data = $request->validated();
+        $ticket = ServiceCrud::create($data);
         return Response($ticket, 201);
     }
 

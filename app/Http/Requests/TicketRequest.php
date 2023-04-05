@@ -27,6 +27,7 @@ class TicketRequest extends FormRequest
     {
         $days = TicketSchedule::DAYS;
         $status = Ticket::STATUS;
+        $type_images = Ticket::TYPE_IMAGES;
         $additional_type = Ticket::ADDITIONAL_PRICE_TYPE;
         switch($this->method()) {
             case 'GET':
@@ -53,15 +54,19 @@ class TicketRequest extends FormRequest
                         'show_in_schedule_page' => ['required','boolean'],
                         'card_image' => ['required'],
                         'card_image.id' => ['required','exists:images,id'],
-                        'card_image.priority_type' => ['required'],
+                        'card_image.priority_type' => ['required',Rule::in($type_images)],
                         'wide_images' => ['required'],
                         'wide_images.*.id' => ['required','exists:images,id'],
                         'wide_images.*.priority' => ['required'],
-                        'wide_images.*.priority_type' => ['required'],
+                        'wide_images.*.priority_type' => ['required',Rule::in($type_images)],
                         'gallery_images' => ['required'],
                         'gallery_images.*.id' => ['required','exists:images,id'],
                         'gallery_images.*.priority' => ['required'],
-                        'gallery_images.*.priority_type' => ['required'],
+                        'gallery_images.*.priority_type' => ['required',Rule::in($type_images)],
+                        'tickets_categories' => ['required'],
+                        'tickets_categories.*.category_id' => ['required','exists:categories,id'],
+                        'tickets_subcategories' => ['required'],
+                        'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
                         'tickets_prices' => ['required'],
                         'tickets_prices.*.type' => ['required'],
                         'tickets_prices.*.age_limit' => ['nullable'],
@@ -79,9 +84,10 @@ class TicketRequest extends FormRequest
                 } break;
 
             case 'PUT':{
+                $ticket = $this->route('ticket');
                 return [
-                        'title_en' => ['unique:tickets,title_en'],
-                        'title_kr' => ['unique:tickets,title_kr'],
+                        'title_en' => ['required',Rule::unique('tickets')->ignore($ticket->id),],
+                        'title_kr' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
                         'ticket_template' => ['required'],
                         'ticket_type' => ['required'],
                         'status' => ['required', Rule::in($status)],
@@ -94,15 +100,19 @@ class TicketRequest extends FormRequest
                         'show_in_schedule_page' => ['required','boolean'],
                         'card_image' => ['required'],
                         'card_image.id' => ['required','exists:images,id'],
-                        'card_image.priority_type' => ['required'],
+                        'card_image.priority_type' => ['required',Rule::in($type_images)],
                         'wide_images' => ['required'],
                         'wide_images.*.id' => ['required','exists:images,id'],
                         'wide_images.*.priority' => ['required'],
-                        'wide_images.*.priority_type' => ['required'],
+                        'wide_images.*.priority_type' => ['required',Rule::in($type_images)],
                         'gallery_images' => ['required'],
                         'gallery_images.*.id' => ['required','exists:images,id'],
                         'gallery_images.*.priority' => ['required'],
-                        'gallery_images.*.priority_type' => ['required'],
+                        'gallery_images.*.priority_type' => ['required',Rule::in($type_images)],
+                        'tickets_categories' => ['required'],
+                        'tickets_categories.*.category_id' => ['required','exists:categories,id'],
+                        'tickets_subcategories' => ['required'],
+                        'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
                         'tickets_prices' => ['required'],
                         'tickets_prices.*.type' => ['required'],
                         'tickets_prices.*.age_limit' => ['nullable'],

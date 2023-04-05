@@ -17,7 +17,7 @@ class PriceListsController extends Controller
         $price_lists = PriceList::query();
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom($params, $price_lists);
-        $elements = $this->httpIndex($elements, ['id','subcategory_id','product_type','child_price','adult_price']);
+        $elements = $this->httpIndex($elements, ['id','category_id','subcategory_id','product_type','child_price','adult_price']);
         $response = ServiceGeneral::mapCollection($elements);
         return Response($response, 200);
     }
