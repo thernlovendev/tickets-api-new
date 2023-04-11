@@ -5,6 +5,7 @@ use DB;
 use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
+use App\Models\Subcategory;
 use App\Models\PriceList;
 use App\Models\Reservation;
 use App\Models\ReservationItem;
@@ -36,8 +37,9 @@ class ServiceCrud
             
             $reservation = Reservation::create($data);
 
-                
-                foreach ($data['items'] as $item) {
+            foreach ($data['items'] as $item) {
+                $subcategory = Subcategory::find($item['subcategory_id']);
+                    
                     $reserve_item = ReservationItem::create(
                         [
                           'reservation_id' => $reservation->id,
@@ -77,9 +79,22 @@ class ServiceCrud
                            $item['sub_items'][$index]['addition'] = $ticket->additional_price_amount;
                         }
 
+                        
+                        $new_price = $item['price'];
+                        
+                        // $price_list = $subcategory->pricesLists()->where('id',$item['price_list_id'])->first();
+                        
+                        // if($price_list){
+                        //     if($item['adult_child_type'] == ReservationItem::TYPE_PRICE['ADULT']){
+                        //         $new_price = $price_list['adult_price'];
+                        //     } else {
+                        //         $new_price = $price_list['child_price'];
+                        //     }
+                        // }
+
                         $addition = collect($item['sub_items'])->sum('addition');
-                        $total = ($item['price'] + $addition) * $item['quantity'];
-                        $reserve_item->update(['addition' => $addition, 'total' => $total]);
+                        $total = ($new_price + $addition) * $item['quantity'];
+                        $reserve_item->update(['price' => $new_price,'addition' => $addition, 'total' => $total]);
 
                         $reserve_item->reservationSubItems()->createMany($item['sub_items']);
                 }

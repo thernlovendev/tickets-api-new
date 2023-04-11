@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Reservation;
+use App\Models\ReservationItem;
 class ReservationRequest extends FormRequest
 {
     /**
@@ -25,7 +26,7 @@ class ReservationRequest extends FormRequest
     public function rules()
     {
         $type = Reservation::PAYMENT_TYPE;
-
+        $type_price_item = ReservationItem::TYPE_PRICE;
         switch($this->method()) {
             case 'GET':
                 {
@@ -53,7 +54,7 @@ class ReservationRequest extends FormRequest
                         'items.*.category_id' => 'required','exists:categories,id',
                         'items.*.subcategory_id' =>'required','exists:subcategories,id',
                         'items.*.price_list_id' => 'nullable','exists:price_lists,id',
-                        'items.*.adult_child_type' => 'required',
+                        'items.*.adult_child_type' => ['required',Rule::in($type_price_item)],
                         'items.*.child_age' => 'nullable',
                         'items.*.price' => 'numeric',
                         'items.*.quantity' => 'integer',

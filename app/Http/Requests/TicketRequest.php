@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
 use App\Models\TicketSchedule;
+use App\Models\TicketPrice;
 class TicketRequest extends FormRequest
 {
     /**
@@ -29,6 +30,7 @@ class TicketRequest extends FormRequest
         $status = Ticket::STATUS;
         $type_images = Ticket::TYPE_IMAGES;
         $additional_type = Ticket::ADDITIONAL_PRICE_TYPE;
+        $price_types = TicketPrice::TYPE_PRICE;
         switch($this->method()) {
             case 'GET':
                 {
@@ -68,7 +70,7 @@ class TicketRequest extends FormRequest
                         'tickets_subcategories' => ['required'],
                         'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
                         'tickets_prices' => ['required'],
-                        'tickets_prices.*.type' => ['required'],
+                        'tickets_prices.*.type' => ['required',Rule::in($price_types)],
                         'tickets_prices.*.age_limit' => ['nullable'],
                         'tickets_prices.*.window_price' => ['nullable'],
                         'tickets_prices.*.sale_price' => ['required'],
@@ -114,7 +116,7 @@ class TicketRequest extends FormRequest
                         'tickets_subcategories' => ['required'],
                         'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
                         'tickets_prices' => ['required'],
-                        'tickets_prices.*.type' => ['required'],
+                        'tickets_prices.*.type' => ['required',Rule::in($price_types)],
                         'tickets_prices.*.age_limit' => ['nullable'],
                         'tickets_prices.*.window_price' => ['nullable'],
                         'tickets_prices.*.sale_price' => ['required'],

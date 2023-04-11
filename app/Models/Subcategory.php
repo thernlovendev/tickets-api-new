@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Category;
+use App\Models\Ticket;
+use App\Models\PriceList;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,6 +28,11 @@ class Subcategory extends Model
     public function tickets()
     {
         return $this->belongsToMany(Ticket::class, 'subcategory_ticket');
+    }
+
+    public function pricesLists()
+    {
+        return $this->hasMany(PriceList::class);
     }
 
 }

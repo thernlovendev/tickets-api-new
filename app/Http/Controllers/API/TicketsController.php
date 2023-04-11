@@ -52,6 +52,11 @@ class TicketsController extends Controller
             }
     
         }
+    public function getSinglePrice(Ticket $ticket)
+    {
+        $response = $ticket->TicketPrices()->get();
+        return Response($response, 200);
+    }
 
 
 }

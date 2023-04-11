@@ -11,6 +11,11 @@ class TicketPrice extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const TYPE_PRICE = [
+        'ADULT' => 'Adult',
+        'CHILD' => 'Child',
+    ];
+    
     protected $table = 'ticket_prices';
 
     protected $fillable = [

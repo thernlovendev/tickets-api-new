@@ -12,6 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ReservationItem extends Model
 {
     use HasFactory, SoftDeletes;
+
+    const TYPE_PRICE = [
+        'ADULT' => 'Adult',
+        'CHILD' => 'Child',
+    ];
+
     
     protected $table = 'reservation_items';
 

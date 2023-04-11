@@ -37,9 +37,9 @@ class Ticket extends Model
     ];
 
     const TYPE_IMAGES = [
-        'WIDE' => 'wide',
-        'CARD_IMAGE' => 'card_image',
-        'GALLERY' => 'gallery'
+        'WIDE' => 'Wide',
+        'CARD_IMAGE' => 'Card_image',
+        'GALLERY' => 'Gallery'
     ];
 
     protected $fillable = [
