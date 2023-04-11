@@ -14,6 +14,7 @@ class TicketPrice extends Model
     const TYPE_PRICE = [
         'ADULT' => 'Adult',
         'CHILD' => 'Child',
+        'NA' => 'N/A',
     ];
     
     protected $table = 'ticket_prices';
