@@ -53,7 +53,7 @@ class CategoriesController extends Controller
     public function show(Category $category)
     {
         $response = ServiceCrud::response($category);
-        return Response($response, 200);
+        return Response($response->load('Subcategories'), 200);
     }
 
     /**
