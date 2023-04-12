@@ -58,6 +58,8 @@ class UserController extends Controller
             'phone' => $request->get('phone'),
         ]);
 
+
+        $user->assignRole('customer');
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user','token'),201);

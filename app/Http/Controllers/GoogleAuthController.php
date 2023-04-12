@@ -48,6 +48,8 @@ class GoogleAuthController extends Controller
                     'external_auth' => 'google',
                 ]);
                 
+                $userNew->assignRole('customer');
+                
                 $token = JWTAuth::fromUser($userNew);
 
                 return view('/welcome',compact('token'));

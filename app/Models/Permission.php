@@ -5,18 +5,16 @@ namespace App\Models;
 use App\Models\Section;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Permission extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'permissions';
 
     protected $fillable = [
-        'section_id',
         'name',
-        'description',
+        'guard_name',
     ];
 
     public function section()

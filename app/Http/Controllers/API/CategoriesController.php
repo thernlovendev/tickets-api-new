@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Categories\ServiceCrud;
+use App\Services\Categories\ServiceGeneral;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 
@@ -15,10 +16,15 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $category = Category::get();
-        return Response($category->load('subCategories'), 200);
+        $categories = Category::query();
+        $params = $request->query();
+        $elements = ServiceGeneral::filterCustom($params, $categories);
+        $elements = $this->httpIndex($elements, ['id', 'city_id','name']);
+        $response = ServiceGeneral::mapCollection($elements);
+        return Response($response, 200);
+        
     }
 
     /**

@@ -46,7 +46,9 @@ class NaverAuthController extends Controller
                     'external_id' => $user->id,
                     'external_auth' => 'naver',
                 ]);
-                
+
+                $userNew->assignRole('customer');
+
                 $token = JWTAuth::fromUser($userNew);
 
                 return view('/welcome',compact('token'));
