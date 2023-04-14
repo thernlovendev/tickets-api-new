@@ -8,6 +8,7 @@ use App\Services\Categories\ServiceCrud;
 use App\Services\Categories\ServiceGeneral;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\Subcategory;
 
 class CategoriesController extends Controller
 {
@@ -99,9 +100,11 @@ class CategoriesController extends Controller
         //
     }
 
-    public function getCategoriesByCompany($id)
+    public function getSubcategories(Request $request)
     {
-        $categories = Category::where('category_id',$id)->get();
-        return Response($categories, 200);
+       
+        $query = $request->query();
+        $sub_category = Subcategory::whereIn('category_id',$query['categories'])->get();
+        return Response($sub_category, 200);
     }
 }

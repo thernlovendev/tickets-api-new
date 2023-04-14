@@ -30,6 +30,7 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 	});
 
     Route::prefix('categories')->group(function() {
+		Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
 		Route::get('/', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
 		Route::get('/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CategoriesController@store')->name('category.create')->middleware();
@@ -66,6 +67,10 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 	Route::prefix('price-lists')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\PriceListsController@index')->name('price.lists.index')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\PriceListsController@store')->name('price.lists.create')->middleware();
+	});
+
+	Route::prefix('schedule')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\ScheduleOverviewController@index')->name('schedule.index')->middleware();
 	});
 
 // });
