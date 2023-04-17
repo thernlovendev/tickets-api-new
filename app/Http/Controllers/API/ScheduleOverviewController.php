@@ -19,12 +19,61 @@ class ScheduleOverviewController extends Controller
         $start_date = Carbon::parse($params['start_date']);
         $end_date = Carbon::parse($params['end_date']);
 
-        $reservation = Reservation::whereBetween('created_at', [$start_date, $end_date])->get();
+        $schedule = ReservationSubItem::with(['reservationItem', 'ticket'])->orderBy('rq_schedule_datetime', 'asc') 
+            ->whereBetween('rq_schedule_datetime', [$start_date, $end_date])
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->ticket->title_en;
+            })->map(function ($item, $key) {
+                foreach ($item as $index => $value) {
+                    if($value->reservationItem->adult_child_type == 'Child'){
+                        $item[$index]['child_quantity'] = $value->reservationItem->quantity; 
+                        $item[$index]['type'] = 'Child'; 
+                    } else {
+                        $item[$index]['adult_quantity'] = $value->reservationItem->quantity;
+                        $item[$index]['type'] = 'Adult'; 
+                    }
+                }
+                return $item->groupBy(function ($item) {
+                    $date = Carbon::parse($item->rq_schedule_datetime)->format('Y-m-d');
+                    return $date;
+                })->map(function ($grouped_items) {
+                        return [
+                            'child_quantity' => $grouped_items->sum('child_quantity'),
+                            'adult_quantity' => $grouped_items->sum('adult_quantity'),
+                            'tiket_id' => $grouped_items->first()->ticket_id,
+                        ];
+                });
+
+            });
+
+        // $reservationSubItem = ReservationSubItem::with('reservationItem')->whereBetween('rq_schedule_datetime', [$start_date, $end_date])->get();
+
+        // $schedule = $reservationSubItem->map( function($item){
+        //     $adult_quantity = 0;
+        //     $child_quantity = 0;
+
+        //     $reservationItem = $item->reservationItem;
+
+        //     if($reservationItem->adult_child_type == 'Child'){
+        //         $child_quantity = $reservationItem->quantity;
+        //     } else {
+        //         $adult_quantity = $reservationItem->quantity;
+        //     }
+
+        //     return [
+        //         'id' => $item->id,
+        //         'reservation_id' =>$reservationItem->reservation_id, 
+        //         'rq_schedule_datetime' => $item->rq_schedule_datetime,
+        //         'ticket' => $item->ticket_id,
+        //         'adult_quantity' => $adult_quantity,
+        //         'child_quantity' => $child_quantity,
+        //     ];
+        // });
 
         
-        $tickets = Ticket::where('show_in_schedule_page',true)->get();
+       return $schedule;
         
-        dd($reservation);
 
 
         // $counter_quantity = [];

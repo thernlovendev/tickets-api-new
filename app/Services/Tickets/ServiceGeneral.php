@@ -24,6 +24,13 @@ class ServiceGeneral
 
     public static function filterCustom($filters, $models){
         
+        if(isset($filters['title_en'])){
+            $models->where('title_en','LIKE', '%'.$filters['title_en'].'%');
+        }
+
+        if(isset($filters['product_code'])){
+            $models->where('product_code','LIKE', '%'.$filters['product_code'].'%');
+        }
         return $models;
     }
 

@@ -18,7 +18,7 @@ class TicketsController extends Controller
         $tickets = Ticket::with(['cardImage', 'ticketPrices']);
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom($params, $tickets);
-        $elements = $this->httpIndex($elements, ['id', 'status', 'product_code']);
+        $elements = $this->httpIndex($elements, ['id', 'status']);
         $response = ServiceGeneral::mapCollection($elements);
         return Response($response, 200);
     }
