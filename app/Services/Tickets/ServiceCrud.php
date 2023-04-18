@@ -120,11 +120,12 @@ class ServiceCrud
             $ticket->subcategories()->sync($subcategories);
             
             $card_image = collect($data['card_image']);
+
             
-            if($ticket->cardImage->id !== $card_image['id']){
-                $ticket->cardImage->delete();
-                ImageService::attach($card_image, $ticket);
-            }
+            // if($ticket->cardImage !== $card_image['id']){
+            //     $ticket->cardImage->delete();
+            //     ImageService::attach($card_image, $ticket);
+            // } 
 
             $wide_images = collect($data['wide_images']);
 

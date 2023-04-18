@@ -19,7 +19,13 @@ class ScheduleOverviewController extends Controller
         $start_date = Carbon::parse($params['start_date']);
         $end_date = Carbon::parse($params['end_date']);
 
-        $schedule = ReservationSubItem::with(['reservationItem', 'ticket'])->orderBy('rq_schedule_datetime', 'asc') 
+        $schedule = ReservationSubItem::with(['reservationItem' => function ($query) {
+            $query->select('id', 'adult_child_type', 'quantity','reservation_id');
+            $query->with(['reservation' => function ($q) {
+                $q->select('id', 'customer_name_en', 'customer_name_kr','order_number','created_by','created_at','ticket_sent_status');
+            }]);
+        }, 'ticket:id,product_code,title_en,title_kr,show_in_schedule_page'])->orderBy('rq_schedule_datetime', 'asc') 
+            ->select('id','rq_schedule_datetime','ticket_sent_status','reservation_item_id','ticket_id')
             ->whereBetween('rq_schedule_datetime', [$start_date, $end_date])
             ->get()
             ->groupBy(function ($item) {
@@ -34,14 +40,22 @@ class ScheduleOverviewController extends Controller
                         $item[$index]['type'] = 'Adult'; 
                     }
                 }
-                return $item->groupBy(function ($item) {
-                    $date = Carbon::parse($item->rq_schedule_datetime)->format('Y-m-d');
+                return $item->groupBy(function ($value) {
+                    $date = Carbon::parse($value->rq_schedule_datetime)->format('Y-m-d');
                     return $date;
-                })->map(function ($grouped_items) {
+                })->map(function ($grouped_items) use ($item) {
+                    $date = $grouped_items->first()->rq_schedule_datetime;
+
+                    $date = Carbon::parse($date)->format('Y-m-d');
+
+                    $sub_items = $item->filter(function ($value) use ($date) {
+                        return Carbon::parse($value->rq_schedule_datetime)->format('Y-m-d') === $date;
+                    });
                         return [
                             'child_quantity' => $grouped_items->sum('child_quantity'),
                             'adult_quantity' => $grouped_items->sum('adult_quantity'),
                             'tiket_id' => $grouped_items->first()->ticket_id,
+                            'sub_items_details' => $sub_items
                         ];
                 });
 

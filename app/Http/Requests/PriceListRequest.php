@@ -35,7 +35,7 @@ class PriceListRequest extends FormRequest
                     return [
                         'category_id' => ['required','exists:categories,id'],
                         'prices' => ['required'],
-                        'prices.*.product_type' => 'required|distinct',
+                        'prices.*.product_type' => 'required',
                         'prices.*.quantity' => 'required|numeric',
                         'prices.*.child_price' => 'required_if:adult_price,true|numeric',
                         'prices.*.adult_price' => 'required_if:child_price,true|numeric',
