@@ -58,5 +58,12 @@ class TicketsController extends Controller
         return Response($response, 200);
     }
 
+    public function delete(Ticket $ticket){
+
+        $ticket->delete();     
+        
+         return Response(['message'=> 'Delete Ticket Successfully'], 204);
+    }
+
 
 }
