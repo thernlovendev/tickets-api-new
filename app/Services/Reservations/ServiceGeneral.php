@@ -19,10 +19,12 @@ class ServiceGeneral
                 'departure_date' => $item->departure_date,
                 'order_date' => $item->order_date,
                 'order_number' => $item->order_number,
-                'customer' => $customer ? $customer->name : $item->customer_name_en,
+                'customer' => $item->customer_name_en,
                 'payment_type' => $item->payment_type,
                 'ticket_sent_status' => $item->ticket_sent_status,
-                'status' => $item->status
+                'status' => $item->status,
+                'phone' => $item->phone,
+                'email' => $item->email
             ];
         });
 
@@ -36,7 +38,18 @@ class ServiceGeneral
     }
 
     public static function filterCustom($filters, $models){
-        
+        if(isset($filters['customer'])){
+            $models->where('customer_name_en','LIKE', '%'.$filters['customer'].'%');
+        }
+
+        if(isset($filters['email'])){
+            $models->where('email','LIKE', '%'.$filters['email'].'%');
+        }
+
+        if(isset($filters['phone'])){
+            $models->where('phone','LIKE', '%'.$filters['phone'].'%');
+        }
+
         return $models;
     }
 

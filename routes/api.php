@@ -74,6 +74,10 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 		Route::get('/', 'App\Http\Controllers\API\ScheduleOverviewController@index')->name('schedule.index')->middleware();
 	});
 
+	Route::prefix('inventories')->group(function() {
+		Route::post('/', 'App\Http\Controllers\API\InventoriesController@register')->name('inventory.register')->middleware();
+	});
+
 // });
 
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();

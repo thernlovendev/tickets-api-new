@@ -26,8 +26,10 @@ class Ticket extends Model
     const TYPE = [
         'REGULAR' => 'Regular',
         'BAR_QR' => 'Bar/QR',
-        'TOUR_TICKET' => 'Tour Ticket',
-        'HARD_COPY' => 'Hard Copy'
+        'GUIDE_TOUR' => 'Guide Tour',
+        'HARD_COPY' => 'Hard Copy',
+        'MUSICAL_SHOW' => 'Musical & Shows',
+        'SIM_CARD' => 'SIM Card'
     ];
 
     const ADDITIONAL_PRICE_TYPE = [
@@ -99,4 +101,10 @@ class Ticket extends Model
     {
         return $this->morphOne(Image::class, 'imageable')->where('priority_type', 'card_image');
     }
+
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+
 }
