@@ -19,7 +19,7 @@ class ServiceGeneral
                 'departure_date' => $item->departure_date,
                 'order_date' => $item->order_date,
                 'order_number' => $item->order_number,
-                'customer' => $item->customer_name_en,
+                'customer' =>$customer ? $customer->name : $item->customer_name_en,
                 'payment_type' => $item->payment_type,
                 'ticket_sent_status' => $item->ticket_sent_status,
                 'status' => $item->status,
