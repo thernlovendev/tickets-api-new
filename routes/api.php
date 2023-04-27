@@ -56,6 +56,7 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 		Route::delete('/{ticket}', 'App\Http\Controllers\API\TicketsController@delete')->name('tickets.delete')->middleware();
 		Route::get('/{ticket}/price', 'App\Http\Controllers\API\TicketsController@getSinglePrice')->name('ticket.single.price')->middleware();
 		Route::put('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@update')->name('ticket.shcedule.update')->middleware();
+		Route::delete('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@delete')->name('ticket.shcedule.delete')->middleware();
 	});
 
 	Route::prefix('reservations')->group(function() {

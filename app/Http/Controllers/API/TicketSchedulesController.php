@@ -115,8 +115,11 @@ class TicketSchedulesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(Ticket $ticket, TicketSchedule $ticketSchedule)
     {
-        //
+        
+        $ticketSchedule->delete();
+
+        return Response(['message'=> 'Delete Schedule Successfully'], 204);
     }
 }
