@@ -66,7 +66,7 @@ class ServiceCrud
                             case Ticket::TYPE['BAR_QR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
                                 break;
-                            case Ticket::TYPE['TOUR_TICKET']:
+                            case Ticket::TYPE['GUIDE_TOUR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 
                                 break;
