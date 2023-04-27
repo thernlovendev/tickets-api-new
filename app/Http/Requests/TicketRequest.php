@@ -129,6 +129,7 @@ class TicketRequest extends FormRequest
                         'tickets_schedule.*.date_start' => 'date|required_if:ticket_type,'.$ticket_type,
                         'tickets_schedule.*.date_end' => 'date|required_if:ticket_type,'.$ticket_type,
                         'tickets_schedule.*.max_people' => 'integer|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.time' => ['required_if:ticket_type,'.$ticket_type,'date_format:H:i'],
                         'tickets_schedule.*.week_days' => ['array','required_if:ticket_type,'.$ticket_type, Rule::in($days)],
                 ];
             } break;
