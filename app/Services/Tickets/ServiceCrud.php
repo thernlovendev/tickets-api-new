@@ -60,22 +60,24 @@ class ServiceCrud
             foreach($data['tickets_subcategories'] as $subcategory){
                 $ticket->subcategories()->attach($subcategory['subcategory_id']);
             }
-            
-
 
             foreach ($data['tickets_prices'] as $price) {
                 $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
                 
             }
             
-            foreach ($data['tickets_content'] as $article) {
-                $item = TicketContent::create(['ticket_id'=> $ticket['id'],'name' => $article['name'], 'content' => $article['content']]); 
+            if(isset($data['tickets_content'])){
+                foreach ($data['tickets_content'] as $article) {
+                    $item = TicketContent::create(['ticket_id'=> $ticket['id'],'name' => $article['name'], 'content' => $article['content']]); 
+                }
             }
 
             if($data['show_in_schedule_page'] == true){
                 foreach ($data['tickets_schedule'] as $schedule) {
-                    
-                    $item = TicketSchedule::create(['ticket_id'=> $ticket['id'],'date_start' => $schedule['date_start'], 'date_end' => $schedule['date_end'], 'max_people' => $schedule['max_people'], 'week_days' => collect($schedule['week_days'])]); 
+                    $schedule['ticket_id'] = $ticket['id'];
+                    $schedule['week_days'] = collect($schedule['week_days'])->toJson();
+
+                    TicketSchedule::create($schedule); 
                     
                 }
             }

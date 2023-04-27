@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TicketSchedule extends Model
+class TicketScheduleException extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'ticket_schedules';
+    protected $table = 'ticket_schedule_exceptions';
 
     const DAYS = [
         'MONDAY' => 'Monday',
@@ -23,21 +23,16 @@ class TicketSchedule extends Model
     ];
 
     protected $fillable = [
-        'ticket_id',
-        'date_start',
-        'date_end',
+        'ticket_schedule_id',
+        'date',
         'max_people',
-        'week_days',
-        'time'
+        'time',
+        'day',
+        'show_on_calendar'
     ];
-    
-    public function ticket()
-    {
-        return $this->belongsTo(Ticket::class, 'ticket_id');
-    }
 
-    public function ticketScheduleExceptions()
+    public function ticketSchedule()
     {
-        return $this->hasMany(TicketScheduleException::class);
+        return $this->belongsTo(TicketSchedule::class, 'ticket_schedule_id');
     }
 }

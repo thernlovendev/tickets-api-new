@@ -27,6 +27,7 @@ class TicketRequest extends FormRequest
     public function rules()
     {
         $days = TicketSchedule::DAYS;
+        $ticket_type = Ticket::TYPE['GUIDE_TOUR'];
         $status = Ticket::STATUS;
         $type_images = Ticket::TYPE_IMAGES;
         $additional_type = Ticket::ADDITIONAL_PRICE_TYPE;
@@ -77,11 +78,12 @@ class TicketRequest extends FormRequest
                         'tickets_content' => ['nullable'],
                         'tickets_content.*.name' => ['required','distinct'],
                         'tickets_content.*.content' => ['required'],
-                        'tickets_schedule' => ['required_if:show_in_schedule_page,true'],
-                        'tickets_schedule.*.date_start' => 'date|required_if:show_in_schedule_page,true',
-                        'tickets_schedule.*.date_end' => 'date|required_if:show_in_schedule_page,true',
-                        'tickets_schedule.*.max_people' => 'integer|required_if:show_in_schedule_page,true',
-                        'tickets_schedule.*.week_days' => ['array','required_if:show_in_schedule_page,true', Rule::in($days)],
+                        'tickets_schedule' => ['required_if:ticket_type,'.$ticket_type],
+                        'tickets_schedule.*.date_start' => 'date|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.date_end' => 'date|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.max_people' => 'integer|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.week_days' => ['array','required_if:ticket_type,'.$ticket_type, Rule::in($days)],
+                        'tickets_schedule.*.time' => ['required_if:ticket_type,'.$ticket_type,'date_format:H:i'],
                     ];
                 } break;
 
@@ -123,11 +125,11 @@ class TicketRequest extends FormRequest
                         'tickets_content' => ['nullable'],
                         'tickets_content.*.name' => ['required','distinct'],
                         'tickets_content.*.content' => ['required'],
-                        'tickets_schedule' => ['required_if:show_in_schedule_page,true'],
-                        'tickets_schedule.*.date_start' => 'date|required_if:show_in_schedule_page,true',
-                        'tickets_schedule.*.date_end' => 'date|required_if:show_in_schedule_page,true',
-                        'tickets_schedule.*.max_people' => 'integer|required_if:show_in_schedule_page,true',
-                        'tickets_schedule.*.week_days' => ['array','required_if:show_in_schedule_page,true', Rule::in($days)],
+                        'tickets_schedule' => ['required_if:ticket_type,'.$ticket_type],
+                        'tickets_schedule.*.date_start' => 'date|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.date_end' => 'date|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.max_people' => 'integer|required_if:ticket_type,'.$ticket_type,
+                        'tickets_schedule.*.week_days' => ['array','required_if:ticket_type,'.$ticket_type, Rule::in($days)],
                 ];
             } break;
 
