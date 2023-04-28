@@ -75,7 +75,6 @@ class ServiceCrud
             if($data['show_in_schedule_page'] == true){
                 foreach ($data['tickets_schedule'] as $schedule) {
                     $schedule['ticket_id'] = $ticket['id'];
-                    $schedule['week_days'] = collect($schedule['week_days'])->toJson();
 
                     TicketSchedule::create($schedule); 
                     
@@ -110,7 +109,6 @@ class ServiceCrud
             DB::beginTransaction();
 
             $ticket->update($data);
-
             ModelCrud::deleteUpdateOrCreate($ticket->ticketContents(), $data['tickets_content']);
             ModelCrud::deleteUpdateOrCreate($ticket->ticketPrices(), $data['tickets_prices']);
             ModelCrud::deleteUpdateOrCreate($ticket->ticketSchedules(), $data['tickets_schedule']);

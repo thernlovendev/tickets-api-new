@@ -81,7 +81,6 @@ class TicketSchedulesController extends Controller
             
             DB::beginTransaction();
             
-            $data['week_days'] = collect($data['week_days'])->toJson();
             $ticketSchedule->update($data);
 
             if(isset($data['ticket_schedule_exceptions'])){

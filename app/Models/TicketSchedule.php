@@ -30,6 +30,10 @@ class TicketSchedule extends Model
         'week_days',
         'time'
     ];
+
+    protected $casts = [
+        'week_days' => 'array',
+    ];
     
     public function ticket()
     {
