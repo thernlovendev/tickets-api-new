@@ -9,10 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasRoles, HasApiTokens, HasFactory, Notifiable;
+    use HasRoles, HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +30,9 @@ class User extends Authenticatable implements JWTSubject
         'phone',
         'avatar',
         'external_id',
-        'external_auth'
+        'external_auth',
+        'active',
+        'last_login_at'
     ];
 
     /**
@@ -62,6 +66,11 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
     	return [];
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
     
 }

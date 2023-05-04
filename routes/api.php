@@ -20,6 +20,8 @@ Route::post('forgot-password', 'App\Http\Controllers\API\Auth\ForgotPasswordCont
 Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password'); 
 
 // Route::group(['middleware' => ['jwt.verify']], function() {    
+	Route::get('email/verify/{id}/{hash}', 'App\Http\Controllers\API\Auth\ApiVerificationController@verify')->name('verification.verify');
+	Route::post('email/resend', 'App\Http\Controllers\API\Auth\ApiVerificationController@resend')->name('verification.resend');
     Route::get('profile','App\Http\Controllers\API\Auth\UserController@getAuthenticatedUser')->name('profile');
     Route::post('profile-update', 'App\Http\Controllers\API\Auth\UserController@updateProfile')->name('profile.update');
     Route::post('logout', 'App\Http\Controllers\API\Auth\UserController@logout')->name('logout');
@@ -79,6 +81,17 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 	Route::prefix('inventories')->group(function() {
 		Route::post('/', 'App\Http\Controllers\API\InventoriesController@register')->name('inventory.register')->middleware();
 	});
+
+	Route::prefix('users')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\Auth\UserController@index')->name('users.index')->middleware();
+		Route::get('/{user}', 'App\Http\Controllers\API\Auth\UserController@show')->name('users.show')->middleware();
+		Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\Auth\UserController@create')->name('users.create')->middleware();
+		Route::put('/{user}', 'App\Http\Controllers\API\Auth\UserController@edit')->name('users.edit')->middleware();
+		Route::put('/{user}/change-status', 'App\Http\Controllers\API\Auth\UserController@changeStatus')->name('users.change.status')->middleware();
+		Route::delete('/{user}', 'App\Http\Controllers\API\Auth\UserController@deleteUser')->name('users.delete')->middleware();
+	});
+
 
 // });
 
