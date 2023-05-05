@@ -35,4 +35,8 @@ class TicketScheduleException extends Model
     {
         return $this->belongsTo(TicketSchedule::class, 'ticket_schedule_id');
     }
+
+    protected $casts = [
+        'show_on_calendar' => 'boolean',
+    ];
 }
