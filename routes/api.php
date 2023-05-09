@@ -80,6 +80,7 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 
 	Route::prefix('inventories')->group(function() {
 		Route::post('/', 'App\Http\Controllers\API\InventoriesController@register')->name('inventory.register')->middleware();
+		Route::post('/bulk-upload', 'App\Http\Controllers\API\InventoriesController@bulkUpload')->name('inventory.bulk.upload')->middleware();
 	});
 
 	Route::prefix('users')->group(function() {

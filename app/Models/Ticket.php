@@ -107,4 +107,9 @@ class Ticket extends Model
         return $this->hasMany(Inventory::class);
     }
 
+    public function ticketStocks()
+    {
+        return $this->hasMany(TicketStock::class);
+    }
+
 }
