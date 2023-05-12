@@ -7,6 +7,7 @@ use App\Models\Subcategory;
 use App\Models\TicketPrice;
 use App\Models\TicketSchedule;
 use App\Models\TicketContent;
+use App\Models\TicketStock;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

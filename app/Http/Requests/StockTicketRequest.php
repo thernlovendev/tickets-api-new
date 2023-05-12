@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\TicketStock;
 
 class StockTicketRequest extends FormRequest
 {
@@ -23,9 +25,8 @@ class StockTicketRequest extends FormRequest
      */
     public function rules()
     {
-        $range_age = StockTicket::RANGE_AGE;
-        $type = StockTicket::TYPE;
-        $status = StockTicket::STATUS;
+        $range_age = TicketStock::RANGE_AGE;
+        $type = TicketStock::TYPE;
         switch($this->method()) {
             case 'GET':
                 {
@@ -38,7 +39,6 @@ class StockTicketRequest extends FormRequest
                         'file_import' => ['required','mimes:csv,xlsx,xls'],
                         'expiration_date' =>['required','date','after:today'],
                         'type' =>['required', Rule::in($type)],
-                        'status' =>['required',Rule::in($range_age)],
                         'range_age_type' =>['required',Rule::in($range_age)],
                         'ticket_id' =>['required']
                     ];

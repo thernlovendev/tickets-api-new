@@ -15,7 +15,7 @@ class CreateTicketStocksTable extends Migration
     {
         Schema::create('ticket_stocks', function (Blueprint $table) {
             $table->id();
-            $table->string('code_number');
+            $table->string('code_number')->unique();
             $table->string('type');
             $table->date('expiration_date');
             $table->string('status');

@@ -52,11 +52,10 @@ class ScheduleOverviewController extends Controller
                         return Carbon::parse($value->rq_schedule_datetime)->format('Y-m-d') === $date;
                     })->values();
 
-                \Log::debug($sub_items);
                         return [
                             'child_quantity' => $grouped_items->sum('child_quantity'),
                             'adult_quantity' => $grouped_items->sum('adult_quantity'),
-                            'tiket_id' => $grouped_items->first()->ticket_id,
+                            'ticket_id' => $grouped_items->first()->ticket_id,
                             'sub_items_details' => $sub_items
                         ];
                 });
