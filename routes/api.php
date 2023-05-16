@@ -19,7 +19,10 @@ Route::post('register', 'App\Http\Controllers\API\Auth\UserController@register')
 Route::post('forgot-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@forgotPassword')->name('forgot.password'); 
 Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password'); 
 
-// Route::group(['middleware' => ['jwt.verify']], function() {    
+
+Route::group(['middleware' => ['jwt.verify']], function() {    
+	Route::get('refresh-token','App\Http\Controllers\API\Auth\UserController@refresh')->name('refresh.token');
+
 	Route::get('email/verify/{id}/{hash}', 'App\Http\Controllers\API\Auth\ApiVerificationController@verify')->name('verification.verify');
 	Route::post('email/resend', 'App\Http\Controllers\API\Auth\ApiVerificationController@resend')->name('verification.resend');
     Route::get('profile','App\Http\Controllers\API\Auth\UserController@getAuthenticatedUser')->name('profile');
@@ -95,6 +98,6 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 	});
 
 
-// });
+});
 
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
