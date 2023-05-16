@@ -19,7 +19,12 @@ class InventoriesController extends Controller
     {
         $stock = TicketStock::query();
         $params = $request->query();
-        $elements = ServiceGeneral::filterCustom($params, $stock);
+
+        $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')
+        ->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult, tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')
+        ->groupBy('ticket_id', 'range_age_type');
+
+        $elements = ServiceGeneral::filterCustom($params, $stocks);
         $elements = $this->httpIndex($elements, []);
         $response = ServiceGeneral::mapCollection($elements);
         return Response($response, 200);
