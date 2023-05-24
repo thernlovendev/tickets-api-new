@@ -46,6 +46,16 @@ class PriceListsController extends Controller
         return Response($data, 200);
     }
 
+    public function getBySubcategory(Request $request)
+    {
+        $params = $request->query();
+
+        $price_lists = PriceList::where('subcategory_id', $params['subcategory_id'])
+            ->get();
+            
+        return Response($price_lists, 200);
+    }
+
     public function store(PriceListRequest $request)
     {
         $ticket = ServiceCrud::create($request);

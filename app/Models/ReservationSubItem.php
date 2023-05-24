@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Subcategory;
 use App\Models\Ticket;
+use App\Models\TicketStock;
 use App\Models\ReservationItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,5 +41,10 @@ class ReservationSubItem extends Model
     public function ticket()
     {
         return $this->belongsTo(Ticket::class, 'ticket_id');
+    }
+
+    public function stocksUsed()
+    {
+        return $this->hasMany(StockUsed::class);
     }
 }

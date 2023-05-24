@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Services\Cities;
+namespace App\Services\Inventories\Details;
+use App\Models\TicketStock;
+use Carbon\Carbon;
 
 class ServiceGeneral
 {
@@ -11,9 +13,14 @@ class ServiceGeneral
         $mapCollection = $data_map->map( function($item){
             return [
                 'id' => $item->id,
-                'name' => $item->name,
+                'code_number' => $item->code_number,
+                'customer_name' => null,
+                'ticket_code' => null,
+                'order_id' => null,
+                'item_number' => null,
+                'expiration_date' => $item->expiration_date,
                 'status' => $item->status,
-                'company' => $item->company->name
+                'uploaded_date' => Carbon::parse($item->created_at)->format('Y-m-d'),
             ];
         });
 
@@ -27,7 +34,8 @@ class ServiceGeneral
     }
 
     public static function filterCustom($filters, $models){
-        
+
+       
         return $models;
     }
 

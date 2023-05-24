@@ -74,4 +74,9 @@ class Reservation extends Model
         return $this->hasMany(VendorComission::class);
     }
 
+    public function stocksUsed()
+    {
+        return $this->hasMany(StockUsed::class);
+    }
+
 }

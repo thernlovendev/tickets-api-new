@@ -11,6 +11,7 @@ use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
 use App\Services\Inventories\ServiceGeneral;
+use App\Services\Inventories\Details\ServiceGeneral as ServiceDetail;
 
 class InventoriesController extends Controller
 {
@@ -43,5 +44,20 @@ class InventoriesController extends Controller
 
         Excel::import(new TicketStocksImport($data), $data['file_import']);
         return Response(['message'=> 'Successful Bulk Up'], 200);
+    }
+
+    public function details(Request $request, $ticket_id, $type){
+
+        $stock = TicketStock::query();
+        $params = $request->query();
+
+        $stocks = $stock->where('ticket_id',$ticket_id)->
+                          where('range_age_type', $type);
+
+        $elements = ServiceDetail::filterCustom($params, $stocks);
+        $elements = $this->httpIndex($elements, []);
+        $response = ServiceDetail::mapCollection($elements);
+        return Response($response, 200);
+        
     }
 }

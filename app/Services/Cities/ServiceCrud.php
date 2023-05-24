@@ -14,7 +14,7 @@ class ServiceCrud
             
             $cities_counter = [];
             foreach ($data->cities as $city) {
-                $item = City::updateOrCreate(['company_id' => $data->company_id, 'name' => $city['name']], ['company_id' => $data->company_id, 'name' => $city['name'], 'status' => true]);
+                $item = City::updateOrCreate(['company_id' => $data->company_id, 'name' => $city['name']], ['company_id' => $data->company_id, 'name' => $city['name'], 'status' => City::STATUS['PUBLISH']]);
                 $cities_counter[] = $item;
             }
 			

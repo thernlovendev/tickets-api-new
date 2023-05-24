@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Ticket;
+use App\Models\StockUsed;
 
 class TicketStock extends Model
 {
@@ -42,5 +43,10 @@ class TicketStock extends Model
     public function ticket()
     {
         return $this->belongsTo(ticket::class);
+    }
+
+    public function stocksUsed()
+    {
+        return $this->hasMany(StockUsed::class);
     }
 }
