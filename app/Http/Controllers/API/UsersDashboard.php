@@ -51,11 +51,10 @@ class UsersDashboard extends Controller
                     $data[$key]['expiration_date'] = $stock->expiration_date;
                 }
                 
-                $ticket = Ticket::with('galleryImages')->where('id',$reservationSubItem->ticket_id)->first();
-                $data['ticket'] = $ticket;
-                // $codes = collect(array_column($data, 'code'));
+                $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
+                $image = $ticket->galleryImages->where('priority', 0)->first();
 
-                $pdf = PDF::loadView('ticketDownload',compact('data'));
+                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image'));
                 
                 // Create PDF and Download
                 return $pdf->download('tickets'.$now.'.pdf');

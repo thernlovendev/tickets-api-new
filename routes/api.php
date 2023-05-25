@@ -92,10 +92,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/bulk-upload', 'App\Http\Controllers\API\InventoriesController@bulkUpload')->name('inventory.bulk.upload')->middleware();
 	});
 
+	Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
 	Route::prefix('users')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\Auth\UserController@index')->name('users.index')->middleware();
 		Route::get('/{user}', 'App\Http\Controllers\API\Auth\UserController@show')->name('users.show')->middleware();
-		Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\Auth\UserController@create')->name('users.create')->middleware();
 		Route::put('/{user}', 'App\Http\Controllers\API\Auth\UserController@edit')->name('users.edit')->middleware();
 		Route::put('/{user}/change-status', 'App\Http\Controllers\API\Auth\UserController@changeStatus')->name('users.change.status')->middleware();
