@@ -20,9 +20,6 @@ class ServiceCrud
 {
 	public static function create($data)
 	{
-		try {
-            DB::beginTransaction();
-
             do {
                 $order_number =  mt_rand(1000000, 9999999);
                 settype($order_number, 'string');
@@ -115,14 +112,8 @@ class ServiceCrud
                     $response = ServiceCreditCard::create($reservation, $data);
                 }
             
-            DB::commit();
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
-
-        } catch (\Exception $e){
-            DB::rollback();
-            return Response($e, 400);
-        }
 
 	}
 

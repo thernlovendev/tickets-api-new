@@ -28,8 +28,17 @@ class ReservationsController extends Controller
 
     public function store(ReservationRequest $request)
     {
-        $reservation = ServiceCrud::create($request->validated());
-        return Response($reservation, 201);
+        try{
+            DB::beginTransaction();
+            $reservation = ServiceCrud::create($request->validated());
+
+            DB::commit();
+            return Response($reservation, 201);
+        } catch (\Exception $e){
+            
+            DB::rollback();
+            return Response($e, 422);
+        }
     }
 
     public function show(Reservation $reservation)
