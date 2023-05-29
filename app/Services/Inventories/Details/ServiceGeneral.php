@@ -2,6 +2,9 @@
 
 namespace App\Services\Inventories\Details;
 use App\Models\TicketStock;
+use App\Models\Reservation;
+use App\Models\Ticket;
+use App\Models\ReservationSubItem;
 use Carbon\Carbon;
 
 class ServiceGeneral
@@ -11,13 +14,32 @@ class ServiceGeneral
         $data_map = $request->per_page ? $data['data'] : $data;
 
         $mapCollection = $data_map->map( function($item){
+            $ticket = Ticket::find($item->ticket_id);
+            $used = count($item->stocksUsed);
+
+            $customer_name = null;
+            $ticket_code = null;
+            $item_number = null;
+            $order_id = null;
+            $item_number = null;
+
+            if($used > 0){
+                $stock = $item->stocksUsed->first();
+                $reservation = Reservation::find($stock->reservation_id);
+                $sub_item = ReservationSubItem::find($stock->reservation_id);
+
+                $item_number = $sub_item->id;
+                $customer_name = $reservation->customer_name_en;
+                $order_id = $reservation->customer_name_en;
+            }
+
             return [
                 'id' => $item->id,
                 'code_number' => $item->code_number,
-                'customer_name' => null,
-                'ticket_code' => null,
-                'order_id' => null,
-                'item_number' => null,
+                'customer_name' => $customer_name,
+                'ticket_code' => $ticket->product_code,
+                'order_id' => $order_id,
+                'item_number' => $item_number,
                 'expiration_date' => $item->expiration_date,
                 'status' => $item->status,
                 'uploaded_date' => Carbon::parse($item->created_at)->format('Y-m-d'),
