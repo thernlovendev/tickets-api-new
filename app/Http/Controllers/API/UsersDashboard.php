@@ -53,8 +53,7 @@ class UsersDashboard extends Controller
                 
                 $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
                 $image = $ticket->galleryImages->where('priority', 0)->first();
-
-                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image'));
+                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation'));
                 
                 // Create PDF and Download
                 return $pdf->download('tickets'.$now.'.pdf');

@@ -9,36 +9,31 @@
 
 <body>
 
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header">
-                <h2>Simple Barcode</h2>
-            </div>
-            <div class="card-body">
+                <h2>Tickets for {{$reservation->customer_name_en}}</h2>
                 <table class="table">
-                    <tbody>
+                    <tbody style="border-style: dotted;border-color: #000000;">
                     @foreach ($data as $item)
-                        <tr style="margin-top:20px;padding-top:20px">
+                        <tr style="margin-top:20px;padding-top:20px;">
                             <td>
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Laravel_Logo.svg/300px-Laravel_Logo.svg.png" alt="gallery Pic" >
-                            
-                            Gallery
+                            <img src="{{storage_path().'/app/public/'.$image->path}}" style="width: 100px; height: 100px">
                             </td>
                             <td>
-                                {{$ticket->title_en}}
-                                {{\Carbon\Carbon::parse($item->expiration_date)->format('m/d/Y')}}
+                                <strong>General Admission</strong><br>
+                                <strong>{{$ticket->title_en}}</strong><br>
+                                Expiration Date: {{\Carbon\Carbon::parse($item->expiration_date)->format('m/d/Y')}}
                             </td>
                             <td>
                                 {!! DNS2D::getBarcodeHTML("$item->code", 'QRCODE',7,7) !!}
                             </td>
                         </tr>
+                        <tr>
+                            <td style="color:transparent">-</td>
+                            <td style="color:transparent">-</td>
+                            <td style="color:transparent">-</td>
+                        </tr>
                     @endforeach
                     
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-    </div>
 </body>
 </html>
