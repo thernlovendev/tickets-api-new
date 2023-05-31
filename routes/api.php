@@ -90,6 +90,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/{ticket_id}/{type}', 'App\Http\Controllers\API\InventoriesController@details')->name('inventory.detail')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\InventoriesController@register')->name('inventory.register')->middleware();
 		Route::post('/bulk-upload', 'App\Http\Controllers\API\InventoriesController@bulkUpload')->name('inventory.bulk.upload')->middleware();
+		Route::post('/reservation/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\InventoriesController@downloadTickets')->name('inventory.download.reservation')->middleware();
 	});
 
 	Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();

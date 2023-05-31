@@ -21,7 +21,9 @@ class ServiceGeneral
             $ticket_code = null;
             $item_number = null;
             $order_id = null;
-            $item_number = null;
+            $reservation_id = null;
+            $sub_item_id = null;
+            
 
             if($used > 0){
                 $stock = $item->stocksUsed->first();
@@ -30,7 +32,10 @@ class ServiceGeneral
 
                 $item_number = $sub_item->id;
                 $customer_name = $reservation->customer_name_en;
-                $order_id = $reservation->customer_name_en;
+                $order_id = $reservation->order_number;
+                $reservation_id = $reservation->id;
+                $sub_item_id = $sub_item->id;
+
             }
 
             return [
@@ -43,6 +48,8 @@ class ServiceGeneral
                 'expiration_date' => $item->expiration_date,
                 'status' => $item->status,
                 'uploaded_date' => Carbon::parse($item->created_at)->format('Y-m-d'),
+                'reservation_id' => $reservation_id,
+                'sub_item_id' => $sub_item_id,
             ];
         });
 

@@ -11,7 +11,6 @@ use App\Models\TicketStock;
 use App\Models\Ticket;
 use Carbon\Carbon;
 use App\Http\Requests\DashboardDownloadRequest;
-use QrCode;
 use PDF;
 use DB;
 
@@ -36,7 +35,6 @@ class UsersDashboard extends Controller
                         ->take($quantity)
                         ->get();
             
-
             if(isset($stocks)){
                 $data = [];
                 foreach ($stocks as  $key => $stock) {
@@ -47,21 +45,30 @@ class UsersDashboard extends Controller
                         'reservation_sub_item_id' => $reservationSubItem->id
                     ]);
                     
+                    $stock->update([
+                        'status' => TicketStock::STATUS['USED']
+                    ]);
+                    
                     $data[$key]['code'] = $stock->code_number;
                     $data[$key]['expiration_date'] = $stock->expiration_date;
+                    $data[$key]['type'] = $stock->type;
                 }
                 
                 $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
-                $image = $ticket->galleryImages->where('priority', 0)->first();
-                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation'));
+                $gallery = $ticket->galleryImages->sortBy('priority')->first();
+                $image_logo = public_path('logo.png');
                 
-                // Create PDF and Download
-                return $pdf->download('tickets'.$now.'.pdf');
+                if($gallery == null){
+                    $image = $image_logo;
+                } else {
+                    $image = storage_path().'/app/public/'.$gallery->path;
+                }
 
-                dd('done');
+                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
+                
                 DB::commit();
-
-                return $data;
+                
+                return $pdf->download('tickets'.$now.'.pdf');
                 
             } else {
                 return 'Empty Stock';
