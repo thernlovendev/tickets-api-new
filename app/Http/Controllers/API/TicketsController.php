@@ -15,7 +15,7 @@ class TicketsController extends Controller
 
     public function index(Request $request)
     {
-        $tickets = Ticket::with(['cardImage', 'ticketPrices']);
+        $tickets = Ticket::with(['categories','subcategories','cardImage', 'ticketPrices']);
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom($params, $tickets);
         $elements = $this->httpIndex($elements, ['id', 'status']);

@@ -31,6 +31,20 @@ class ServiceGeneral
         if(isset($filters['product_code'])){
             $models->where('product_code','LIKE', '%'.$filters['product_code'].'%');
         }
+
+        if(isset($filters['category'])){
+            $category_id = $filters['category'];
+            $models->whereHas('categories', function ($query) use ($category_id) {
+                $query->where('category_id', $category_id);
+            });
+        }
+
+        if(isset($filters['sub_category'])){
+            $sub_category = $filters['sub_category'];
+            $models->whereHas('subcategories', function ($query) use ($sub_category) {
+                $query->where('subcategory_id', $sub_category);
+            });
+        }
         return $models;
     }
 
