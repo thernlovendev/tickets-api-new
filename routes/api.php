@@ -54,7 +54,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	});
 
 	Route::prefix('tickets')->group(function() {
-		Route::get('/', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 		Route::get('/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\TicketsController@store')->name('tickets.create')->middleware();
 		Route::put('/{ticket}', 'App\Http\Controllers\API\TicketsController@update')->name('tickets.update')->middleware();
@@ -105,5 +104,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 
 });
+
+//Tamice users
+Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
