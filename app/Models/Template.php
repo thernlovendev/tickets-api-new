@@ -21,6 +21,11 @@ class Template extends Model
         'created_by'
     ];
 
+    const STATUS = [
+        'PUBLISH' => 'Publish',
+        'UNPUBLISH' => 'Unpublish'
+    ];
+
     public function navigationSubMenus()
     {
         return $this->hasMany(NavigationSubMenu::class);
