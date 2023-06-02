@@ -30,4 +30,10 @@ class Template extends Model
     {
         return $this->hasMany(NavigationSubMenu::class);
     }
+
+    public function headerImage()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+        // ->where('priority_type', 'card_image');
+    }
 }

@@ -45,11 +45,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 	Route::prefix('cities')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
-		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.create')->middleware();
+		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CitiesController@store')->name('cities.create')->middleware();
 	});
 
 	Route::prefix('images')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\ImagesController@index')->name('images.index')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\ImagesController@store')->name('images.create')->middleware();
 	});
 

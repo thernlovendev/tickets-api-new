@@ -17,8 +17,8 @@ class Service
 		$image->update([
 			'imageable_id' => $model->id,
 			'imageable_type' => get_class($model),
-			'priority' => $data['priority'],
-            'priority_type' => $data['priority_type']
+			'priority' => $data['priority'] ?? null,
+            'priority_type' => $data['priority_type'] ?? null
 		]);
 		return $image;
 	}
