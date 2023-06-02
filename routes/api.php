@@ -37,7 +37,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::prefix('categories')->group(function() {
 		Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
 		Route::get('/', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
-		Route::get('/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CategoriesController@store')->name('category.create')->middleware();
 		Route::put('/{category}', 'App\Http\Controllers\API\CategoriesController@update')->name('category.update')->middleware();
 		Route::delete('/{category}', 'App\Http\Controllers\API\CategoriesController@destroy')->name('category.delete')->middleware();
@@ -107,5 +106,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 //Tamice users
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
+Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
