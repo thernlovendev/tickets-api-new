@@ -3,8 +3,6 @@
 namespace App\Services\Templates;
 use App\Models\Template;
 use DB;
-use App\Utils\ModelCrud;
-use App\Services\Images\Service as ImageService;
 
 class ServiceCrud
 {
@@ -22,7 +20,6 @@ class ServiceCrud
                     'status' => $data['status'],
                     'created_by' => $data['created_by'],
                 ]);
-            ImageService::attach($data['header_image'], $template);
 
             DB::commit();
 
@@ -41,13 +38,6 @@ class ServiceCrud
             DB::beginTransaction();
 
             $template->update($data);
-
-            $header_image = collect($data['header_image']);
-
-            if($template->headerImage->id !== $data['header_image']['id']){
-                $template->headerImage->delete();
-                ImageService::attach($header_image, $template);
-            } 
 
             DB::commit();
             return $template->load('navigationSubMenus');

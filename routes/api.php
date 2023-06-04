@@ -111,6 +111,14 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
 	});
 
+	Route::prefix('header-gallery')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\HeaderGalleryController@index')->name('header_gallery.index')->middleware();
+		Route::get('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@show')->name('header_gallery.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\HeaderGalleryController@store')->name('header_gallery.create')->middleware();
+		Route::put('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@update')->name('header_gallery.update')->middleware();
+		Route::delete('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@delete')->name('header_gallery.delete')->middleware();
+	});
+
 
 });
 

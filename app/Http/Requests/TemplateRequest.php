@@ -44,9 +44,6 @@ class TemplateRequest extends FormRequest
                         'content' => ['required'],
                         'status' => ['required', Rule::in($status)],
                         'created_by' => ['required'],
-                        'header_image' => ['required'],
-                        'header_image.id' => ['required','exists:images,id'],
-                        // 'header_image.priority_type' => ['required',Rule::in($type_images)],
                     ];
                 } break;
 
@@ -59,9 +56,6 @@ class TemplateRequest extends FormRequest
                     'content' => ['required'],
                     'status' => ['required', Rule::in($status)],
                     'created_by' => ['required'],
-                    'header_image' => ['required'],
-                    'header_image.id' => ['required','exists:images,id'],
-                    // 'header_image.priority_type' => ['required',Rule::in($type_images)],
                 ];
             } break;
 
