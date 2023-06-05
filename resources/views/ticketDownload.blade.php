@@ -22,6 +22,7 @@
 
 <body>
                         
+                        {{-- This code will be implemented when template images are added to the ticket --}}
                     {{-- <div style="position:relative;">
                             @foreach ($data as $item)
                                     <div style="position: relative;margin-bottom:50px">
