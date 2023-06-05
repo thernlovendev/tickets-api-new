@@ -34,4 +34,28 @@ class CitiesController extends Controller
         return $cities;
     }
 
+    public function changeStatus(City $city)
+    {
+        if($city->status == City::STATUS['PUBLISH']){
+            $city->update([
+                'status' => 'Unpublish'
+            ]);
+            $city->save();
+        } else {
+            $city->update([
+                'status' => 'Publish'
+            ]);
+            $city->save();
+        }
+        return Response($city, 200);
+    }
+
+    public function delete(City $city){
+         $city->delete();     
+         
+         return response()->json([
+            'message'=> 'Delete City Successfully'
+        ]);
+    }
+
 }

@@ -136,14 +136,16 @@ class UserController extends Controller
         auth()->logout();
         User::find($myUser->id)->delete();
         
-        return Response(['message'=> 'Your account has been deleted'], 204);
+        return response()->json(['message'=> 'Your account has been deleted'], 204);
     }
 
     public function deleteUser(User $user){
         
         $user->delete();
         
-        return Response(['message'=> 'Your account has been deleted'], 204);
+        return response()->json([
+            'message'=> 'Delete User Successfully'
+        ]);
     }
 
     public function create(UserByAdminRequest $request)
