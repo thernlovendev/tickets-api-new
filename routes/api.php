@@ -44,13 +44,14 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 	Route::prefix('cities')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
-		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.create')->middleware();
+		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CitiesController@store')->name('cities.create')->middleware();
 		Route::put('/{city}', 'App\Http\Controllers\API\CitiesController@changeStatus')->name('cities.change.status')->middleware();
 		Route::delete('/{city}', 'App\Http\Controllers\API\CitiesController@delete')->name('cities.delete')->middleware();
 	});
 
 	Route::prefix('images')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\ImagesController@index')->name('images.index')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\ImagesController@store')->name('images.create')->middleware();
 	});
 
@@ -102,6 +103,22 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::put('/{user}', 'App\Http\Controllers\API\Auth\UserController@edit')->name('users.edit')->middleware();
 		Route::put('/{user}/change-status', 'App\Http\Controllers\API\Auth\UserController@changeStatus')->name('users.change.status')->middleware();
 		Route::delete('/{user}', 'App\Http\Controllers\API\Auth\UserController@deleteUser')->name('users.delete')->middleware();
+	});
+
+	Route::prefix('templates')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\TemplatesController@index')->name('templates.index')->middleware();
+		Route::get('/{template}', 'App\Http\Controllers\API\TemplatesController@show')->name('templates.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\TemplatesController@store')->name('templates.create')->middleware();
+		Route::put('/{template}', 'App\Http\Controllers\API\TemplatesController@update')->name('templates.update')->middleware();
+		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
+	});
+
+	Route::prefix('header-gallery')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\HeaderGalleryController@index')->name('header_gallery.index')->middleware();
+		Route::get('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@show')->name('header_gallery.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\HeaderGalleryController@store')->name('header_gallery.create')->middleware();
+		Route::put('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@update')->name('header_gallery.update')->middleware();
+		Route::delete('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@delete')->name('header_gallery.delete')->middleware();
 	});
 
 
