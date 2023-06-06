@@ -18,7 +18,7 @@ class AddCollumnsToHeaderGalleriesTable extends Migration
             $table->string('first_phrase')->after('title');
             $table->string('second_phrase')->after('first_phrase');
             $table->integer('is_show')->default(0)->after('second_phrase');
-            $table->softDeletes();
+            $table->softDeletes(); 
         });
     }
 
