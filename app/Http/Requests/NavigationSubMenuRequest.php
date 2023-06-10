@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\NavigationMenu;
+use App\Models\NavigationSubMenu;
 use App\Models\Template;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -49,11 +50,11 @@ class NavigationSubMenuRequest extends FormRequest
                 } break;
 
             case 'PUT':{
-                $navigation_menu_id = $this->route('navigation');
+                $navigation_submenu_ids = NavigationSubMenu::pluck('id')->toArray();
                 return [
                     'navigation_menu_id' => ['required', Rule::in($navigation_menu_ids)],
                     'navigation_submenus' => ['required'],
-                    'navigation_submenus.*.id' => ['required'],
+                    'navigation_submenus.*.id' => ['required', Rule::in($navigation_submenu_ids)],
                     'navigation_submenus.*.name' => ['required'],
                     'navigation_submenus.*.url' => ['string', 'required_without:navigation_submenus.*.template_id'],
                     'navigation_submenus.*.template_id' => ['integer', 'required_without:navigation_submenus.*.url', Rule::in($template_ids)],

@@ -42,7 +42,7 @@ class ServiceCrud
                 $data_update[$i]['navigation_menu_id'] = $data['navigation_menu_id'];
                 $i++;
             }
-            // dd($data_update);
+
             foreach($data_update as $key => $value) {
                 NavigationSubMenu::where('id', $value['id'])->update($value);
             }
