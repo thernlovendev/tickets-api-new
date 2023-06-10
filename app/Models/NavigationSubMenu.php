@@ -16,6 +16,7 @@ class NavigationSubMenu extends Model
         'navigation_menu_id',
         'template_id',
         'url',
+        'name'
     ];
     
     public function navigationMenu()

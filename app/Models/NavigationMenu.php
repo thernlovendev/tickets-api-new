@@ -15,8 +15,8 @@ class NavigationMenu extends Model
     protected $fillable = [
         'name',
         'url',
-        'template',
-        'static_page'
+        'static_page',
+        'template_id',
     ];
     
     public function navigationSubMenus()
