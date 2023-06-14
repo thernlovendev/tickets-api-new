@@ -19,6 +19,7 @@ use App\Services\Inventories\Details\ServiceGeneral as ServiceDetail;
 use PDF;
 use DB;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class InventoriesController extends Controller
 {
@@ -111,17 +112,93 @@ class InventoriesController extends Controller
             $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
             
             // Create PDF and Download
-            return $pdf->download('tickets'.$now.'.pdf');
-
-            dd('done');
+            
             DB::commit();
-
-            return $data;
+            
+            return $pdf->download('tickets'.$now.'.pdf');
     
         } catch(\Exception $e) {
             DB::rollback();
             return Response($e,400);
 
         }
+    }
+
+    public function stockBalance(Request $request){
+        
+        $params = $request->query();
+        //filters received
+        if($request->filled('start_date') && $request->filled('end_date')){
+            $start_date = Carbon::parse($params['start_date'])->format('Y-m-d');
+            $end_date = Carbon::parse($params['end_date'])->format('Y-m-d');
+        }else{
+            $end_date = Carbon::now()->format('Y-m-d');
+            $start_date = Carbon::now()->subDays(7)->format('Y-m-d');
+        }
+        $balance_type = 'All';
+        if($request->filled('balance_type')){
+            $balance_type = $request->input('balance_type');
+        }
+
+        //create period of calendar for show all dates
+        $dates = CarbonPeriod::create($start_date, $end_date);
+        $calendar = [];
+        foreach ($dates as $date) {
+           $calendar[] = $date->toDateString();
+        }
+
+        //Stock
+        $tickets = TicketStock::leftJoin('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')
+            ->leftJoin('stock_used', 'ticket_stocks.id', '=', 'stock_used.ticket_stock_id')
+            ->select(
+                'tickets.id',
+                'tickets.title_en',
+                'ticket_stocks.range_age_type',
+            )->where(function ($query) use ($start_date, $end_date) {
+            $query->whereHas('stocksUsed', function ($subquery) use ($start_date, $end_date) {
+                $subquery->whereBetween('date_used', [$start_date, $end_date]);
+            })->orWhereBetween('ticket_stocks.created_at', [$start_date, $end_date]);
+        })->groupBy('ticket_stocks.range_age_type', 'tickets.id')
+        ->orderBy('tickets.id')
+        ->get()
+        ->map(function($item) use($calendar){
+            $stock_in = TicketStock::where('ticket_id', $item->id)->where('range_age_type', $item->range_age_type)->count();
+            $stock_out = StockUsed::whereHas('ticketStock', function($query) use($item) {
+                $query->whereHas('ticket', function($q) use($item){
+                    $q->where('id', $item->id);
+                })->where('range_age_type', $item->range_age_type);
+            })->count();
+
+            $dates = [];
+            foreach($calendar as $day){
+                $dates[] = [
+                    'date' => $day,
+                    'in' => TicketStock::where('ticket_id', $item->id)
+                        ->where('range_age_type', $item->range_age_type)
+                        ->whereDate('created_at', $day)->count(),
+                    'out' => StockUsed::whereHas('ticketStock', function($query) use($item) {
+                        $query->whereHas('ticket', function($q) use($item){
+                            $q->where('id', $item->id);
+                        })->where('range_age_type', $item->range_age_type);
+                    })->whereDate('date_used', $day)->count()
+                ];
+            }
+
+            return [
+                'ticket_id' => $item->id,
+                'title_en' => $item->title_en,
+                'range_age_type' => $item->range_age_type,
+                'balance_general' => $stock_in - $stock_out,
+                'dates' => $dates
+            ]; 
+        })->filter(function($item) use($balance_type) {
+            if($balance_type == 'Positive'){
+                return strval($item['balance_general']) > 0;
+            } else if($balance_type == 'Negative'){
+                return strval($item['balance_general']) < 0;
+            } else return true;
+        });
+
+        return $tickets;
     }
 }
