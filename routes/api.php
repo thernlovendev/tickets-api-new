@@ -56,7 +56,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	});
 
 	Route::prefix('tickets')->group(function() {
-		Route::get('/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\TicketsController@store')->name('tickets.create')->middleware();
 		Route::put('/{ticket}', 'App\Http\Controllers\API\TicketsController@update')->name('tickets.update')->middleware();
 		Route::delete('/{ticket}', 'App\Http\Controllers\API\TicketsController@delete')->name('tickets.delete')->middleware();
@@ -124,6 +123,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 //Tamice users
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
+Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
 Route::get('price-lists/product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.lists.product')->middleware();
