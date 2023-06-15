@@ -158,7 +158,7 @@ class InventoriesController extends Controller
             $query->whereHas('stocksUsed', function ($subquery) use ($start_date, $end_date) {
                 $subquery->whereBetween('date_used', [$start_date, $end_date]);
             })->orWhereBetween('ticket_stocks.created_at', [$start_date, $end_date]);
-        })->groupBy('ticket_stocks.range_age_type', 'tickets.id')
+        })->groupBy('ticket_stocks.range_age_type', 'tickets.id','tickets.title_en')
         ->orderBy('tickets.id')
         ->get()
         ->map(function($item) use($calendar){
