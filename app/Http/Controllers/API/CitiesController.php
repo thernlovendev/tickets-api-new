@@ -34,6 +34,14 @@ class CitiesController extends Controller
         return $cities;
     }
 
+    public function update(CityRequest $request, City $city)
+    {
+        $data = $request->validated();
+        $update = ServiceCrud::update($data, $city);
+        
+        return Response($update, 200);
+    }
+
     public function changeStatus(City $city)
     {
         if($city->status == City::STATUS['PUBLISH']){

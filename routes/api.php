@@ -47,6 +47,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CitiesController@store')->name('cities.create')->middleware();
 		Route::put('/{city}', 'App\Http\Controllers\API\CitiesController@changeStatus')->name('cities.change.status')->middleware();
+		Route::put('/{city}/edit', 'App\Http\Controllers\API\CitiesController@update')->name('cities.update')->middleware();
 		Route::delete('/{city}', 'App\Http\Controllers\API\CitiesController@delete')->name('cities.delete')->middleware();
 	});
 

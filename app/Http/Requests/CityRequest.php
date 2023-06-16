@@ -43,7 +43,10 @@ class CityRequest extends FormRequest
                 } break;
 
             case 'PUT':{
-                return [];
+                return [
+                    'name'=> ['required',
+                    Rule::unique('cities')->where(fn ($query) => $query->where('id',$this->company_id))]
+                ];
             } break;
 
             case 'DELETE': break;

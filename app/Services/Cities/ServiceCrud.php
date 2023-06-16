@@ -30,9 +30,22 @@ class ServiceCrud
 
 	}
 
-	public static function update($city, $data)
+	public static function update($data, $city)
 	{
-		return $city;
+		try{
+            DB::beginTransaction();
+
+            $city->update([
+                'name' => $data['name']
+            ]); 
+
+            DB::commit();
+            return $data;
+
+        } catch (\Exception $e){
+            DB::rollback();
+            return $e;
+        }
 	}
 
 	public static function delete($city)
