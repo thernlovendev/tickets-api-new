@@ -44,6 +44,7 @@ class CityRequest extends FormRequest
 
             case 'PUT':{
                 return [
+                    'company_id' => ['required','exists:companies,id'],
                     'name'=> ['required',
                     Rule::unique('cities')->where(fn ($query) => $query->where('id',$this->company_id))]
                 ];
