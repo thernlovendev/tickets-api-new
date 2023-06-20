@@ -120,6 +120,22 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::delete('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@delete')->name('header_gallery.delete')->middleware();
 	});
 
+	Route::prefix('navigation-menu')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\NavigationMenuController@index')->name('navigation.index')->middleware();
+		Route::get('/{navigation_menu}', 'App\Http\Controllers\API\NavigationMenuController@show')->name('navigation.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\NavigationMenuController@store')->name('navigation.create')->middleware();
+		Route::put('/{navigation_menu}', 'App\Http\Controllers\API\NavigationMenuController@update')->name('navigation.update')->middleware();
+		Route::delete('/{navigation_menu}', 'App\Http\Controllers\API\NavigationMenuController@delete')->name('navigation.delete')->middleware();
+	});
+
+	Route::prefix('navigation-submenu')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\NavigationSubMenuController@index')->name('navigation_submenu.index')->middleware();
+		Route::get('/{navigation_submenu}', 'App\Http\Controllers\API\NavigationSubMenuController@show')->name('navigation_submenu.show')->middleware();
+		Route::post('/', 'App\Http\Controllers\API\NavigationSubMenuController@store')->name('navigation_submenu.create')->middleware();
+		Route::put('/', 'App\Http\Controllers\API\NavigationSubMenuController@update')->name('navigation_submenu.update')->middleware();
+		Route::delete('/{navigation_menu}', 'App\Http\Controllers\API\NavigationSubMenuController@delete')->name('navigation_submenu.delete')->middleware();
+	});
+
 
 });
 
