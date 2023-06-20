@@ -54,7 +54,7 @@ class ServiceCrud
                     'announcement' =>$data['announcement'],
                 ]);
 
-                // TicketContent::create(['ticket_id' => $ticket->id,'content' => $data['ticket_content']['content']]); 
+            TicketContent::create(['ticket_id' => $ticket->id,'content' => $data['ticket_content']['content']]); 
 
             foreach($data['tickets_categories'] as $category){
                 $ticket->categories()->attach($category['category_id']);
@@ -69,11 +69,11 @@ class ServiceCrud
                 
             }
             
-            if(isset($data['tickets_content'])){
-                foreach ($data['tickets_content'] as $article) {
-                    $item = TicketContent::create(['ticket_id'=> $ticket['id'],'name' => $article['name'], 'content' => $article['content']]); 
-                }
-            }
+            // if(isset($data['tickets_content'])){
+            //     foreach ($data['tickets_content'] as $article) {
+            //         $item = TicketContent::create(['ticket_id'=> $ticket['id'],'name' => $article['name'], 'content' => $article['content']]); 
+            //     }
+            // }
 
             if($data['show_in_schedule_page'] == true){
                 foreach ($data['tickets_schedule'] as $schedule) {
@@ -96,7 +96,7 @@ class ServiceCrud
                 
             DB::commit();
 
-            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContents', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage',
+            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage',
             );
 
         } catch (\Exception $e){
@@ -112,7 +112,7 @@ class ServiceCrud
             DB::beginTransaction();
 
             $ticket->update($data);
-            ModelCrud::deleteUpdateOrCreate($ticket->ticketsContents(), $data['tickets_content']);
+            // ModelCrud::deleteUpdateOrCreate($ticket->ticketContents(), $data['tickets_content']);
             ModelCrud::deleteUpdateOrCreate($ticket->ticketPrices(), $data['tickets_prices']);
             ModelCrud::deleteUpdateOrCreate($ticket->ticketSchedules(), $data['tickets_schedule']);
 
@@ -121,9 +121,20 @@ class ServiceCrud
 
             $subcategories = collect($data['tickets_subcategories'])->pluck('subcategory_id');
             $ticket->subcategories()->sync($subcategories);
+
+            $ticket_content = $ticket->ticketContent()->first();
+            
+            if($ticket_content === null){
+                TicketContent::create([
+                    'ticket_id' => $ticket->id,
+                    'content' => $data['ticket_content']['content']
+                ]);
+            } else {
+                $ticket_content = $data['ticket_content']['content'];
+            };
             
             $card_image = collect($data['card_image']);
-
+            
             if($ticket->cardImage->id !== $data['card_image']['id']){
                 $ticket->cardImage->delete();
                 ImageService::attach($card_image, $ticket);
@@ -184,7 +195,7 @@ class ServiceCrud
             }
 
             DB::commit();
-            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketsContents', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage');
+            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage');
 
         } catch (\Exception $e){
             DB::rollback();

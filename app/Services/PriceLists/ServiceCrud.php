@@ -61,10 +61,11 @@ class ServiceCrud
                 // $prices[] = $item;
             }
             
+            $price_list_news = PriceList::where('category_id',$data['category_id'])->get();
 
             DB::commit();
 
-            return $data;
+            return $price_list_news;
 
         } catch (\Exception $e){
             DB::rollback();
