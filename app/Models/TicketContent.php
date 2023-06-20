@@ -15,7 +15,6 @@ class TicketContent extends Model
 
     protected $fillable = [
         'ticket_id',
-        'name',
         'content'
     ];
 

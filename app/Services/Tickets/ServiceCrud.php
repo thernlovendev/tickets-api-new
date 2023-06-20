@@ -51,8 +51,10 @@ class ServiceCrud
                     'additional_price_type' => $data['additional_price_type'],
                     'additional_price_amount' => $data['additional_price_amount'],
                     'show_in_schedule_page' => $data['show_in_schedule_page'],
-                    'announcement' =>$data['announcement'],
+                    'announcement' => $data['announcement']
                 ]);
+
+            TicketContent::create(['ticket_id' => $ticket->id,'content' => $data['ticket_content']['content']]); 
 
             foreach($data['tickets_categories'] as $category){
                 $ticket->categories()->attach($category['category_id']);
@@ -67,11 +69,7 @@ class ServiceCrud
                 
             }
             
-            if(isset($data['tickets_content'])){
-                foreach ($data['tickets_content'] as $article) {
-                    $item = TicketContent::create(['ticket_id'=> $ticket['id'],'name' => $article['name'], 'content' => $article['content']]); 
-                }
-            }
+            
 
             if($data['show_in_schedule_page'] == true){
                 foreach ($data['tickets_schedule'] as $schedule) {
@@ -94,7 +92,7 @@ class ServiceCrud
                 
             DB::commit();
 
-            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContents', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage',
+            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage',
             );
 
         } catch (\Exception $e){
@@ -110,7 +108,6 @@ class ServiceCrud
             DB::beginTransaction();
 
             $ticket->update($data);
-            ModelCrud::deleteUpdateOrCreate($ticket->ticketContents(), $data['tickets_content']);
             ModelCrud::deleteUpdateOrCreate($ticket->ticketPrices(), $data['tickets_prices']);
             ModelCrud::deleteUpdateOrCreate($ticket->ticketSchedules(), $data['tickets_schedule']);
 
@@ -119,6 +116,10 @@ class ServiceCrud
 
             $subcategories = collect($data['tickets_subcategories'])->pluck('subcategory_id');
             $ticket->subcategories()->sync($subcategories);
+
+            $ticket_content = $ticket->ticketContent()->first();
+            $ticket_content['content'] = $data['ticket_content']['content'];
+            $ticket_content->save();
             
             $card_image = collect($data['card_image']);
 
@@ -182,7 +183,7 @@ class ServiceCrud
             }
 
             DB::commit();
-            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketContents', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage');
+            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage');
 
         } catch (\Exception $e){
             DB::rollback();

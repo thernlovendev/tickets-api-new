@@ -79,9 +79,9 @@ class Ticket extends Model
         return $this->hasMany(TicketPrice::class);
     }
 
-    public function ticketContents()
+    public function ticketContent()
     {
-        return $this->hasMany(TicketContent::class);
+        return $this->hasOne(TicketContent::class);
     }
 
     public function ticketSchedules()
