@@ -130,7 +130,11 @@ class ServiceCrud
                     'content' => $data['ticket_content']['content']
                 ]);
             } else {
-                $ticket_content = $data['ticket_content']['content'];
+                $ticket_content->update([
+                    'content' => $data['ticket_content']['content']
+                ]);
+
+                $ticket_content->save();
             };
             
             $card_image = collect($data['card_image']);
