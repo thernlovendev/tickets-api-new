@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\InventoryRequest;
 use App\Http\Requests\StockTicketRequest;
+use App\Http\Requests\StockCorrectionBalanceRequest;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
@@ -14,8 +15,10 @@ use App\Models\Reservation;
 use App\Models\ReservationSubItem;
 use App\Models\StockUsed;
 use App\Models\Ticket;
+use App\Models\StockCorrectionBalance;
 use App\Services\Inventories\ServiceGeneral;
 use App\Services\Inventories\Details\ServiceGeneral as ServiceDetail;
+use App\Services\Inventories\StockCorrectionBalance\ServiceCrud as ServiceStockCorrection;
 use PDF;
 use DB;
 use Carbon\Carbon;
@@ -45,10 +48,12 @@ class InventoriesController extends Controller
         
     }
 
-    public function register(InventoryRequest $request)
+    public function stockCorrection(StockCorrectionBalanceRequest $request)
     {
-        $inventory = ServiceCrud::register($request);
-        return $inventory;
+        $data = $request->validated();
+        $stock = ServiceStockCorrection::create($data);
+        return Response($stock, 200);
+
     }
 
     public function bulkUpload(StockTicketRequest $request)
@@ -150,6 +155,7 @@ class InventoriesController extends Controller
         //Stock
         $tickets = TicketStock::leftJoin('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')
             ->leftJoin('stock_used', 'ticket_stocks.id', '=', 'stock_used.ticket_stock_id')
+            ->leftJoin('stock_correction_balance', 'ticket_stocks.ticket_id', '=', 'stock_correction_balance.ticket_id')
             ->select(
                 'tickets.id',
                 'tickets.title_en',
@@ -157,7 +163,7 @@ class InventoriesController extends Controller
             )->where(function ($query) use ($start_date, $end_date) {
             $query->whereHas('stocksUsed', function ($subquery) use ($start_date, $end_date) {
                 $subquery->whereBetween('date_used', [$start_date, $end_date]);
-            })->orWhereBetween('ticket_stocks.created_at', [$start_date, $end_date]);
+            })->orWhereBetween('ticket_stocks.created_at', [$start_date, $end_date])->orWhereBetween('stock_correction_balance.register_date',[$start_date, $end_date]);
         })->groupBy('ticket_stocks.range_age_type', 'tickets.id','tickets.title_en')
         ->orderBy('tickets.id')
         ->get()
@@ -169,18 +175,31 @@ class InventoriesController extends Controller
                 })->where('range_age_type', $item->range_age_type);
             })->count();
 
+            $stock_in_correction = StockCorrectionBalance::where('ticket_id',$item->id)->where('range_age_type',$item->range_age_type)->pluck('stock_in')->sum();
+            $stock_out_correction = StockCorrectionBalance::where('ticket_id',$item->id)->where('range_age_type',$item->range_age_type)->pluck('stock_out')->sum();
+
             $dates = [];
             foreach($calendar as $day){
+
+                $stock_in_day = TicketStock::where('ticket_id', $item->id)
+                        ->where('range_age_type', $item->range_age_type)
+                        ->whereDate('created_at', $day)->count();
+                $stock_out_day = StockUsed::whereHas('ticketStock', function($query) use($item) {
+                    $query->whereHas('ticket', function($q) use($item){
+                        $q->where('id', $item->id);
+                    })->where('range_age_type', $item->range_age_type);
+                })->whereDate('date_used', $day)->count();
+                
+                $stock_in_correction_balance = StockCorrectionBalance::whereDate('register_date',$day)->where('ticket_id',$item->id)->where('range_age_type',$item->range_age_type)->pluck('stock_in')->sum();
+                $stock_out_correction_balance = StockCorrectionBalance::where('register_date',$day)->where('ticket_id',$item->id)->where('range_age_type',$item->range_age_type)->pluck('stock_out')->sum();
+
+                $stock_in_final = $stock_in_day + $stock_in_correction_balance;
+                $stock_out_final = $stock_out_day + $stock_out_correction_balance;
+
                 $dates[] = [
                     'date' => $day,
-                    'in' => TicketStock::where('ticket_id', $item->id)
-                        ->where('range_age_type', $item->range_age_type)
-                        ->whereDate('created_at', $day)->count(),
-                    'out' => StockUsed::whereHas('ticketStock', function($query) use($item) {
-                        $query->whereHas('ticket', function($q) use($item){
-                            $q->where('id', $item->id);
-                        })->where('range_age_type', $item->range_age_type);
-                    })->whereDate('date_used', $day)->count()
+                    'in' => $stock_in_final,
+                    'out' => $stock_out_final
                 ];
             }
 
@@ -188,7 +207,7 @@ class InventoriesController extends Controller
                 'ticket_id' => $item->id,
                 'title_en' => $item->title_en,
                 'range_age_type' => $item->range_age_type,
-                'balance_general' => $stock_in - $stock_out,
+                'balance_general' => ($stock_in + $stock_in_correction) - ($stock_out + $stock_out_correction),
                 'dates' => $dates
             ]; 
         })->filter(function($item) use($balance_type) {

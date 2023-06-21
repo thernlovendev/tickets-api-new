@@ -9,6 +9,7 @@ use App\Models\TicketSchedule;
 use App\Models\TicketContent;
 use App\Models\TicketStock;
 use App\Models\Image;
+use App\Models\StockCorrectionBalance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -112,6 +113,11 @@ class Ticket extends Model
     public function ticketStocks()
     {
         return $this->hasMany(TicketStock::class);
+    }
+
+    public function stockCorrectionBalance()
+    {
+        return $this->hasMany(StockCorrectionBalance::class);
     }
 
 }
