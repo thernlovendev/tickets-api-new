@@ -29,6 +29,7 @@ class TemplateRequest extends FormRequest
     public function rules()
     {
         $status = Template::STATUS;
+        $type = Template::TYPE;
         switch($this->method()) {
             case 'GET':
                 {
@@ -37,26 +38,40 @@ class TemplateRequest extends FormRequest
 
             case 'POST':
                 {
+
+                    if($this->type ==$type['EMAIL']){
+                        return [
+                            'email' => 'required'
+                        ];
+                    }else{
+                        return [
+                            'title' => ['required','unique:templates,title'],
+                            'type' => ['required', Rule::in($type)],
+                            'header_gallery_id' => ['required', 'exists:header_galleries,id'],
+                            'content' => ['required'],
+                            'status' => ['required', Rule::in($status)],
+                            'created_by' => ['required'],
+                        ];
+                    };
+                } break;
+
+            case 'PUT':{
+                $template = $this->route('template');
+                if($template->type == 'Email'){
+                    return[
+                        'subject' => ['required'],
+                        'content' => ['required'],
+                    ];
+                } else {
                     return [
-                        'title' => ['required','unique:templates,title'],
+                        'title' => ['required',Rule::unique('templates')->ignore($template->id)],
                         'type' => ['required'],
                         'header_gallery_id' => ['required', 'exists:header_galleries,id'],
                         'content' => ['required'],
                         'status' => ['required', Rule::in($status)],
                         'created_by' => ['required'],
                     ];
-                } break;
-
-            case 'PUT':{
-                $template = $this->route('template');
-                return [
-                    'title' => ['required',Rule::unique('templates')->ignore($template->id)],
-                    'type' => ['required'],
-                    'header_gallery_id' => ['required', 'exists:header_galleries,id'],
-                    'content' => ['required'],
-                    'status' => ['required', Rule::in($status)],
-                    'created_by' => ['required'],
-                ];
+                }
             } break;
 
             case 'DELETE': break;
@@ -85,5 +100,12 @@ class TemplateRequest extends FormRequest
             JsonResponse::HTTP_UNPROCESSABLE_ENTITY
             )
         );
+    }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'Not allowed to create a new template for email',
+        ];
     }
 }

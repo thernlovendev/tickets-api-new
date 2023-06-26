@@ -8,6 +8,8 @@
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>{{__('Forgot Password Mail')}}</title>
 </head>
+
+@if($template->content == 'default')
 <body style="margin: 0;
     box-sizing: border-box;
     background-color: rgb(224, 224, 224);
@@ -118,4 +120,22 @@
     </div>
     
 </body>
+@else
+
+<body>
+    {{$template->content}}
+     <a style="margin: 0;
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        padding: 0.9em 0 0.9em 0;
+        text-align: center;
+        font-family: sans-serif;
+        font-weight: bold;
+        text-decoration: none;
+        color: #fff;
+        background: #46BCF7;
+        margin: 2em 0 2em 0;" href="{{route('reset.password.get', $token)}}">{{__('Click here to reset your password')}}</a>
+</body>
+@endif
 </html>

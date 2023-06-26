@@ -11,6 +11,7 @@ use Hash;
 use Illuminate\Support\Str;
 use Validator;
 use App\Models\PasswordReset;
+use App\Models\Template;
 
 use Illuminate\Http\Request;
 
@@ -23,6 +24,8 @@ class ForgotPasswordController extends Controller
         ], [
             'exists' => __('The email is invalid')
         ]);
+
+        $template = Template::where('title','After Password Reset Request By User')->first();
 
         if ($validator->fails()) {
             return response($validator->errors()->all(), 400);
@@ -39,7 +42,7 @@ class ForgotPasswordController extends Controller
             'created_at' => Carbon::now()
           ]);
 
-        Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $user->name, 'url' => $url], function($message) use($request){
+        Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template], function($message) use($request){
             $message->to($request->email);
             $message->subject('Reset Password');
         });
