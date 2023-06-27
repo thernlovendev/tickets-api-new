@@ -78,7 +78,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 	Route::prefix('price-lists')->group(function() {
 		Route::post('/', 'App\Http\Controllers\API\PriceListsController@store')->name('price.lists.create')->middleware();
-
+		Route::delete('/{price_list}', 'App\Http\Controllers\API\PriceListsController@delete')->name('price.lists.delete')->middleware();
 	});
 
 	Route::prefix('schedule')->group(function() {

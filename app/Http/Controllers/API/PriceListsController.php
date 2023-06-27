@@ -61,4 +61,14 @@ class PriceListsController extends Controller
         $ticket = ServiceCrud::create($request);
         return Response($ticket, 201);
     }
+
+    public function delete(PriceList $price_list)
+    {
+        $price_list->delete();
+
+        return response()->json([
+            'message'=> 'Delete Reservation Successfully'
+        ]);
+    }
+
 }
