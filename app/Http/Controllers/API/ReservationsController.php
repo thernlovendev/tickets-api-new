@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ReservationRequest;
+use App\Http\Requests\ReservationByUserRequest;
 use App\Http\Requests\ReservationPaymentRequest;
 use App\Services\Reservations\ServiceCrud;
+use App\Services\Reservations\CreateByUser\ServiceCrud as ReservationByUserCrud;
 use App\Models\Reservation;
 use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
@@ -84,4 +86,19 @@ class ReservationsController extends Controller
             'message'=> 'Delete Reservation Successfully'
         ]);
    }
+
+   public function createByUser(ReservationByUserRequest $request)
+    {
+        try{
+            DB::beginTransaction();
+            $reservation = ReservationByUserCrud::create($request->validated());
+
+            DB::commit();
+            return Response($reservation, 201);
+        } catch (\Exception $e){
+            
+            DB::rollback();
+            return Response($e, 422);
+        }
+    }
 }
