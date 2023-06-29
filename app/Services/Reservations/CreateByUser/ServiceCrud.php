@@ -30,13 +30,14 @@ class ServiceCrud
             
             $created_by = Auth::user();
             if($created_by){
-                $data['created_by'] = $created_by->name;
+                $data['customer_name_en'] = $created_by->name;
+                $data['customer_name_kr'] = $created_by->name;
             } else {
-                $data['created_by'] = $data['first_name'].' '.$data['last_name'];
+                $data['customer_name_en'] = $data['first_name'].' '.$data['last_name'];
+                $data['customer_name_kr'] = $data['first_name'].' '.$data['last_name'];
             };
+            $data['created_by'] = 'Customer';
 
-            $data['customer_name_en'] = $data['first_name'].' '.$data['last_name'];
-            $data['customer_name_kr'] = $data['first_name'].' '.$data['last_name'];
             $data['order_date'] = Carbon::now()->format('Y-m-d');
             
             $reservation = Reservation::create($data);

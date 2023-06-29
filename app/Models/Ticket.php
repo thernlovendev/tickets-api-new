@@ -65,6 +65,10 @@ class Ticket extends Model
         'announcement'
     ];
 
+    protected $casts = [
+        'show_in_schedule_page' => 'boolean'
+    ];
+
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_ticket');

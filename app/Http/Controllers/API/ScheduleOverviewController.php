@@ -24,7 +24,7 @@ class ScheduleOverviewController extends Controller
             $query->with(['reservation' => function ($q) {
                 $q->select('id', 'customer_name_en', 'customer_name_kr','order_number','created_by','created_at','ticket_sent_status');
             }]);
-        }, 'ticket:id,product_code,title_en,title_kr,show_in_schedule_page'])->orderBy('rq_schedule_datetime', 'asc') 
+        }, 'ticket:id,product_code,title_en,title_kr,show_in_schedule_page,ticket_type'])->orderBy('rq_schedule_datetime', 'asc') 
             ->select('id','rq_schedule_datetime','ticket_sent_status','reservation_item_id','ticket_id')
             ->whereBetween('rq_schedule_datetime', [$start_date, $end_date])
             ->get()
