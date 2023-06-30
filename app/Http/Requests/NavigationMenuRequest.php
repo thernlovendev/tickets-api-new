@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Template;
+use App\Models\Ticket;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
@@ -29,6 +30,7 @@ class NavigationMenuRequest extends FormRequest
     public function rules()
     {
         $template_ids = Template::pluck('id')->toArray();
+        $ticket_ids = Ticket::pluck('id')->toArray();
         switch($this->method()) {
             case 'GET':
                 {
@@ -41,6 +43,7 @@ class NavigationMenuRequest extends FormRequest
                         'name' => ['required'],
                         'url' => ['string', 'required_without:template_id'],
                         'template_id' => ['integer', 'required_without:url', Rule::in($template_ids)],
+                        'ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
                     ];
                 } break;
 
@@ -50,6 +53,7 @@ class NavigationMenuRequest extends FormRequest
                     'name' => ['required',Rule::unique('navigation_menus')->ignore($navigation_menu_id),],
                     'url' => ['string', 'required_without:template_id'],
                     'template_id' => ['integer', 'required_without:url', Rule::in($template_ids)],
+                    'ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
                 ];
             } break;
 
