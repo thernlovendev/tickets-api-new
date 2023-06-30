@@ -17,6 +17,7 @@ class NavigationMenu extends Model
         'url',
         'static_page',
         'template_id',
+        'ticket_id'
     ];
     
     public function navigationSubMenus()

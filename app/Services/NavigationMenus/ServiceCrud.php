@@ -17,6 +17,7 @@ class ServiceCrud
                     'name' => $data['name'],
                     'url' => $data['url'] ?? null,
                     'template_id' => $data['template_id'] ?? null,
+                    'ticket_id' => $data['ticket_id'] ?? null,
                 ]);
 
             DB::commit();

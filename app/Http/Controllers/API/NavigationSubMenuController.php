@@ -14,7 +14,7 @@ class NavigationSubMenuController extends Controller
 {
     public function index(Request $request)
     {
-        $navigation_submenus = NavigationSubMenu::with(['navigationSubMenus']);
+        $navigation_submenus = NavigationSubMenu::with(['navigationMenu']);
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom($params, $navigation_submenus);
         $elements = $this->httpIndex($elements, ['id', 'name']);
@@ -22,9 +22,9 @@ class NavigationSubMenuController extends Controller
         return Response($response, 200);
     }
 
-    public function show(NavigationSubMenu $navigation_menu)
+    public function show(NavigationSubMenu $navigation_submenu)
     {
-        $response = $navigation_menu->load(['navigationMenu']);
+        $response = $navigation_submenu->load(['navigationMenu']);
         return Response($response, 200);
     }
 
@@ -51,7 +51,7 @@ class NavigationSubMenuController extends Controller
                 return Response($e->errors(), 422);
             }
     
-        }
+    }
 
     public function delete(NavigationSubMenu $navigation_menu){
 

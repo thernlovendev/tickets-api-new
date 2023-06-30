@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\NavigationMenu;
 use App\Models\NavigationSubMenu;
 use App\Models\Template;
+use App\Models\Ticket;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
@@ -32,6 +33,7 @@ class NavigationSubMenuRequest extends FormRequest
     {
         $template_ids = Template::pluck('id')->toArray();
         $navigation_menu_ids = NavigationMenu::pluck('id')->toArray();
+        $ticket_ids = Ticket::pluck('id')->toArray();
         switch($this->method()) {
             case 'GET':
                 {
@@ -46,6 +48,7 @@ class NavigationSubMenuRequest extends FormRequest
                         'navigation_submenus.*.name' => ['required'],
                         'navigation_submenus.*.url' => ['string', 'required_without:navigation_submenus.*.template_id'],
                         'navigation_submenus.*.template_id' => ['integer', 'required_without:navigation_submenus.*.url', Rule::in($template_ids)],
+                        'navigation_submenus.*.ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
                     ];
                 } break;
 
@@ -58,6 +61,7 @@ class NavigationSubMenuRequest extends FormRequest
                     'navigation_submenus.*.name' => ['required'],
                     'navigation_submenus.*.url' => ['string', 'required_without:navigation_submenus.*.template_id'],
                     'navigation_submenus.*.template_id' => ['integer', 'required_without:navigation_submenus.*.url', Rule::in($template_ids)],
+                    'navigation_submenus.*.ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
                 ];
             } break;
 
