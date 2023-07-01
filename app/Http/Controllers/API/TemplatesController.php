@@ -55,8 +55,13 @@ class TemplatesController extends Controller
 
     public function delete(Template $template){
 
-        $template->delete();     
-        
-         return Response(['message'=> 'Delete Template Successfully'], 204);
+        if($template->type == Template::TYPE['EMAIL']){
+            return Response(['message'=> 'Not allowed to delete a template for email'], 400);
+        }else{
+            $template->delete();     
+            
+            return Response(['message'=> 'Delete Template Successfully'], 204);
+        }
+
     }
 }

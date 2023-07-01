@@ -18,6 +18,8 @@ use App\Services\Users\ServiceGeneral;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\UserByAdminRequest;
 use Carbon\Carbon;
+use App\Models\Template;
+use Mail;
 
 class UserController extends Controller
 {
@@ -133,6 +135,19 @@ class UserController extends Controller
 
     public function deleteMyUser(Request $request){
         $myUser = auth()->user();
+        
+        $template = Template::where('title','After Account Deleted')->first();
+        
+        if($template->subject == 'default'){
+            $subject = "Delete account";
+        } else {
+            $subject = $template->subject;
+        }
+        
+        Mail::send('email.deleteMyUser', ['fullname' => $myUser->name, 'template' => $template], function($message) use($myUser, $template, $subject){
+            $message->to($myUser->email);
+            $message->subject($subject);
+        });
         auth()->logout();
         User::find($myUser->id)->delete();
         
@@ -178,6 +193,19 @@ class UserController extends Controller
 
         if($request->filled('password')){
             $user->password = Hash::make($response['password']);
+            $template = Template::where('title','After Password Reset Request By User')->first();
+        
+            if($template->subject == 'default'){
+                $subject = "Password Reset By Admin";
+            } else {
+                $subject = $template->subject;
+            }
+            
+            Mail::send('email.passwordResetAdmin', ['fullname' => $user->name, 'template' => $template], function($message) use($user, $template, $subject){
+                $message->to($user->email);
+                $message->subject($subject);
+            });
+            
         }
 
         

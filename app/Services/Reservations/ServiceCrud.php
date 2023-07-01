@@ -10,12 +10,13 @@ use App\Models\PriceList;
 use App\Models\Reservation;
 use App\Models\ReservationItem;
 use App\Models\ReservationSubItem;
+use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
-
+use Mail;
 class ServiceCrud
 {
 	public static function create($data)
@@ -111,6 +112,19 @@ class ServiceCrud
                 }  else{
                     $response = ServiceCreditCard::create($reservation, $data);
                 }
+
+                $template = Template::where('title','After Payment Completed')->first();
+        
+                if($template->subject == 'default'){
+                    $subject = "Payment Completed";
+                } else {
+                    $subject = $template->subject;
+                }
+                
+                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject){
+                    $message->to($reservation->email);
+                    $message->subject($subject);
+                });
             
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
@@ -133,7 +147,7 @@ class ServiceCrud
                 } else {
                     $item_model = $reservation_old->reservationItems()->create($item);
                 }
-                //Setea el adicional desde el ticket y el estado
+                //Set the additional from the ticket and the status
                 
                 foreach($item['sub_items'] as  $index => $sub_item){
                     $ticket = Ticket::find($sub_item['ticket_id']);
@@ -199,6 +213,20 @@ class ServiceCrud
                 }  else{
                     $response = ServiceCreditCard::create($reservation_old, $data);
                 }
+
+                $template = Template::where('title','After Upgraded Order')->first();
+        
+                if($template->subject == 'default'){
+                    $subject = "Order Upgraded";
+                } else {
+                    $subject = $template->subject;
+                }
+
+                Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount' => $data['total']], function($message) use ($reservation_old, $subject){
+                    $message->to($reservation_old->email);
+                    $message->subject($subject);
+                });
+                
             }
             
           return $reservation_old;

@@ -18,12 +18,19 @@ class Template extends Model
         'header_gallery_id',
         'content',
         'status',
-        'created_by'
+        'created_by',
+        'subject'
     ];
 
     const STATUS = [
         'PUBLISH' => 'Publish',
         'UNPUBLISH' => 'Unpublish'
+    ];
+
+    const TYPE = [
+        'EMAIL' => 'Email',
+        'WEB_PAGE' => 'Web Page',
+        'IMAGE' => 'Image'
     ];
 
     public function navigationSubMenus()

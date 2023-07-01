@@ -11,6 +11,7 @@ use Hash;
 use Illuminate\Support\Str;
 use Validator;
 use App\Models\PasswordReset;
+use App\Models\Template;
 
 use Illuminate\Http\Request;
 
@@ -39,9 +40,16 @@ class ForgotPasswordController extends Controller
             'created_at' => Carbon::now()
           ]);
 
-        Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $user->name, 'url' => $url], function($message) use($request){
+        $template = Template::where('title','After Password Reset')->first();
+
+        if($template->subject == 'default'){
+            $subject = 'Reset Password';
+        } else {
+            $subject = $template->subject;
+        }
+        Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template], function($message) use($request, $template,$subject){
             $message->to($request->email);
-            $message->subject('Reset Password');
+            $message->subject($subject);
         });
             
             return response()->json(['message', 'We have e-mailed your password reset link!']);
