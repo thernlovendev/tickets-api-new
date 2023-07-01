@@ -72,6 +72,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::put('/{reservation}', 'App\Http\Controllers\API\ReservationsController@update')->name('reservations.update')->middleware();
 		// Route::post('/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 		Route::post('/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\UsersDashboard@downloadTicket')->name('reservations.ticket.download')->middleware();
+		Route::post('/{reservation}/reservation-subitems/{reservationSubItem}/email', 'App\Http\Controllers\API\UsersDashboard@emailDownloadTicket')->name('reservations.ticket.email')->middleware();
 		Route::delete('/{reservation}', 'App\Http\Controllers\API\ReservationsController@delete')->name('reservation.delete')->middleware();
 		
 	});

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
-    <title>{{__('Forgot Password Mail')}}</title>
+    <title>{{__('Payment Successfully')}}</title>
 </head>
 
 @if($template->content == 'default')
@@ -46,20 +46,8 @@
                 font-family: sans-serif;
                 font-size: 0.9em;
                 line-height: 1.5"> {{__('Hi!')}} {{$fullname}}, <br>
-                {{__('We’ve received a request to reset your password. If you didn’t make the request, just ignore this mail. Otherwise, you can reset your password using this link')}}:</p>
-                <a style="margin: 0;
-                        box-sizing: border-box;
-                        display: block;
-                        width: 100%;
-                        padding: 0.9em 0 0.9em 0;
-                        text-align: center;
-                        font-family: sans-serif;
-                        font-weight: bold;
-                        text-decoration: none;
-                        color: #fff;
-                        background: #46BCF7;
-                        margin: 2em 0 2em 0;" href="{{route('reset.password.get', $token)}}">{{__('Click here to reset your password')}}</a>
-                <p style="margin: 0;
+                {{__('We’ve received the payment for your reservation for amount of:')}} {{$amount}}$</p>
+               <p style="margin: 0;
                         box-sizing: border-box;
                         color: #9A9A9A;
                         font-family: sans-serif;
@@ -124,18 +112,6 @@
 
 <body>
     {!!$template->content!!}
-     <a style="margin: 0;
-        box-sizing: border-box;
-        display: block;
-        width: 100%;
-        padding: 0.9em 0 0.9em 0;
-        text-align: center;
-        font-family: sans-serif;
-        font-weight: bold;
-        text-decoration: none;
-        color: #fff;
-        background: #46BCF7;
-        margin: 2em 0 2em 0;" href="{{route('reset.password.get', $token)}}">{{__('Click here to reset your password')}}</a>
 </body>
 @endif
 </html>
