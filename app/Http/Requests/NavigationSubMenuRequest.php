@@ -46,9 +46,9 @@ class NavigationSubMenuRequest extends FormRequest
                         'navigation_menu_id' => ['required', Rule::in($navigation_menu_ids)],
                         'navigation_submenus' => ['required'],
                         'navigation_submenus.*.name' => ['required'],
-                        'navigation_submenus.*.url' => ['string', 'required_without:navigation_submenus.*.template_id'],
-                        'navigation_submenus.*.template_id' => ['integer', 'required_without:navigation_submenus.*.url', Rule::in($template_ids)],
-                        'navigation_submenus.*.ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
+                        'navigation_submenus.*.url' => ['string'],
+                        'navigation_submenus.*.template_id' => ['integer', Rule::in($template_ids)],
+                        'navigation_submenus.*.ticket_id' => ['integer', Rule::in($ticket_ids)],
                     ];
                 } break;
 
@@ -59,9 +59,9 @@ class NavigationSubMenuRequest extends FormRequest
                     'navigation_submenus' => ['required'],
                     'navigation_submenus.*.id' => ['required', Rule::in($navigation_submenu_ids)],
                     'navigation_submenus.*.name' => ['required'],
-                    'navigation_submenus.*.url' => ['string', 'required_without:navigation_submenus.*.template_id'],
-                    'navigation_submenus.*.template_id' => ['integer', 'required_without:navigation_submenus.*.url', Rule::in($template_ids)],
-                    'navigation_submenus.*.ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
+                    'navigation_submenus.*.url' => ['string'],
+                    'navigation_submenus.*.template_id' => ['integer', Rule::in($template_ids)],
+                    'navigation_submenus.*.ticket_id' => ['integer', Rule::in($ticket_ids)],
                 ];
             } break;
 
