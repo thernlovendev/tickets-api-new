@@ -41,9 +41,9 @@ class NavigationMenuRequest extends FormRequest
                 {
                     return [
                         'name' => ['required'],
-                        'url' => ['string', 'required_without:template_id'],
-                        'template_id' => ['integer', 'required_without:url', Rule::in($template_ids)],
-                        'ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
+                        'url' => ['string'],
+                        'template_id' => ['integer', Rule::in($template_ids)],
+                        'ticket_id' => ['integer', Rule::in($ticket_ids)],
                     ];
                 } break;
 
@@ -51,9 +51,9 @@ class NavigationMenuRequest extends FormRequest
                 $navigation_menu_id = $this->route('navigation');
                 return [
                     'name' => ['required',Rule::unique('navigation_menus')->ignore($navigation_menu_id),],
-                    'url' => ['string', 'required_without:template_id'],
-                    'template_id' => ['integer', 'required_without:url', Rule::in($template_ids)],
-                    'ticket_id' => ['integer', 'required', Rule::in($ticket_ids)],
+                    'url' => ['string'],
+                    'template_id' => ['integer',Rule::in($template_ids)],
+                    'ticket_id' => ['integer', Rule::in($ticket_ids)],
                 ];
             } break;
 
