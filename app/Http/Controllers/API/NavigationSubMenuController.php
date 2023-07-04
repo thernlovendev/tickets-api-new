@@ -37,20 +37,19 @@ class NavigationSubMenuController extends Controller
 
     public function update(NavigationSubMenuRequest $request){
         try{
-                DB::beginTransaction();
-                $data = $request->validated();
-                $navigation_menu_updated = ServiceCrud::update($data);
-               
-                DB::commit();
-                
-                return Response($navigation_menu_updated, 200);
-    
-            } catch (\Exception $e){
-                
-                DB::rollback();
-                return Response($e->errors(), 422);
-            }
-    
+            DB::beginTransaction();
+            $data = $request->validated();
+            $navigation_menu_updated = ServiceCrud::update($data);
+            
+            DB::commit();
+            
+            return Response($navigation_menu_updated, 200);
+
+        } catch (\Exception $e){
+            
+            DB::rollback();
+            return Response($e->errors(), 422);
+        }
     }
 
     public function delete(NavigationSubMenu $navigation_menu){
