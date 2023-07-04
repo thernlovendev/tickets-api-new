@@ -86,7 +86,7 @@ class ReservationRequest extends FormRequest
                     'items.*.quantity' => 'integer',
                     'items.*.sub_items' => 'array',
                     'items.*.sub_items.*.rq_schedule_datetime' => 'nullable|date',
-                    'items.*.sub_items.*.ticket_id' => 'required|exists:tickets,id',
+                    'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                     'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
                     'items.*.sub_items.*.refund_status' => 'nullable',
                     'vendor_comissions' => 'array|nullable',
