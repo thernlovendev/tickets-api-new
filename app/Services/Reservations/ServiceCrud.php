@@ -121,10 +121,10 @@ class ServiceCrud
                     $subject = $template->subject;
                 }
                 
-                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject){
-                    $message->to($reservation->email);
-                    $message->subject($subject);
-                });
+                // Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject){
+                //     $message->to($reservation->email);
+                //     $message->subject($subject);
+                // });
             
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
@@ -222,10 +222,10 @@ class ServiceCrud
                     $subject = $template->subject;
                 }
 
-                Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount' => $data['total']], function($message) use ($reservation_old, $subject){
-                    $message->to($reservation_old->email);
-                    $message->subject($subject);
-                });
+                // Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount' => $data['total']], function($message) use ($reservation_old, $subject){
+                //     $message->to($reservation_old->email);
+                //     $message->subject($subject);
+                // });
                 
             }
             
