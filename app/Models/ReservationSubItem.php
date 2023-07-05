@@ -6,6 +6,7 @@ use App\Models\Subcategory;
 use App\Models\Ticket;
 use App\Models\TicketStock;
 use App\Models\ReservationItem;
+use App\Models\OptionSchedule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,5 +47,10 @@ class ReservationSubItem extends Model
     public function stocksUsed()
     {
         return $this->hasMany(StockUsed::class);
+    }
+
+    public function optionsSchedules()
+    {
+        return $this->hasMany(OptionSchedule::class);
     }
 }

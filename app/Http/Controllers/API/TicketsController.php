@@ -60,9 +60,14 @@ class TicketsController extends Controller
 
     public function delete(Ticket $ticket){
 
-        $ticket->delete();     
+        if($ticket->reservationSubItems()->count() == 0){
+            $ticket->delete();     
+            return Response(['message'=> 'Delete Ticket Successfully'], 204);
+        } else {
+            return Response(['message'=> 'The ticket is already used, cannot be delete'],422);
+        }
+
         
-         return Response(['message'=> 'Delete Ticket Successfully'], 204);
     }
 
 

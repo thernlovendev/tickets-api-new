@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ReservationRequest;
 use App\Http\Requests\ReservationByUserRequest;
 use App\Http\Requests\ReservationPaymentRequest;
+use App\Http\Requests\OptionScheduleRequest;
 use App\Services\Reservations\ServiceCrud;
 use App\Services\Reservations\CreateByUser\ServiceCrud as ReservationByUserCrud;
 use App\Models\Reservation;
+use App\Models\ReservationSubItem;
 use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
@@ -100,5 +102,23 @@ class ReservationsController extends Controller
             DB::rollback();
             return Response($e, 422);
         }
+    }
+
+    public function getScheduleOptions(ReservationSubItem $reservation_sub_item) {
+        return Response($reservation_sub_item->optionsSchedules()->orderBy('order')->get(), 200);
+    }
+
+    public function createScheduleOptions(ReservationSubItem $reservation_sub_item,OptionScheduleRequest $request) {
+        $data = $request->validated();
+
+        if($reservation_sub_item->optionsSchedules->isEmpty()){
+            $reservation_sub_item->optionsSchedules()->createMany($data['schedules']);
+
+            return Response($reservation_sub_item->load('optionsSchedules'),201);
+        }else {
+
+            return Response(['message'=> 'Schedule preferences have already been added'],422);
+        }
+        
     }
 }

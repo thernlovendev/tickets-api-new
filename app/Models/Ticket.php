@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\ReservationSubItem;
 use App\Models\TicketPrice;
 use App\Models\TicketSchedule;
 use App\Models\TicketContent;
@@ -124,4 +125,8 @@ class Ticket extends Model
         return $this->hasMany(StockCorrectionBalance::class);
     }
 
+    public function reservationSubItems()
+    {
+        return $this->hasMany(ReservationSubItem::class);
+    }
 }
