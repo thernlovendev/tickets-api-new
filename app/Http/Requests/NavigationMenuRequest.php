@@ -29,8 +29,6 @@ class NavigationMenuRequest extends FormRequest
      */
     public function rules()
     {
-        $template_ids = Template::pluck('id')->toArray();
-        $ticket_ids = Ticket::pluck('id')->toArray();
         switch($this->method()) {
             case 'GET':
                 {
@@ -42,18 +40,18 @@ class NavigationMenuRequest extends FormRequest
                     return [
                         'name' => ['required'],
                         'url' => ['string'],
-                        'template_id' => ['integer', Rule::in($template_ids)],
-                        'ticket_id' => ['integer', Rule::in($ticket_ids)],
+                        'template_id' => ['integer_or_nullable'],
+                        'ticket_id' => ['integer_or_nullable'],
                     ];
                 } break;
 
             case 'PUT':{
-                $navigation_menu_id = $this->route('navigation');
+                $navigation_menu_id = $this->route('navigation_menu');
                 return [
                     'name' => ['required',Rule::unique('navigation_menus')->ignore($navigation_menu_id),],
                     'url' => ['string'],
-                    'template_id' => ['integer',Rule::in($template_ids)],
-                    'ticket_id' => ['integer', Rule::in($ticket_ids)],
+                    'template_id' => ['integer_or_nullable'],
+                    'ticket_id' => ['integer_or_nullable'],
                 ];
             } break;
 

@@ -28,17 +28,17 @@ class NavigationMenuController extends Controller
         return Response($response, 200);
     }
 
-    public function store(NavigationMenuRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->all();
         $header_gallery = ServiceCrud::create($data);
         return Response($header_gallery, 201);
     }
 
-    public function update(NavigationMenuRequest $request, NavigationMenu $navigation_menu){
+    public function update(Request $request, NavigationMenu $navigation_menu){
         try{
                 DB::beginTransaction();
-                $data = $request->validated();
+                $data = $request->all();
                 $navigation_menu_updated = ServiceCrud::update($data, $navigation_menu);
                
                 DB::commit();
