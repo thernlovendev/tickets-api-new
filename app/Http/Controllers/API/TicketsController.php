@@ -60,7 +60,7 @@ class TicketsController extends Controller
 
     public function delete(Ticket $ticket){
 
-        if($ticket->reservationSubItems()->count() == 0){
+        if($ticket->reservationSubItems->isEmpty()){
             $ticket->delete();     
             return Response(['message'=> 'Delete Ticket Successfully'], 204);
         } else {

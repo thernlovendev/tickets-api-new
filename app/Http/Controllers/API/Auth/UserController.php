@@ -144,10 +144,10 @@ class UserController extends Controller
             $subject = $template->subject;
         }
         
-        Mail::send('email.deleteMyUser', ['fullname' => $myUser->name, 'template' => $template], function($message) use($myUser, $template, $subject){
-            $message->to($myUser->email);
-            $message->subject($subject);
-        });
+        // Mail::send('email.deleteMyUser', ['fullname' => $myUser->name, 'template' => $template], function($message) use($myUser, $template, $subject){
+        //     $message->to($myUser->email);
+        //     $message->subject($subject);
+        // });
         auth()->logout();
         User::find($myUser->id)->delete();
         
@@ -201,10 +201,10 @@ class UserController extends Controller
                 $subject = $template->subject;
             }
             
-            Mail::send('email.passwordResetAdmin', ['fullname' => $user->name, 'template' => $template], function($message) use($user, $template, $subject){
-                $message->to($user->email);
-                $message->subject($subject);
-            });
+            // Mail::send('email.passwordResetAdmin', ['fullname' => $user->name, 'template' => $template], function($message) use($user, $template, $subject){
+            //     $message->to($user->email);
+            //     $message->subject($subject);
+            // });
             
         }
 

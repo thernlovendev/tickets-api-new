@@ -141,11 +141,11 @@ class UsersDashboard extends Controller
                     $subject = $template->subject;
                 }
                 
-                Mail::send('email.sendTicketEmail', ['fullname' => $reservation->customer_name_en, 'template' => $template], function($message) use($reservation, $template, $subject, $pdf){
-                    $message->to($reservation->email);
-                    $message->subject($subject);
-                    $message->attachData($pdf->output(), 'tickets.pdf');
-                });
+                // Mail::send('email.sendTicketEmail', ['fullname' => $reservation->customer_name_en, 'template' => $template], function($message) use($reservation, $template, $subject, $pdf){
+                //     $message->to($reservation->email);
+                //     $message->subject($subject);
+                //     $message->attachData($pdf->output(), 'tickets.pdf');
+                // });
                 DB::commit();
                 
                 return $pdf->download('tickets'.$now.'.pdf');
