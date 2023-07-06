@@ -74,28 +74,11 @@ class ServiceCrud
 
 	}
 
-	public static function update($data, $reservation)
+	public static function update($data, $price_list)
 	{
 		try{
             DB::beginTransaction();
-
-            //  //condicion para eliminar los que no esta en la nueva data
-            //  $price_list_saved = PriceList::where('category_id', $data['category_id'])
-            //  ->get();
-
-            // $price_to_delete = $price_list_saved->diff($items);
-
-            // dd($price_to_delete);
-
-            
-            // foreach ($data['prices'] as $price) {
-                
-            //     if(isset($price['id'])){
-            //         //actualiza
-            //     } else {
-            //         //crea
-            //     }
-            // }
+            $price_list->update($data);
 
             DB::commit();
             return $data;
@@ -106,14 +89,9 @@ class ServiceCrud
         }
 	}
 
-	public static function delete($reservation)
-	{
-        // $reservation->delete();
-        // return $reservation;
-    }
 
-    public static function response($reservation)
+    public static function response($price_list)
     {
-        return $reservation;
+        return $price_list;
     }
 }

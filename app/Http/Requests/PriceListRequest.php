@@ -44,7 +44,12 @@ class PriceListRequest extends FormRequest
                 } break;
 
             case 'PUT':{
-                return [];
+                return [
+                    'product_type' => 'required',
+                    'quantity' => 'required|numeric',
+                    'child_price' => 'required_if:adult_price,true|numeric',
+                    'adult_price' => 'required_if:child_price,true|numeric',
+                ];
             } break;
 
             case 'DELETE': break;

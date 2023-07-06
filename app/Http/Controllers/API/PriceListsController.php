@@ -9,6 +9,7 @@ use App\Models\PriceList;
 use App\Services\PriceLists\ServiceCrud;
 use App\Services\PriceLists\ServiceGeneral;
 use App\Models\Category;
+use DB;
 
 class PriceListsController extends Controller
 {
@@ -61,6 +62,23 @@ class PriceListsController extends Controller
         $ticket = ServiceCrud::create($request);
         return Response($ticket, 201);
     }
+
+    public function update(PriceListRequest $request, PriceList $price_list){
+        try{
+            DB::beginTransaction();
+                $data = $request->validated();
+                $price_list_updated = ServiceCrud::update($data, $price_list);
+               
+                DB::commit();
+                return Response($price_list_updated, 200);
+    
+            } catch (\Exception $e){
+                
+                DB::rollback();
+                return Response($e->errors(), 422);
+            }
+    
+        }
 
     public function delete(PriceList $price_list)
     {
