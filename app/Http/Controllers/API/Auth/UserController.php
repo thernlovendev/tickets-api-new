@@ -88,7 +88,7 @@ class UserController extends Controller
         
         $user->assignRole('customer');
         $token = JWTAuth::fromUser($user);
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
         
         return response()->json(compact('user','token'),201);
     }
