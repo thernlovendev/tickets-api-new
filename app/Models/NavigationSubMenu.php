@@ -12,6 +12,10 @@ class NavigationSubMenu extends Model
     
     protected $table = 'navigation_sub_menus';
 
+    protected $casts = [
+        'ticket_ids' => 'array'
+    ];
+
     protected $fillable = [
         'navigation_menu_id',
         'template_id',
