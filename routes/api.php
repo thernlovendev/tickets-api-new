@@ -148,8 +148,7 @@ Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesControll
 Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
 Route::get('price-lists/product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.lists.product')->middleware();
 Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
-
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
-
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
+Route::get('order-lookup', 'App\Http\Controllers\API\OrderController@orderLookup')->name('order.lookup')->middleware();
