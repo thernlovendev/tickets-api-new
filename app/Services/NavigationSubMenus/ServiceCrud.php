@@ -15,6 +15,7 @@ class ServiceCrud
             $i = 0;
             foreach($data['navigation_submenus'] as $key => $value)  {
                 $data_insert[$i] = $value;
+                $data_insert[$i]['ticket_ids'] = json_encode($value['ticket_ids']);
                 $data_insert[$i]['navigation_menu_id'] = $data['navigation_menu_id'];
                 $i++;
             }
@@ -39,6 +40,7 @@ class ServiceCrud
             $i = 0;
             foreach($data['navigation_submenus'] as $key => $value)  {
                 $data_update[$i] = $value;
+                $data_insert[$i]['ticket_ids'] = json_encode($value['ticket_ids']);
                 $data_update[$i]['navigation_menu_id'] = $data['navigation_menu_id'];
                 $i++;
             }
