@@ -50,6 +50,12 @@ class ServiceGeneral
                 });
         }
 
+        if(isset($filters['role_name'])){
+            $models->whereHas('roles', function($query) use ($filters){
+                    return $query->where('name', $filters['role_name']);
+                });
+        }
+
         return $models;
     }
 
