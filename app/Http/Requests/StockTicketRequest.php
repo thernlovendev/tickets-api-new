@@ -40,7 +40,7 @@ class StockTicketRequest extends FormRequest
                         'expiration_date' =>['required','date','after:today'],
                         'type' =>['required', Rule::in($type)],
                         'range_age_type' =>['required',Rule::in($range_age)],
-                        'ticket_id' =>['required']
+                        'ticket_id' =>['required', 'exists:tickets,id']
                     ];
                 } break;
 
