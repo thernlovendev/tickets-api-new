@@ -32,11 +32,14 @@ class NaverAuthController extends Controller
             $user = Socialite::driver('naver')->user();
             $userResponse = $user['response'];
 
-            $userExist = User::where('email',$user->email)->where('external_auth','naver')->first();
+            $userExist = User::where('email',$user->email)->first();
+
+            $url = env('APP_URL_WEB_PAGE');
+
             if($userExist){
                 $token = JWTAuth::fromUser($userExist);
                 
-                return view('/welcome',compact('token'));
+                return redirect($url)->with('token');
             } else {
                 $userNew = User::create([
                     'name' => $user->name,
@@ -51,7 +54,7 @@ class NaverAuthController extends Controller
 
                 $token = JWTAuth::fromUser($userNew);
 
-                return view('/welcome',compact('token'));
+                return redirect($url)->with('token');
             }
 
         } catch (Exception $e) {

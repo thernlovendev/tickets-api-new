@@ -31,12 +31,14 @@ class GoogleAuthController extends Controller
             
             $user = Socialite::driver('google')->user();
             
-            $userExist = User::where('email',$user->email)->where('external_auth','google')->first();
+            $userExist = User::where('email',$user->email)->first();
+
+            $url = env('APP_URL_WEB_PAGE');
             
             if($userExist){
                 $token = JWTAuth::fromUser($userExist);
 
-                return view('/welcome',compact('token'));
+                return redirect($url)->with('token');
             } else {
                 $userNew = User::create([
                     'name' => $user->name,
@@ -52,7 +54,7 @@ class GoogleAuthController extends Controller
                 
                 $token = JWTAuth::fromUser($userNew);
 
-                return view('/welcome',compact('token'));
+                return redirect($url)->with('token');
             }
 
         } catch (Exception $e) {
