@@ -8,6 +8,7 @@ use App\Http\Requests\ReservationRequest;
 use App\Http\Requests\ReservationByUserRequest;
 use App\Http\Requests\ReservationPaymentRequest;
 use App\Http\Requests\OptionScheduleRequest;
+use App\Http\Requests\ReservationCardRequest;
 use App\Services\Reservations\ServiceCrud;
 use App\Services\Reservations\CreateByUser\ServiceCrud as ReservationByUserCrud;
 use App\Models\Reservation;
@@ -94,6 +95,20 @@ class ReservationsController extends Controller
         try{
             DB::beginTransaction();
             $reservation = ReservationByUserCrud::create($request->validated());
+
+            DB::commit();
+            return Response($reservation, 201);
+        } catch (\Exception $e){
+            
+            DB::rollback();
+            return Response($e, 422);
+        }
+    }
+
+    public function saveCard(ReservationCardRequest $request){
+        try{
+            DB::beginTransaction();
+            $reservation = ServiceCreditCard::saveCardInfo($request->validated());
 
             DB::commit();
             return Response($reservation, 201);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NavigationSubMenuRequest;
 use App\Models\NavigationSubMenu;
+use App\Models\Ticket;
 use App\Services\NavigationSubMenus\ServiceCrud;
 use App\Services\NavigationSubMenus\ServiceGeneral;
 use Illuminate\Http\Request;
@@ -25,6 +26,12 @@ class NavigationSubMenuController extends Controller
     public function show(NavigationSubMenu $navigation_submenu)
     {
         $response = $navigation_submenu->load(['navigationMenu']);
+        $list_ticket = [];
+        foreach($response->ticket_ids as $value) {
+            $ticket = Ticket::find($value);
+            if($ticket) $list_ticket[] = $ticket;
+        }
+        $response->list_ticket = $list_ticket;
         return Response($response, 200);
     }
 

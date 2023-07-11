@@ -48,4 +48,22 @@ class ServiceCreditCard
 
 	}
 
+    public static function saveCardInfo($data)
+	{
+		try {
+            DB::beginTransaction();
+            $service = new ServiceStripe();
+            $response = $service->saveCard($data);
+            
+            DB::commit();
+
+            return $response;
+
+        } catch (\Exception $e){
+            DB::rollback();
+            return Response($e, 400);
+        }
+
+	}
+
 }
