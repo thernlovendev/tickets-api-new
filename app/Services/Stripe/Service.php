@@ -5,6 +5,8 @@ namespace App\Services\Stripe;
 
 
 // use App\Exceptions\MercadoPago\MercadopagoSetupNotFoundException;
+
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class Service
@@ -38,5 +40,37 @@ class Service
         return $response;
     }
 
+    public function saveCard($data)
+    {
+        $stripe = new \Stripe\StripeClient(
+            $this->access_token
+          );
+        $cus_response = $stripe->customers->create([
+            'name' => $data['full_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'description' => $data['last_name'] ?? ''.'-'.$data['first_name'] ?? ''.'-'.$data['departure_date'] ?? ''
+        ]);
+
+        $card_response = $stripe->tokens->create([
+            'card' => [
+                'number' => $data['card']['number'],
+                'exp_month' => $data['card']['exp_month'],
+                'exp_year' => $data['card']['exp_year'],
+                'cvc' => $data['card']['cvc'],
+            ],
+        ]);
+
+        if(!$cus_response || !$card_response)   throw new Exception('Error!');
+
+        // create and save card on stripe
+        $card_response = $stripe->customers->createSource(
+            $cus_response->id,
+            [
+                'source' => $card_response->id
+            ]
+        );
+        return $card_response;
+    }
     
 }
