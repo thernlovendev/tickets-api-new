@@ -8,9 +8,23 @@ use App\Http\Requests\OrderLookupRequest;
 use App\Models\Reservation;
 use App\Models\ReservationItem;
 use App\Models\ReservationSubItem;
+use App\Services\Reservations\ServiceGeneral;
+use Illuminate\Support\Facades\Auth;
 
-class OrderController extends Controller
+
+class BookingController extends Controller
 {
+    public function index(Request $request)
+    {
+       $email = Auth::user()->email;
+       $reservation = Reservation::with(['reservationItems.reservationSubItems'])->where('email',$email);
+       $params = $request->query();
+       $elements = ServiceGeneral::filterCustom($params, $reservation);
+       $elements = $this->httpIndex($elements, []);
+       $response = ServiceGeneral::mapCollection($elements);
+       return Response($response, 200);
+    }
+
     public function orderLookup(OrderLookupRequest $request){
         
         $order = Reservation::with('reservationItems.reservationSubItems')->where('order_number',$request->order_number)->where('email',$request->email)->first();

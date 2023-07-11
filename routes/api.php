@@ -138,6 +138,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::delete('/{navigation_menu}', 'App\Http\Controllers\API\NavigationSubMenuController@delete')->name('navigation_submenu.delete')->middleware();
 	});
 
+	Route::prefix('booking')->group(function() {
+		Route::get('/', 'App\Http\Controllers\API\BookingController@index')->name('booking.index')->middleware();
+	});
 
 });
 
@@ -151,4 +154,4 @@ Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsCo
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
-Route::get('order-lookup', 'App\Http\Controllers\API\OrderController@orderLookup')->name('order.lookup')->middleware();
+Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();

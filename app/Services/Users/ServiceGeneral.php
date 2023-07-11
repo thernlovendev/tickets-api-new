@@ -22,6 +22,7 @@ class ServiceGeneral
                 'last_login' => $item->last_login_at,
                 'active' => $item->active,
                 'email_status' => $item->email_verified_at,
+                'password' =>  $item->password
             ];
         });
 
