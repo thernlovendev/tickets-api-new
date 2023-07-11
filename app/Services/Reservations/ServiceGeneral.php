@@ -39,7 +39,8 @@ class ServiceGeneral
 
     public static function filterCustom($filters, $models){
         if(isset($filters['customer'])){
-            $models->where('customer_name_en','LIKE', '%'.$filters['customer'].'%');
+            $models->where('customer_name_en','LIKE', '%'.$filters['customer'].'%')
+                    ->orWhere('customer_name_kr','LIKE', '%'.$filters['customer'].'%');
         }
 
         if(isset($filters['email'])){

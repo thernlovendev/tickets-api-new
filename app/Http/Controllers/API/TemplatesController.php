@@ -17,7 +17,7 @@ class TemplatesController extends Controller
         $templates = Template::with(['navigationSubMenus']);
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom ($params, $templates);
-        $elements = $this->httpIndex($elements, ['id', 'title', 'type']);
+        $elements = $this->httpIndex($elements, ['id']);
         $response = ServiceGeneral::mapCollection($elements);
         return Response($response, 200);
     }
