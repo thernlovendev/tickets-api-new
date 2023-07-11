@@ -8,7 +8,7 @@ use App\Http\Requests\OrderLookupRequest;
 use App\Models\Reservation;
 use App\Models\ReservationItem;
 use App\Models\ReservationSubItem;
-use App\Services\Reservations\ServiceGeneral;
+use App\Services\Bookings\ServiceGeneral;
 use Illuminate\Support\Facades\Auth;
 
 

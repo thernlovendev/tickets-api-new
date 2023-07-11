@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Services\Reservations;
+namespace App\Services\Bookings;
 use App\Models\User;
+use App\Models\Reservation;
+use App\Models\ReservationItem;
 
 class ServiceGeneral
 {
@@ -15,16 +17,9 @@ class ServiceGeneral
 
             return [
                 'id' => $item->id,
-                'created_by' => $item->created_by,
-                'departure_date' => $item->departure_date,
                 'order_date' => $item->order_date,
                 'order_number' => $item->order_number,
-                'customer' =>$customer ? $customer->name : $item->customer_name_en,
-                'payment_type' => $item->payment_type,
-                'ticket_sent_status' => $item->ticket_sent_status,
-                'status' => $item->status,
-                'phone' => $item->phone,
-                'email' => $item->email
+                'items' => $item->reservationItems,
             ];
         });
 
@@ -49,10 +44,6 @@ class ServiceGeneral
 
         if(isset($filters['phone'])){
             $models->where('phone','LIKE', '%'.$filters['phone'].'%');
-        }
-
-        if(isset($filters['username'])){
-            $models->where('created_by','LIKE', '%'.$filters['username'].'%');
         }
 
         return $models;
