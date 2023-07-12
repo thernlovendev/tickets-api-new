@@ -63,7 +63,9 @@ class Ticket extends Model
         'additional_price_amount',
         'additional_price_image',
         'show_in_schedule_page',
-        'announcement'
+        'announcement',
+        'premium_amount',
+        'premium_s_amount'
     ];
 
     protected $casts = [

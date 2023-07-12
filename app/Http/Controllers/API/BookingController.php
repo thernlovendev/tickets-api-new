@@ -26,8 +26,8 @@ class BookingController extends Controller
     }
 
     public function orderLookup(OrderLookupRequest $request){
-        
-        $order = Reservation::with('reservationItems.reservationSubItems')->where('order_number',$request->order_number)->where('email',$request->email)->first();
+        $data = $request->validated();
+        $order = Reservation::with('reservationItems.reservationSubItems')->where('order_number',$data['order_number'])->where('email',$data['email'])->first();
         
         if($order){
             $response = $order;

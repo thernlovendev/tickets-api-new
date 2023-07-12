@@ -50,6 +50,8 @@ class ServiceCrud
                     'product_code' => $code,
                     'additional_price_type' => $data['additional_price_type'],
                     'additional_price_amount' => $data['additional_price_amount'],
+                    'premium_amount' => $data['premium_amount'],
+                    'premium_s_amount' => $data['premium_s_amount'],
                     'show_in_schedule_page' => $data['show_in_schedule_page'],
                     'announcement' =>$data['announcement'],
                 ]);
