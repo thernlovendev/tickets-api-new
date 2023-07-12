@@ -149,14 +149,14 @@ class UserController extends Controller
         //     $message->subject($subject);
         // });
         auth()->logout();
-        User::find($myUser->id)->delete();
+        User::find($myUser->id)->forceDelete();
         
         return response()->json(['message'=> 'Your account has been deleted'], 204);
     }
 
     public function deleteUser(User $user){
         
-        $user->delete();
+        $user->forceDelete();
         
         return response()->json([
             'message'=> 'Delete User Successfully'
