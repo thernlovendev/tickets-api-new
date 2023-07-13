@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class UserByAdminRequest extends FormRequest
 {
@@ -32,16 +33,18 @@ class UserByAdminRequest extends FormRequest
 
             case 'POST':
                 {
+                    $request = $this;
                     return [
                         'fullname' => ['required','max:55'],
                         'firstname' => ['required','max:55'],
                         'lastname' => ['required','max:55'],
-                        'email' => ['required','email','unique:users,email','max:255','confirmed'],
+                        'email' => ['required','email','unique:users,email,NULL,id,company_id,' . $request->input('company_id'),'max:255','confirmed'],
                         'email_confirmation' => ['required','email','max:255'],
                         'password' => ['required','max:55', 'confirmed'],
                         'password_confirmation' => ['required','max:55'],
                         'phone' => ['required','max:15'],
-                        'role' => ['required','exists:roles,id']
+                        'role' => ['required','exists:roles,id'],
+                        'company_id' => ['required','exists:users,id']
                     ];
                 } break;
 
@@ -56,7 +59,8 @@ class UserByAdminRequest extends FormRequest
                     'password' => ['nullable','max:55', 'confirmed'],
                     'password_confirmation' => ['nullable','max:55'],
                     'phone' => ['required','max:15'],
-                    'role' => ['required','exists:roles,id']
+                    'role' => ['required','exists:roles,id'],
+                    'company_id' => ['required',Rule::unique('users')->ignore($user->id)]
                 ];
             } break;
 

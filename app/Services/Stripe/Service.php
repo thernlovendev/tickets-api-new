@@ -72,5 +72,20 @@ class Service
         );
         return $card_response;
     }
+
+    public function createTokenCreditCard($data){
+        $stripe = new \Stripe\StripeClient($this->access_token);
+
+        $response = $stripe->tokens->create([
+        'card' => [
+            'number' => $data['credit_number'],
+            'exp_month' => $data['exp_month'],
+            'exp_year' => $data['exp_year'],
+            'cvc' => $data['cvc']
+        ],
+        ]);
+
+        return $response;
+    }
     
 }

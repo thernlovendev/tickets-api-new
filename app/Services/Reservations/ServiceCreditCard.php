@@ -16,15 +16,17 @@ class ServiceCreditCard
 	{
 		try {
             DB::beginTransaction();
+            
+            $service = new ServiceStripe();     
 
             $payload = [
-                'source' => $data['token_stripe'],
+                'source' => $data['token_id'],
                 'amount' => $data['total'] * 100,
                 'currency' => 'usd',
                 'description' => $reservation->customer_name_en
             ];
             
-            $service = new ServiceStripe();
+            
             $response = $service->createCharge($payload);
             
             $data['payment_status'] = $response['outcome']['seller_message'];

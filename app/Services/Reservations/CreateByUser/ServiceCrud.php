@@ -13,6 +13,7 @@ use App\Models\ReservationSubItem;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
+use App\Services\Stripe\Service as ServiceStripe;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
@@ -21,6 +22,13 @@ class ServiceCrud
 {
 	public static function create($data)
 	{
+            $service = new ServiceStripe();
+    
+            $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
+            $token_credit_card = $service->createTokenCreditCard($credit_card); 
+            
+            $data['token_id'] = $token_credit_card['id'];
+
             do {
                 $order_number =  mt_rand(1000000, 9999999);
                 settype($order_number, 'string');

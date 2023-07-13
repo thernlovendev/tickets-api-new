@@ -156,3 +156,13 @@ Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'Ap
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
+
+use App\Services\Stripe\Service;
+
+Route::post('token-stripe',function(Request $request) {
+	$stripe = new Service();
+	$data = $request->all();
+	$response = $stripe->createTokenCreditCard($data);
+
+	return $response;
+});
