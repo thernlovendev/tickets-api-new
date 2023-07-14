@@ -60,7 +60,7 @@ class UserByAdminRequest extends FormRequest
                     'password_confirmation' => ['nullable','max:55'],
                     'phone' => ['required','max:15'],
                     'role' => ['required','exists:roles,id'],
-                    'company_id' => ['required']
+                    'company_id' => ['required','exists:companies,id']
                 ];
             } break;
 
