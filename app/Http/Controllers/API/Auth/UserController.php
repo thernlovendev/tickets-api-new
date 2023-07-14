@@ -173,7 +173,8 @@ class UserController extends Controller
             'email' => $response['email'],
             'password' => Hash::make($response['password']),
             'phone' => $response['phone'],
-            'active' => true
+            'active' => true,
+            'company_id' => $response['company_id']
         ]);
         
         $user->assignRole($response['role']);

@@ -38,7 +38,7 @@ class UserByAdminRequest extends FormRequest
                         'fullname' => ['required','max:55'],
                         'firstname' => ['required','max:55'],
                         'lastname' => ['required','max:55'],
-                        'email' => ['required','email','unique:users,email,NULL,id,company_id,' . $request->input('company_id'),'max:255','confirmed'],
+                        'email' => ['unique:users,email,NULL,id,company_id,'.$request->input('company_id'),'required','email','max:255','confirmed'],
                         'email_confirmation' => ['required','email','max:255'],
                         'password' => ['required','max:55', 'confirmed'],
                         'password_confirmation' => ['required','max:55'],
@@ -54,13 +54,13 @@ class UserByAdminRequest extends FormRequest
                     'fullname' => ['required','max:55'],
                     'firstname' => ['required','max:55'],
                     'lastname' => ['required','max:55'],
-                    'email' => ['required','email','max:255','confirmed',Rule::unique('users')->ignore($user->id)],
+                    'email' => ['required',Rule::unique('users')->where('company_id',$user->company_id)->ignore($user->email),'email','max:255','confirmed'],
                     'email_confirmation' => ['required','email','max:255'],
                     'password' => ['nullable','max:55', 'confirmed'],
                     'password_confirmation' => ['nullable','max:55'],
                     'phone' => ['required','max:15'],
                     'role' => ['required','exists:roles,id'],
-                    'company_id' => ['required',Rule::unique('users')->ignore($user->id)]
+                    'company_id' => ['required']
                 ];
             } break;
 

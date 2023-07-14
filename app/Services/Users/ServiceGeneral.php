@@ -2,6 +2,7 @@
 
 namespace App\Services\Users;
 use Carbon\Carbon;
+use App\Models\Company;
 
 class ServiceGeneral
 {
@@ -10,10 +11,12 @@ class ServiceGeneral
         $data_map = $request->per_page ? $data['data'] : $data;
 
 
-        
         $mapCollection = $data_map->map( function($item){
+
             $rol = $item->roles->first();
             $date = Carbon::parse($item->created_at)->format('Y-m-d');
+            $company = Company::where('id', $item->company_id)->pluck('name')->first();
+            
             return [
                 'id' => $item->id,
                 'name' => $item->name,
@@ -22,7 +25,9 @@ class ServiceGeneral
                 'last_login' => $item->last_login_at,
                 'active' => $item->active,
                 'email_status' => $item->email_verified_at,
-                'password' =>  $item->password
+                'password' =>  $item->password,
+                'company_id'=> $item->company_id,
+                'company_name' => $company
             ];
         });
 
