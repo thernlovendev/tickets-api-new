@@ -54,7 +54,7 @@ class UserByAdminRequest extends FormRequest
                     'fullname' => ['required','max:55'],
                     'firstname' => ['required','max:55'],
                     'lastname' => ['required','max:55'],
-                    'email' => ['required',Rule::unique('users')->where('company_id',$user->company_id)->ignore($user->email),'email','max:255','confirmed'],
+                    'email' => [Rule::unique('users')->where('company_id',$user->company_id)->ignore($user->id),'required','email','max:255','confirmed'],
                     'email_confirmation' => ['required','email','max:255'],
                     'password' => ['nullable','max:55', 'confirmed'],
                     'password_confirmation' => ['nullable','max:55'],
