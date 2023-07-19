@@ -43,7 +43,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	});
 
 	Route::prefix('cities')->group(function() {
-		Route::get('/', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 		Route::get('/{company}', 'App\Http\Controllers\API\CitiesController@getCitiesByCompany')->name('cities.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CitiesController@store')->name('cities.create')->middleware();
 		Route::put('/{city}', 'App\Http\Controllers\API\CitiesController@changeStatus')->name('cities.change.status')->middleware();
@@ -145,6 +144,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 });
 
 //Tamice users
+Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
@@ -156,13 +156,3 @@ Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'Ap
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
-
-use App\Services\Stripe\Service;
-
-Route::post('token-stripe',function(Request $request) {
-	$stripe = new Service();
-	$data = $request->all();
-	$response = $stripe->createTokenCreditCard($data);
-
-	return $response;
-});
