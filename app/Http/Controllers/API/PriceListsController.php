@@ -89,4 +89,11 @@ class PriceListsController extends Controller
         ]);
     }
 
+    public function show(PriceList $price_list)
+    {
+        $response = $price_list->load('subcategory');
+
+        return $response;
+    }
+
 }

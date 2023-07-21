@@ -77,6 +77,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	});
 
 	Route::prefix('price-lists')->group(function() {
+		Route::get('/{price_list}', 'App\Http\Controllers\API\PriceListsController@show')->name('price.lists.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\PriceListsController@store')->name('price.lists.create')->middleware();
 		Route::put('/{price_list}', 'App\Http\Controllers\API\PriceListsController@update')->name('price.lists.update')->middleware();
 		Route::delete('/{price_list}', 'App\Http\Controllers\API\PriceListsController@delete')->name('price.lists.delete')->middleware();
