@@ -157,3 +157,4 @@ Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'Ap
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
+Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
