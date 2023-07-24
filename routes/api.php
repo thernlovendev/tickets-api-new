@@ -145,6 +145,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 });
 
 //Tamice users
+Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->name('seats.index')->middleware();
 Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
