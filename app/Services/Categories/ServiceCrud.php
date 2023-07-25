@@ -17,12 +17,14 @@ class ServiceCrud
 
             $data_category = $data->validated();
             $category = Category::create(['city_id' => $data->city_id, 'name'=> $data_category['name']]);
-            
+            $count_subcategories = $data->subcategories;
             $subcategory_counter = [];
-            foreach ($data->subcategories as $subcategory) {
-                $item = Subcategory::create(['category_id'=> $category->id,'name' => $subcategory['name']]); 
-                
-                $subcategory_counter[] = $item;
+            if(!empty($count_subcategories)){
+                foreach ($data->subcategories as $subcategory) {
+                    $item = Subcategory::create(['category_id'=> $category->id,'name' => $subcategory['name']]); 
+                    
+                    $subcategory_counter[] = $item;
+                }
             }
 
             $subcategories['Subcategory'] = $subcategory_counter;

@@ -19,7 +19,6 @@ class SFCategoriesTableSeeder extends Seeder
     {
         $cities = City::where('name','San Francisco')->get();
         if ($cities->isNotEmpty()) {
-            // La colección no está vacía, tiene al menos un usuario
             foreach ($cities as $city) {
                 $category_package = Category::updateOrCreate(['city_id'=> $city->id, 'name'=> 'SF Package Tour'],['city_id'=> $city->id, 'name'=>'SF Package Tour']); 
 
