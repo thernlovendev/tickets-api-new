@@ -25,7 +25,7 @@ class SFCategoriesTableSeeder extends Seeder
 
                 Subcategory::updateOrCreate(['category_id'=> $category_package->id, 'name'=> 'SF Big Apple Pass'],['category_id'=> $category_package->id, 'name'=>'SF Big Apple Pass']);
                 Subcategory::updateOrCreate(['category_id'=> $category_package->id, 'name'=> 'SF City Pass'],['category_id'=> $category_package->id, 'name'=>'SF City Pass']);
-                Subcategory::updateOrCreate(['category_id'=> $category_package->id, 'name'=> 'SF NY Explore Pass'],['category_id'=> $category_package->id, 'name'=>'SF NY Explore Pass']);
+                Subcategory::updateOrCreate(['category_id'=> $category_package->id, 'name'=> 'SF City Explore Pass'],['category_id'=> $category_package->id, 'name'=>'SF City Explore Pass']);
 
                 $category_attractions = Category::updateOrCreate(['city_id'=> $city->id, 'name'=> 'SF City Attractions'],['city_id'=> $city->id, 'name'=>'SF City Attractions']); 
                 Subcategory::updateOrCreate(['category_id'=> $category_attractions->id, 'name'=> 'SF Observation(Scenics)'],['category_id'=> $category_attractions->id, 'name'=>'SF Observation(Scenics)']);
