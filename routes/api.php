@@ -57,11 +57,14 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 	Route::prefix('tickets')->group(function() {
 		Route::post('/', 'App\Http\Controllers\API\TicketsController@store')->name('tickets.create')->middleware();
+		Route::put('/ordering', 'App\Http\Controllers\API\TicketsOrderingController@updateOrdering')->name('ticket.ordering.update')->middleware();
 		Route::put('/{ticket}', 'App\Http\Controllers\API\TicketsController@update')->name('tickets.update')->middleware();
 		Route::delete('/{ticket}', 'App\Http\Controllers\API\TicketsController@delete')->name('tickets.delete')->middleware();
 		Route::get('/{ticket}/price', 'App\Http\Controllers\API\TicketsController@getSinglePrice')->name('ticket.single.price')->middleware();
 		Route::put('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@update')->name('ticket.shcedule.update')->middleware();
 		Route::delete('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@delete')->name('ticket.shcedule.delete')->middleware();
+		
+
 	});
 
 	Route::prefix('reservations')->group(function() {

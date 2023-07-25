@@ -65,7 +65,8 @@ class Ticket extends Model
         'show_in_schedule_page',
         'announcement',
         'premium_amount',
-        'premium_s_amount'
+        'premium_s_amount',
+        'order'
     ];
 
     protected $casts = [
