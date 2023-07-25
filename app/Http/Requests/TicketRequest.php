@@ -91,7 +91,7 @@ class TicketRequest extends FormRequest
             case 'PUT':{
                 $ticket = $this->route('ticket');
                 return [
-                        'title_en' => ['required',Rule::unique('tickets')->ignore($ticket->id),],
+                        'title_en' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
                         'title_kr' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
                         'ticket_template' => ['required'],
                         'ticket_type' => ['required'],

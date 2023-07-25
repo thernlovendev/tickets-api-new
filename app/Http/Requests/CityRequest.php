@@ -37,16 +37,17 @@ class CityRequest extends FormRequest
                         'cities' =>[
                             'required'
                         ],
-                        'cities.*.name'=>['required',Rule::unique('companies')->
-                        where(fn ($query) => $query->where('id',$this->company_id)), 'distinct'],
+                        'cities.*.name'=>['required',Rule::unique('cities')->
+                        where(fn ($query) => $query->where('company_id',$this->company_id)), 'distinct'],
                     ];
                 } break;
 
             case 'PUT':{
+                $city = $this->route('city');
                 return [
                     'company_id' => ['required','exists:companies,id'],
                     'name'=> ['required',
-                    Rule::unique('cities')->where(fn ($query) => $query->where('id',$this->company_id))]
+                    Rule::unique('cities')->where(fn ($query) => $query->where('company_id',$this->company_id))->ignore($city->id)]
                 ];
             } break;
 
