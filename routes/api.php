@@ -151,7 +151,7 @@ Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name(
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
-Route::get('price-lists/product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.lists.product')->middleware();
+Route::get('product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.get.by.subcategory')->middleware();
 Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
