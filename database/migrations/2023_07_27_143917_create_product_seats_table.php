@@ -14,7 +14,6 @@ class CreateProductSeatsTable extends Migration
     public function up()
     {
         Schema::create('product_seats', function (Blueprint $table) {
-            $table->id();
             $table->bigInteger('product_id')->unsigned();
             $table->string('product_code', 255);
             $table->string('product_date',255);
@@ -30,7 +29,6 @@ class CreateProductSeatsTable extends Migration
             $table->string('facility_fee',10);
             $table->string('supplier_fee',10);
             $table->string('service_charge',10);
-            $table->timestamps();
         });
     }
 
