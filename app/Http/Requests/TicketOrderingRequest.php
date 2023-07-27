@@ -23,7 +23,6 @@ class TicketOrderingRequest extends FormRequest
      */
     public function rules()
     {
-        
         return [
             '*.ticket_id'=> ['exists:tickets,id', 'distinct'],
             '*.order' => ['distinct', 'integer', 'min:1']   
