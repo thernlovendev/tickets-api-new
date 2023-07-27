@@ -35,6 +35,10 @@ class ServiceCrud
                 $code = $prefix.$number_code;
             } while (Ticket::where("product_code", "=", $code)->exists());
 
+            $last_ticket_order = Ticket::where('company_id', $data['company_id'])->orderByDesc('order')->first();
+
+            $order = $last_ticket_order ? $last_ticket_order->order + 1 : 1;
+
             $ticket = Ticket::create(
                 [
                     'company_id' => $data['company_id'],
@@ -54,6 +58,7 @@ class ServiceCrud
                     'premium_s_amount' => $data['premium_s_amount'],
                     'show_in_schedule_page' => $data['show_in_schedule_page'],
                     'announcement' =>$data['announcement'],
+                    'order' => $order
                 ]);
 
             TicketContent::create(['ticket_id' => $ticket->id,'content' => $data['ticket_content']['content']]); 

@@ -45,6 +45,15 @@ class ServiceGeneral
                 $query->where('subcategory_id', $sub_category);
             });
         }
+
+        if(isset($filters['order'])){
+            $models->where('order', $filters['order']);
+        }
+
+        if(isset($filters['company_id'])){
+            $models->where('company_id', $filters['company_id']);
+        }
+
         return $models;
     }
 
