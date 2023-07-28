@@ -114,8 +114,7 @@ class ServiceCrud
                 $response = ServiceCreditCard::create($reservation, $data);
 
                 if($reservation->status == Reservation::STATUS['NO_PAID']){
-                    
-                    return $response;
+                    throw new \Exception($response);
                 }
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);

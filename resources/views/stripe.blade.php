@@ -39,7 +39,7 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js" integrity="sha512-LUKzDoJKOLqnxGWWIBM4lzRBlxcva2ZTztO8bTcWPmDSpkErWx0bSP4pdsjNH8kiHAUPaT06UXcb+vOEZH+HpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-    var stripe = Stripe('pk_test_51MpCKJACe4fzyuYTJ7dhX6C5O2cMlxTseYRQlWL74jeAvYTg1TL9nU9shH0tNydkvLh4YRomOb4eG11M08SI9yCI00qCMUvVDY');
+    var stripe = Stripe('pk_test_51NXXnoFiJUoJo4YUdGLKaPwGOD0GU5bvut6NJPONPhcVMaieF2q1LvRM6JmvbGwuUJunuNUmTjgG1cdUrwb2DOOR00lOkeErhO');
    
    const elements = stripe.elements();
    const style = {
