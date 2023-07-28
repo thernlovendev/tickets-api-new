@@ -23,7 +23,7 @@ class ReservationsController extends Controller
 
     public function index(Request $request)
     {
-       $reservation = Reservation::with(['vendorComissions']);
+       $reservation = Reservation::with(['reservationItems.reservationSubItems','vendorComissions']);
        $params = $request->query();
        $elements = ServiceGeneral::filterCustom($params, $reservation);
        $elements = $this->httpIndex($elements, ['id', 'order_number']);

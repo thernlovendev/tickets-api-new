@@ -45,6 +45,7 @@ class ServiceCrud
             $data['created_by'] = 'Customer';
 
             $data['order_date'] = Carbon::now()->format('Y-m-d');
+            $data['payment_type'] = 'Credit Card';
             
             $reservation = Reservation::create($data);
             

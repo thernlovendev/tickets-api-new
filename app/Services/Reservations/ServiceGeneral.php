@@ -24,7 +24,8 @@ class ServiceGeneral
                 'ticket_sent_status' => $item->ticket_sent_status,
                 'status' => $item->status,
                 'phone' => $item->phone,
-                'email' => $item->email
+                'email' => $item->email,
+                'reservation_items' => $item->reservationItems
             ];
         });
 
