@@ -67,11 +67,7 @@ class ReservationRequest extends FormRequest
                         'vendor_comissions.*.type' => ['required', Rule::in('AP', 'AR')],
                         'vendor_comissions.*.comission_amount' => ['required','numeric'],
                         'payment_type' => ['required',Rule::in($type)],
-                        'credit' => ['required_if:payment_type,Cash'],
-                        'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
-                        'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
-                        'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
-                        'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string'],
+                        'stripe_token' => ['required_if:payment_type,Credit Card'],
                     ];
                 } break;
 
@@ -97,11 +93,7 @@ class ReservationRequest extends FormRequest
                     'vendor_comissions.*.type' => ['required', Rule::in('AP', 'AR')],
                     'vendor_comissions.*.comission_amount' => 'required|numeric',
                     'payment_type' => ['nullable',Rule::in($type)],
-                    'credit' => ['nullable'],
-                    'credit_number'=> ['nullable'],
-                    'exp_month'=> ['nullable'],
-                    'exp_year'=> ['nullable'],
-                    'cvc'=> ['nullable'],
+                    'stripe_token' => ['required_if:payment_type,Credit Card'],
                 ];
             } break;
 

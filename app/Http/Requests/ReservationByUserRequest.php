@@ -63,10 +63,7 @@ class ReservationByUserRequest extends FormRequest
                         'items.*.sub_items.*.rq_schedule_datetime' => ['nullable','date'],
                         'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                         'items.*.sub_items.*.refund_status' => ['nullable'],
-                        'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
-                        'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
-                        'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
-                        'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string'],
+                        'stripe_token' => ['required'],
                     ];
                 } break;
 

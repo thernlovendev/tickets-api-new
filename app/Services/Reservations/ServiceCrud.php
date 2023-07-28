@@ -14,7 +14,7 @@ use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
-use App\Services\Stripe\Service as ServiceStripe;
+// use App\Services\Stripe\Service as ServiceStripe;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
 use Mail;
@@ -23,14 +23,14 @@ class ServiceCrud
 {
 	public static function create($data)
 	{
-            if($data['payment_type'] == 'Credit Card'){
-                $service = new ServiceStripe();
+            // if($data['payment_type'] == 'Credit Card'){
+            //     $service = new ServiceStripe();
         
-                $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
-                $token_credit_card = $service->createTokenCreditCard($credit_card); 
+            //     $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
+            //     $token_credit_card = $service->createTokenCreditCard($credit_card); 
                 
-                $data['token_id'] = $token_credit_card['id'];
-            }
+            //     $data['token_id'] = $token_credit_card['id'];
+            // }
             do {
                 $order_number =  mt_rand(1000000, 9999999);
                 settype($order_number, 'string');
@@ -206,10 +206,12 @@ class ServiceCrud
                 
                     $validator = Validator::make($data,[
                         'payment_type' => ['required',Rule::in(Reservation::PAYMENT_TYPE)],
-                        'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
-                        'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
-                        'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
-                        'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string']
+                        'stripe_token' => ['required_if:payment_type,Credit Card'],
+
+                        // 'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
+                        // 'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
+                        // 'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
+                        // 'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string']
                     ]);
                     
                     if( $validator->fails() ){
@@ -218,15 +220,12 @@ class ServiceCrud
                         ]);
                     }
                    
-                    $service = new ServiceStripe();
-            
-                    $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
-                 
-                    $token_credit_card = $service->createTokenCreditCard($credit_card); 
+                    // $service = new ServiceStripe();
+                    // $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
+                    // $token_credit_card = $service->createTokenCreditCard($credit_card); 
+                    // $data['token_id'] = $token_credit_card['id'];
                     
                     $data = $validator->validate();
-
-                    $data['token_id'] = $token_credit_card['id'];
 
                 } else {
                     $validator = Validator::make($data, [

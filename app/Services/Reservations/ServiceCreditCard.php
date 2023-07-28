@@ -20,7 +20,7 @@ class ServiceCreditCard
             $service = new ServiceStripe();     
 
             $payload = [
-                'source' => $data['token_id'],
+                'source' => $data['stripe_token'],
                 'amount' => $data['total'] * 100,
                 'currency' => 'usd',
                 'description' => $reservation->customer_name_en

@@ -25,13 +25,6 @@ class Service
      */
     public function createCharge($data)
     {
-        // \Log::debug($data);
-        // $response = Http::withHeaders([
-        //     // 'Authorization' => "Bearer ".$this->access_token,
-        //     'u' => $this->access_token.':',
-        //     // 'Content-type' => 'application/json'
-        // ])->post(self::URL.'v1/charges', $data);+}
-
         $stripe = new \Stripe\StripeClient(
             $this->access_token
           );
@@ -73,19 +66,19 @@ class Service
         return $card_response;
     }
 
-    public function createTokenCreditCard($data){
-        $stripe = new \Stripe\StripeClient($this->access_token);
+    // public function createTokenCreditCard($data){
+    //     $stripe = new \Stripe\StripeClient($this->access_token);
 
-        $response = $stripe->tokens->create([
-        'card' => [
-            'number' => $data['credit_number'],
-            'exp_month' => $data['exp_month'],
-            'exp_year' => $data['exp_year'],
-            'cvc' => $data['cvc']
-        ],
-        ]);
+    //     $response = $stripe->tokens->create([
+    //     'card' => [
+    //         'number' => $data['credit_number'],
+    //         'exp_month' => $data['exp_month'],
+    //         'exp_year' => $data['exp_year'],
+    //         'cvc' => $data['cvc']
+    //     ],
+    //     ]);
 
-        return $response;
-    }
+    //     return $response;
+    // }
     
 }
