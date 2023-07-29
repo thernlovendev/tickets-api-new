@@ -15,9 +15,15 @@ class Category extends Model
     
     protected $table = 'categories';
 
+    const STATUS = [
+        'PUBLISH' => 'Publish',
+        'UNPUBLISH' => 'Unpublish',
+    ];
+    
     protected $fillable = [
         'city_id',
         'name',
+        'status'
     ];
 
     public function subcategories()
