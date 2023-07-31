@@ -144,31 +144,32 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 });
 
 //Tamice users
-Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->name('seats.index')->middleware();
-Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
-Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
-Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
+Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
+Route::put('booking/{cartId}', 'App\Http\Controllers\API\BookingController@update')->name('booking.update')->middleware();
 Route::get('categories', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
-Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
-Route::get('product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.get.by.subcategory')->middleware();
-Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
-Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
-Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
-Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
-Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
+Route::prefix('categories')->group(function() {
+	Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
+});
+Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
-Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
-
+Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
+Route::prefix('price-lists')->group(function() {
+	Route::get('/{price_list}', 'App\Http\Controllers\API\PriceListsController@show')->name('price.lists.show')->middleware();
+});
+Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->name('seats.index')->middleware();
+Route::get('product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.get.by.subcategory')->middleware();
 Route::get('reservations', 'App\Http\Controllers\API\ReservationsController@index')->name('reservation.index')->middleware();	
 Route::prefix('reservations')->group(function() {
 	Route::get('/{reservation}', 'App\Http\Controllers\API\ReservationsController@show')->name('reservation.show')->middleware();
 });
+Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
+Route::put('reservations/user-create/{reservation}', 'App\Http\Controllers\API\ReservationsController@updateByUser')->name('reservations.update.by.user')->middleware();
+Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
+Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
+Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
+Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
+Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
+Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 
-Route::prefix('categories')->group(function() {
-	Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
-});
 
-Route::prefix('price-lists')->group(function() {
-	Route::get('/{price_list}', 'App\Http\Controllers\API\PriceListsController@show')->name('price.lists.show')->middleware();
-});

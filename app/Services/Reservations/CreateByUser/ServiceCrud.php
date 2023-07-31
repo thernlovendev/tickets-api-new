@@ -22,10 +22,6 @@ class ServiceCrud
 {
 	public static function create($data)
 	{
-            // $service = new ServiceStripe();
-            // $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
-            // $token_credit_card = $service->createTokenCreditCard($credit_card); 
-            // $data['token_id'] = $token_credit_card['id'];
 
             do {
                 $order_number =  mt_rand(1000000, 9999999);
@@ -119,6 +115,110 @@ class ServiceCrud
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
 
+	}
+
+    public static function update($data, $reservation_old)
+	{
+            $total_old = $reservation_old->total;
+
+            foreach ($data['items'] as $item){
+                $item_model = $reservation_old->reservationItems()->where('id', $item['id'])->first();
+                $item['total'] = 0;
+                $item['addition'] = 0;
+                
+                if($item_model){
+                    $item_model->update($item);
+                } else {
+                    $item_model = $reservation_old->reservationItems()->create($item);
+                }
+                //Set the additional from the ticket and the status
+                
+                foreach($item['sub_items'] as  $index => $sub_item){
+                    $ticket = Ticket::find($sub_item['ticket_id']);
+
+                    if(!isset($sub_item['id'])){
+                        switch ($ticket->ticket_type) {
+                            case Ticket::TYPE['REGULAR']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                break;
+    
+                            case Ticket::TYPE['BAR_QR']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                break;
+                            case Ticket::TYPE['TOUR_TICKET']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                
+                                break;
+                            case Ticket::TYPE['HARD_COPY']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                break;
+                            
+                        }
+
+                    } 
+                    
+                    $item['sub_items'][$index]['addition'] = $ticket->additional_price_amount;
+                }
+
+                $addition = collect($item['sub_items'])->sum('addition');
+                $total = ($item['price'] + $addition) * $item['quantity'];
+
+                $item_model->update(['addition' => $addition, 'total' => $total]);
+                
+                ModelCrud::deleteUpdateOrCreate($item_model->reservationSubItems(), $item['sub_items']);
+            }
+
+            $reservation_old->subtotal = $reservation_old->reservationItems()->sum('total');
+            
+            $reservation_old->total = round($reservation_old->subtotal - $reservation_old->discount_amount, 2);
+
+            $reservation_old->save();
+
+            if($reservation_old->total - $total_old > 0){    
+                            
+                
+                $validator = Validator::make($data,[
+                    'stripe_token' => ['required'],
+                ]);
+                
+                if( $validator->fails() ){
+                    throw ValidationException::withMessages([
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                
+                $data = $validator->validate();
+
+                $data['total'] = $reservation_old->total - $total_old;
+                if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                    $response = ServiceCashPayment::create($reservation_old, $data);
+                }  else{
+
+                    $reservation_old->status = Reservation::STATUS['NO_PAID'];
+
+                    $response = ServiceCreditCard::create($reservation_old, $data);
+                
+                    if($reservation->status == Reservation::STATUS['NO_PAID']){
+                        throw new \Exception($response);
+                    }
+                }
+
+                $template = Template::where('title','After Upgraded Order')->first();
+        
+                if($template->subject == 'default'){
+                    $subject = "Order Upgraded";
+                } else {
+                    $subject = $template->subject;
+                }
+
+                // Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount' => $data['total']], function($message) use ($reservation_old, $subject){
+                //     $message->to($reservation_old->email);
+                //     $message->subject($subject);
+                // });
+                
+            }
+            
+          return $reservation_old->load('reservationItems.reservationSubItems');
 	}
 
     public static function response($reservation)

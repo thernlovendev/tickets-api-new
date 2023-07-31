@@ -136,4 +136,21 @@ class ReservationsController extends Controller
         }
         
     }
+
+    public function updateByUser(ReservationByUserRequest $request, Reservation $reservation){
+        try{
+            DB::beginTransaction();
+                $data = $request->validated();
+                $reservation_updated = ReservationByUserCrud::update($data, $reservation);
+                
+                DB::commit();
+                return Response($reservation_updated, 200);
+
+            } catch (\Exception $e){
+                
+                DB::rollback();
+                return Response($e->errors(), 422);
+            }
+
+    }
 }

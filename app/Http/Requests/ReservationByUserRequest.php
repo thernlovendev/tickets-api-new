@@ -35,15 +35,7 @@ class ReservationByUserRequest extends FormRequest
                 } break;
 
             case 'POST':
-                {
-
-                    // if($reservation->status !== Reservation::STATUS['NO_PAID']){
-                    //     throw ValidationException::withMessages([
-                    //         'errors' => ['A payment has already been made, reservation status: '.$reservation->status]
-                    //     ]);
-                    // }
-                    
-                   
+                {                   
                     return [
                         'first_name' => ['required'],
                         'last_name' => ['required'],
@@ -67,9 +59,24 @@ class ReservationByUserRequest extends FormRequest
                     ];
                 } break;
 
-            case 'PUT':{
-                return [];
-            } break;
+                case 'PUT':{
+                    return [
+                        'items.*.id' => 'nullable','exists:reservation_items,id',
+                        'items.*.category_id' => 'nullable','exists:categories,id',
+                        'items.*.subcategory_id' =>'nullable','exists:subcategories,id',
+                        'items.*.price_list_id' => 'nullable','exists:price_lists,id',
+                        'items.*.adult_child_type' => 'required',
+                        'items.*.child_age' => 'nullable',
+                        'items.*.price' => 'required|numeric',
+                        'items.*.quantity' => 'integer',
+                        'items.*.sub_items' => 'array',
+                        'items.*.sub_items.*.rq_schedule_datetime' => 'nullable|date',
+                        'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
+                        'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
+                        'items.*.sub_items.*.refund_status' => 'nullable',
+                        'stripe_token' => ['nullable'],
+                    ];
+                } break;
 
             case 'DELETE': break;
             default:
