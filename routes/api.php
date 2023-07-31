@@ -36,7 +36,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     Route::prefix('categories')->group(function() {
 		Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
-		Route::get('/', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CategoriesController@store')->name('category.create')->middleware();
 		Route::put('/{category}', 'App\Http\Controllers\API\CategoriesController@update')->name('category.update')->middleware();
 		Route::delete('/{category}', 'App\Http\Controllers\API\CategoriesController@destroy')->name('category.delete')->middleware();
@@ -149,6 +148,7 @@ Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->n
 Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
+Route::get('categories', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
 Route::get('product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.get.by.subcategory')->middleware();
