@@ -25,7 +25,8 @@ class ServiceGeneral
                 'status' => $item->status,
                 'phone' => $item->phone,
                 'email' => $item->email,
-                'reservation_items' => $item->reservationItems
+                'reservation_items' => $item->reservationItems,
+                'vendor_comissions' => $item->vendorComissions
             ];
         });
 

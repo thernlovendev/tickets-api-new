@@ -13,7 +13,7 @@ class ServiceGeneral
 
         $mapCollection = $data_map->map( function($item){
 
-            $rol = $item->roles->first();
+            $role = $item->roles->first();
             $date = Carbon::parse($item->created_at)->format('Y-m-d');
             $company = Company::where('id', $item->company_id)->pluck('name')->first();
             
@@ -27,7 +27,8 @@ class ServiceGeneral
                 'email_status' => $item->email_verified_at,
                 'password' =>  $item->password,
                 'company_id'=> $item->company_id,
-                'company_name' => $company
+                'company_name' => $company,
+                'role' => $role
             ];
         });
 
