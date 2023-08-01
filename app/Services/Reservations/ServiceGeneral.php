@@ -57,6 +57,10 @@ class ServiceGeneral
             $models->where('created_by','LIKE', '%'.$filters['username'].'%');
         }
 
+        if(isset($filters['ids_filter'])){
+            $models->whereIn('id', $filters['ids_filter']);
+        }
+
         return $models;
     }
 

@@ -54,6 +54,10 @@ class ServiceGeneral
             $models->where('company_id', $filters['company_id']);
         }
 
+        if(isset($filters['ids_filter'])){
+            $models->whereIn('id', $filters['ids_filter']);
+        }
+
         return $models;
     }
 

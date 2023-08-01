@@ -13,6 +13,7 @@ use App\Services\Reservations\ServiceCrud;
 use App\Services\Reservations\CreateByUser\ServiceCrud as ReservationByUserCrud;
 use App\Models\Reservation;
 use App\Models\ReservationSubItem;
+use App\Models\OptionSchedule;
 use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
@@ -117,6 +118,16 @@ class ReservationsController extends Controller
             DB::rollback();
             return Response($e, 422);
         }
+    }
+    public function filterScheduleOptions(Request $request) {
+
+        if($request->filled('reservation_sub_item_id')){
+           $response = OptionSchedule::whereIn('reservation_sub_item_id', $request->input('reservation_sub_item_id'))->get();
+        } else {
+            $response = OptionSchedule::get();
+        }
+
+        return $response;
     }
 
     public function getScheduleOptions(ReservationSubItem $reservation_sub_item) {

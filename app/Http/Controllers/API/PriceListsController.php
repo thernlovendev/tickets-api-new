@@ -96,4 +96,14 @@ class PriceListsController extends Controller
         return $response;
     }
 
+    public function index(Request $request)
+    {
+       $reservation = PriceList::with(['subcategory']);
+       $params = $request->query();
+       $elements = ServiceGeneral::filterCustom($params, $reservation);
+       $elements = $this->httpIndex($elements, []);
+       $response = ServiceGeneral::mapCollection($elements);
+       return Response($response, 200);
+    }
+
 }
