@@ -143,7 +143,7 @@ class ServiceCrud
 
 	public static function update($data, $reservation_old)
 	{
-		
+            $reservation_old->update($data);
 
             $total_old = $reservation_old->total;
 
