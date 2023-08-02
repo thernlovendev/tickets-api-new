@@ -68,6 +68,7 @@ class ReservationRequest extends FormRequest
                         'vendor_comissions.*.comission_amount' => ['required','numeric'],
                         'payment_type' => ['required',Rule::in($type)],
                         'stripe_token' => ['required_if:payment_type,Credit Card'],
+                        'credit' => ['required_if:payment_type,Cash']
                     ];
                 } break;
 
@@ -94,6 +95,7 @@ class ReservationRequest extends FormRequest
                     'vendor_comissions.*.comission_amount' => 'required|numeric',
                     'payment_type' => ['nullable',Rule::in($type)],
                     'stripe_token' => ['required_if:payment_type,Credit Card'],
+                    'credit' => ['required_if:payment_type,Cash']
                 ];
             } break;
 
