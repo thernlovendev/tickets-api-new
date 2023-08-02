@@ -65,7 +65,7 @@ class ReservationsController extends Controller
         } catch (\Exception $e){
             
             DB::rollback();
-            return Response($e->errors(), 422);
+            return Response($e, 422);
         }
 
     }
