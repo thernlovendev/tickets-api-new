@@ -74,8 +74,8 @@ class ReservationRequest extends FormRequest
 
             case 'PUT':{
                 return [
-                    'memo' => ['max:800'],
-                    'history' => ['max:800'],
+                    'memo' => ['nullable','max:800'],
+                    'history' => ['nullable','max:800'],
                     'items.*.id' => 'nullable','exists:reservation_items,id',
                     'items.*.category_id' => 'required','exists:categories,id',
                     'items.*.subcategory_id' =>'nullable','exists:subcategories,id',
@@ -88,6 +88,7 @@ class ReservationRequest extends FormRequest
                     'items.*.refund_sent_date'=> 'nullable|date',
                     'items.*.sub_items' => 'array',
                     'items.*.sub_items.*.rq_schedule_datetime' => 'nullable|date',
+                    'items.*.ticket_sent_status' => 'nullable',
                     'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                     'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
                     'vendor_comissions' => 'array|nullable',
