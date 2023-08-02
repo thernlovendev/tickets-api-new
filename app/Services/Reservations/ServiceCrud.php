@@ -263,8 +263,10 @@ class ServiceCrud
                 // });
                 
             }
+
+            ModelCrud::deleteUpdateOrCreate($reservation_old->vendorComissions(), $data['vendor_comissions']);
             
-          return $reservation_old->load('reservationItems.reservationSubItems');
+          return $reservation_old->load('reservationItems.reservationSubItems','vendorComissions');
 	}
 
 	public static function delete($reservation)
