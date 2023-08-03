@@ -18,6 +18,7 @@ use App\Services\Reservations\ServiceCreditCard;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
 use Mail;
+use Carbon\Carbon;
 
 class ServiceCrud
 {
@@ -186,6 +187,10 @@ class ServiceCrud
                     } 
                     
                     $item['sub_items'][$index]['addition'] = $ticket->additional_price_amount;
+
+                    if($sub_item['refund_status'] !== null){
+                        $item['sub_items'][$index]['refund_sent_date'] = Carbon::now();
+                    }
                 }
 
                 $addition = collect($item['sub_items'])->sum('addition');
