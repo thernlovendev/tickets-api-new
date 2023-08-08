@@ -187,19 +187,14 @@ class ServiceCrud
                 
                 $data = $validator->validate();
 
-                $data['total'] = $reservation_old->total - $total_old;
-
-                if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
-                    $response = ServiceCashPayment::create($reservation_old, $data);
-                }  else{
+                $data['total'] = $reservation_old->total - $total_old;             
                     
-                    $reservation_old->status = Reservation::STATUS['NO_PAID'];
-                    
-                    $response = ServiceCreditCard::create($reservation_old, $data);
-                    
-                    if($reservation->status == Reservation::STATUS['NO_PAID']){
-                        throw new \Exception($response);
-                    }
+                $reservation_old->status = Reservation::STATUS['NO_PAID'];
+                
+                $response = ServiceCreditCard::create($reservation_old, $data);
+                
+                if($reservation->status == Reservation::STATUS['NO_PAID']){
+                    throw new \Exception($response);
                 }
 
                 $template = Template::where('title','After Upgraded Order')->first();
