@@ -193,7 +193,7 @@ class ServiceCrud
                 
                 $response = ServiceCreditCard::create($reservation_old, $data);
                 
-                if($reservation->status == Reservation::STATUS['NO_PAID']){
+                if($reservation_old->status == Reservation::STATUS['NO_PAID']){
                     throw new \Exception($response);
                 }
 
