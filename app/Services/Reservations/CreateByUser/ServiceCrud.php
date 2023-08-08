@@ -5,6 +5,7 @@ use DB;
 use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
+use App\Models\Template;
 use App\Models\Subcategory;
 use App\Models\PriceList;
 use App\Models\Reservation;
