@@ -220,4 +220,19 @@ class InventoriesController extends Controller
 
         return $tickets;
     }
+
+    public function changeStatus(TicketStock $stock){
+
+        if($stock->status == $stock->status = TicketStock::STATUS['VALID'] ){
+            $stock->status = TicketStock::STATUS['USED'];
+            $stock->save();
+        } else {
+            $stock->status = TicketStock::STATUS['VALID'];
+            $stock->save();
+        }
+        return Response($stock, 200);
+
+    }
+
+    
 }
