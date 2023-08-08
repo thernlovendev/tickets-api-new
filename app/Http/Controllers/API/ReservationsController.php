@@ -17,6 +17,8 @@ use App\Models\OptionSchedule;
 use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
+use App\Exceptions\StripeTokenFailException;
+
 use DB;
 
 class ReservationsController extends Controller
@@ -62,6 +64,9 @@ class ReservationsController extends Controller
             DB::commit();
             return Response($reservation_updated, 200);
 
+        } catch (StripeTokenFailException $e) {
+            DB::rollback();
+            return $e->render($request);
         } catch (\Exception $e){
             
             DB::rollback();
@@ -157,8 +162,10 @@ class ReservationsController extends Controller
                 DB::commit();
                 return Response($reservation_updated, 200);
 
+            } catch (StripeTokenFailException $e) {
+                DB::rollback();
+                return $e->render($request);
             } catch (\Exception $e){
-                
                 DB::rollback();
                 return Response($e, 422);
             }

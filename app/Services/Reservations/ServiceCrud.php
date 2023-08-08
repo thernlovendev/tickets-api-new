@@ -17,6 +17,7 @@ use App\Services\Reservations\ServiceCreditCard;
 // use App\Services\Stripe\Service as ServiceStripe;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
+use App\Exceptions\StripeTokenFailException;
 use Mail;
 use Carbon\Carbon;
 
@@ -221,10 +222,8 @@ class ServiceCrud
                         // 'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string']
                     ]);
                     
-                    if( $validator->fails() ){
-                        throw ValidationException::withMessages([
-                            'errors' => $validator->errors()
-                        ]);
+                    if( $validator->fails()){
+                        throw new StripeTokenFailException($validator->messages());
                     }
                    
                     // $service = new ServiceStripe();

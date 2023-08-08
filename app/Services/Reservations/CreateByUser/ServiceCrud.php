@@ -16,6 +16,7 @@ use App\Services\Reservations\ServiceCreditCard;
 // use App\Services\Stripe\Service as ServiceStripe;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
+use App\Exceptions\StripeTokenFailException;
 use Carbon\Carbon;
 
 class ServiceCrud
@@ -174,30 +175,28 @@ class ServiceCrud
 
             $reservation_old->save();
 
+            
             if($reservation_old->total - $total_old > 0){    
-                            
                 
                 $validator = Validator::make($data,[
                     'stripe_token' => ['required'],
                 ]);
-                
-                if( $validator->fails() ){
-                    throw ValidationException::withMessages([
-                        'errors' => $validator->errors()
-                    ]);
+                if( $validator->fails()){
+                    throw new StripeTokenFailException($validator->messages());
                 }
                 
                 $data = $validator->validate();
 
                 $data['total'] = $reservation_old->total - $total_old;
+
                 if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
                     $response = ServiceCashPayment::create($reservation_old, $data);
                 }  else{
-
+                    
                     $reservation_old->status = Reservation::STATUS['NO_PAID'];
-
+                    
                     $response = ServiceCreditCard::create($reservation_old, $data);
-                
+                    
                     if($reservation->status == Reservation::STATUS['NO_PAID']){
                         throw new \Exception($response);
                     }
