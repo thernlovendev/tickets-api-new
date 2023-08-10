@@ -7,11 +7,13 @@ use App\Models\Subcategory;
 use App\Models\TicketPrice;
 use App\Models\TicketSchedule;
 use App\Models\TicketContent;
+use App\Models\TicketScheduleException;
 use DB;
 use Validator;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\Rule;
 use App\Services\Images\Service as ImageService;
+use Carbon\Carbon;
 
 class ServiceCrud
 {
@@ -86,7 +88,22 @@ class ServiceCrud
                 foreach ($data['tickets_schedule'] as $schedule) {
                     $schedule['ticket_id'] = $ticket['id'];
 
-                    TicketSchedule::create($schedule); 
+                    $ticket_schedule = TicketSchedule::create($schedule); 
+
+                    if(isset($schedule['ticket_schedule_exceptions'])){
+                        $schedule_exceptions = collect($schedule['ticket_schedule_exceptions'])
+                            ->map( function($item) use ($ticket_schedule) {
+                                return [
+                                    'date' => $item['date'],
+                                    'max_people' => $item['max_people'],
+                                    'time' => $ticket_schedule->time,
+                                    'day' => Carbon::parse($item['date'])->format('l'),
+                                    'show_on_calendar' => $item['show_on_calendar']
+                                ];
+                        });
+
+                        $schedule_exception = $ticket_schedule->ticketScheduleExceptions()->createMany($schedule_exceptions);
+                    }
                     
                 }
             }

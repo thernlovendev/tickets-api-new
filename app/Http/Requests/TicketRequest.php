@@ -85,6 +85,10 @@ class TicketRequest extends FormRequest
                         'tickets_schedule.*.max_people' => 'integer|required_if:ticket_type,'.$ticket_type,
                         'tickets_schedule.*.week_days' => ['array','required_if:ticket_type,'.$ticket_type, Rule::in($days)],
                         'tickets_schedule.*.time' => ['required_if:ticket_type,'.$ticket_type,'date_format:H:i'],
+                        'tickets_schedule.*.ticket_schedule_exceptions' => ['nullable'],
+                        'tickets_schedule.*.ticket_schedule_exceptions.*.date' => ['required','date','date_format:Y-m-d'],
+                        'tickets_schedule.*.ticket_schedule_exceptions.*.max_people' => ['required','integer','min:0'],
+                        'tickets_schedule.*.ticket_schedule_exceptions.*.show_on_calendar' => ['required','boolean']
                     ];
                 } break;
 
