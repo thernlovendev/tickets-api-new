@@ -37,6 +37,7 @@ class ReservationByUserRequest extends FormRequest
             case 'POST':
                 {                   
                     return [
+                        'fullname' => ['required'],
                         'first_name' => ['required'],
                         'last_name' => ['required'],
                         'email' => ['required','email','confirmed'],

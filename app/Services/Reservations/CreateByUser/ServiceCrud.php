@@ -31,15 +31,10 @@ class ServiceCrud
             } while (Reservation::where("order_number", "=", $order_number)->exists());
             
             $data['order_number'] = $order_number;
-            
-            $created_by = Auth::user();
-            if($created_by){
-                $data['customer_name_en'] = $created_by->name;
-                $data['customer_name_kr'] = $created_by->name;
-            } else {
-                $data['customer_name_en'] = $data['first_name'].' '.$data['last_name'];
-                $data['customer_name_kr'] = $data['first_name'].' '.$data['last_name'];
-            };
+
+            $data['customer_name_kr'] = $data['fullname'];
+            $data['customer_name_en'] = $data['first_name'].' '.$data['last_name'];
+
             $data['created_by'] = 'Customer';
 
             $data['order_date'] = Carbon::now()->format('Y-m-d');

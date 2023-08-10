@@ -19,14 +19,17 @@ class ServiceGeneral
                 'departure_date' => $item->departure_date,
                 'order_date' => $item->order_date,
                 'order_number' => $item->order_number,
+                'customer_name_en' => $item->customer_name_en,
+                'customer_name_kr' => $item->customer_name_kr,
+                'phone' => $item->phone,
                 'customer' =>$customer ? $customer->name : $item->customer_name_en,
                 'payment_type' => $item->payment_type,
                 'ticket_sent_status' => $item->ticket_sent_status,
                 'status' => $item->status,
-                'phone' => $item->phone,
                 'email' => $item->email,
                 'reservation_items' => $item->reservationItems,
-                'vendor_comissions' => $item->vendorComissions
+                'vendor_comissions' => $item->vendorComissions,
+                'user' => $customer ? $customer : $item->customer_name_en
             ];
         });
 
