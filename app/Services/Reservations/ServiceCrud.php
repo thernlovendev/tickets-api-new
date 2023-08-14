@@ -206,6 +206,8 @@ class ServiceCrud
             
             $reservation_old->total = round($reservation_old->subtotal - $reservation_old->discount_amount, 2);
 
+            $reservation_old->order_date = Carbon::now()->format('Y-m-d');
+
             $reservation_old->save();
 
             if($reservation_old->total - $total_old > 0){    
