@@ -158,6 +158,12 @@ class ServiceCrud
                         }
 
                     } 
+
+                    if($sub_item['rq_schedule_datetime'] !== null){
+                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                    } else {
+                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                    }
                     
                     if ($ticket->additional_price_type == 'Premium'){
                     $item['sub_items'][$index]['addition'] = $ticket->premium_amount;
