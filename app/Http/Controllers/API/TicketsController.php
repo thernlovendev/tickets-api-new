@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Services\Tickets\ServiceCrud;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
+use App\Models\ReservationItem;
+use App\Models\ReservationSubItem;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
 use App\Services\Tickets\ServiceGeneral;
@@ -68,6 +70,28 @@ class TicketsController extends Controller
         }
 
         
+    }
+
+    public function getSold(Ticket $ticket){
+        //Params query, and another route.
+        // $tickets_id = [1,2,26];
+
+        // $items = ReservationSubItem::whereIn('ticket_id', $tickets_id);
+
+        // $quantity_sold_test = $items->join('reservation_items', 'reservation_sub_items.reservation_item_id', '=', 'reservation_items.id')->selectRaw('ticket_id, sum(reservation_items.quantity) as total_quantity_sold')->groupBy('ticket_id')->get();
+
+        // return Response($quantity_sold_test, 200);
+
+
+        $quantity_sold = ReservationItem::whereHas('reservationSubItems', function($query) use ($ticket){
+            $query->where('ticket_id', $ticket->id);
+        })->sum('quantity');
+
+        $response = [
+            'total_quantity_sold' => $quantity_sold
+        ];
+
+        return Response($response, 200);
     }
 
 

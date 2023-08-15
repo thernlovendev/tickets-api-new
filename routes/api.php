@@ -62,7 +62,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/{ticket}/price', 'App\Http\Controllers\API\TicketsController@getSinglePrice')->name('ticket.single.price')->middleware();
 		Route::put('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@update')->name('ticket.shcedule.update')->middleware();
 		Route::delete('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@delete')->name('ticket.shcedule.delete')->middleware();
-		
+		Route::get('/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
 
 	});
 
