@@ -72,7 +72,7 @@ class TicketsController extends Controller
         
     }
 
-    public function getSold(Ticket $ticket){
+    public function getSold(Ticket $ticket, Request $request){
         //Params query, and another route.
         // $tickets_id = [1,2,26];
 
@@ -81,10 +81,18 @@ class TicketsController extends Controller
         // $quantity_sold_test = $items->join('reservation_items', 'reservation_sub_items.reservation_item_id', '=', 'reservation_items.id')->selectRaw('ticket_id, sum(reservation_items.quantity) as total_quantity_sold')->groupBy('ticket_id')->get();
 
         // return Response($quantity_sold_test, 200);
+        $filter_datetime = false;
+        $datetime = null;
+        if($request->filled('rq_schedule_datetime')){
+            $datetime = $request->input('rq_schedule_datetime');
+            $filter_datetime = true;
+        }
 
-
-        $quantity_sold = ReservationItem::whereHas('reservationSubItems', function($query) use ($ticket){
+        $quantity_sold = ReservationItem::whereHas('reservationSubItems', function($query) use ($ticket, $datetime, $filter_datetime){
             $query->where('ticket_id', $ticket->id);
+            if($filter_datetime){
+                $query->where('rq_schedule_datetime', $datetime);
+            }
         })->sum('quantity');
 
         $response = [
