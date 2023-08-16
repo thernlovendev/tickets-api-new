@@ -62,7 +62,7 @@ class DashboardDownloadRequest extends FormRequest
                         
                         if(count($stocks) < $quantity){
                             return [
-                                'quantity_stock' => 'required'
+                                'quantity' => 'required'
                             ];
                         }
                         return [
