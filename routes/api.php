@@ -168,6 +168,7 @@ Route::prefix('reservations')->group(function() {
 Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
 Route::put('reservations/user-create/{reservation}', 'App\Http\Controllers\API\ReservationsController@updateByUser')->name('reservations.update.by.user')->middleware();
 Route::get('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptions')->name('schedule.options.index')->middleware();
+Route::post('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptionsPost')->name('schedule.options.index.post')->middleware();
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
