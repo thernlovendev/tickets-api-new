@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TemplateRequest;
+use App\Http\Requests\TemplateImageRequest;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use App\Services\Templates\ServiceGeneral;
@@ -63,5 +64,12 @@ class TemplatesController extends Controller
             return Response(['message'=> 'Delete Template Successfully'], 204);
         }
 
+    }
+
+    public function createTemplateImage(TemplateImageRequest $request)
+    {
+        $data = $request->validated();
+        $template = ServiceCrud::createImage($data);
+        return Response($template, 201);
     }
 }

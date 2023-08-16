@@ -108,6 +108,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/', 'App\Http\Controllers\API\TemplatesController@index')->name('templates.index')->middleware();
 		Route::get('/{template}', 'App\Http\Controllers\API\TemplatesController@show')->name('templates.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\TemplatesController@store')->name('templates.create')->middleware();
+		Route::post('/images', 'App\Http\Controllers\API\TemplatesController@createTemplateImage')->name('templates.image.create')->middleware();
 		Route::put('/{template}', 'App\Http\Controllers\API\TemplatesController@update')->name('templates.update')->middleware();
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
 	});

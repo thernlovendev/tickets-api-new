@@ -43,4 +43,9 @@ class Template extends Model
         return $this->morphOne(Image::class, 'imageable');
         // ->where('priority_type', 'card_image');
     }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable')->where('priority_type', 'template');
+    }
 }
