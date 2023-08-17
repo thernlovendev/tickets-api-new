@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\TicketSchedule;
 use App\Models\TicketPrice;
@@ -45,7 +46,9 @@ class TicketRequest extends FormRequest
                         'city_id' => ['required','exists:cities,id'],
                         'title_en' => ['required','unique:tickets,title_en'],
                         'title_kr' => ['required','unique:tickets,title_kr'],
-                        'ticket_template' => ['required'],
+                        'template_id' => ['required',Rule::exists('templates', 'id')->where(function ($query) {
+                            $query->where('type', 'Image');
+                        }),'integer'],
                         'ticket_type' => ['required'],
                         'status' => ['required', Rule::in($status)],
                         'out_of_stock_alert_adult' => ['nullable', 'integer'],
@@ -97,7 +100,9 @@ class TicketRequest extends FormRequest
                 return [
                         'title_en' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
                         'title_kr' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
-                        'ticket_template' => ['required'],
+                        'template_id' => ['required',Rule::exists('templates', 'id')->where(function ($query) {
+                            $query->where('type', 'Image');
+                        }),'integer'],
                         'ticket_type' => ['required'],
                         'status' => ['required', Rule::in($status)],
                         'out_of_stock_alert_adult' => ['nullable', 'integer'],

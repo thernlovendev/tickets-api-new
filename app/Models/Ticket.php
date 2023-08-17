@@ -52,7 +52,7 @@ class Ticket extends Model
         'city_id',
         'title_en',
         'title_kr',
-        'ticket_template',
+        'template_id',
         'ticket_type',
         'status',
         'out_of_stock_alert_adult',
@@ -131,5 +131,10 @@ class Ticket extends Model
     public function reservationSubItems()
     {
         return $this->hasMany(ReservationSubItem::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class, 'template_id');
     }
 }
