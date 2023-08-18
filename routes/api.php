@@ -93,7 +93,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::put('/{stock}/change-status', 'App\Http\Controllers\API\InventoriesController@changeStatus')->name('inventory.change.status')->middleware();
 		Route::post('/correction-balance', 'App\Http\Controllers\API\InventoriesController@stockCorrection')->name('inventory.correction.balance')->middleware();
 		Route::post('/bulk-upload', 'App\Http\Controllers\API\InventoriesController@bulkUpload')->name('inventory.bulk.upload')->middleware();
+		Route::post('/bulk-upload-zip', 'App\Http\Controllers\API\InventoriesController@bulkUploadZip')->name('inventory.bulk.upload.zip')->middleware();
 		Route::post('/reservation/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\InventoriesController@downloadTickets')->name('inventory.download.reservation')->middleware();
+	
 	});
 
 	Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
@@ -176,3 +178,7 @@ Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name(
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 
 
+// Route::get('/test-pdf', function(){
+// 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201558/CY87445.pdf';
+// 	return Response::download($file);
+// });
