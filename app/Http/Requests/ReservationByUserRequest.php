@@ -15,9 +15,25 @@ class ReservationByUserRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {
-        return true;
-    }
+{
+    //    $user = auth()->user();
+
+    //    $isAdmin = $user && $user->roles->first()->name === 'admin' || $user && $user->roles->first()->name === 'super admin';
+   
+    //    if ($isAdmin) {
+    //        return true;
+    //    }
+   
+    //    $restrictedFields = ['discount_amount', 'vendor_comissions', 'payment_type'];
+   
+    //    foreach ($this->all() as $field => $value) {
+    //        if (in_array($field, $restrictedFields) && !is_null($value)) {
+    //            return false;
+    //        }
+    //    }
+   
+       return true;
+}
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,6 +42,8 @@ class ReservationByUserRequest extends FormRequest
      */
     public function rules()
     {
+        $user = auth()->user();
+        $isAdmin = $user && $user->roles->first()->name === 'admin' || $user && $user->roles->first()->name === 'super admin';
         $type = Reservation::PAYMENT_TYPE;
         $type_price_item = ReservationItem::TYPE_PRICE;
         switch($this->method()) {
@@ -44,7 +62,6 @@ class ReservationByUserRequest extends FormRequest
                         'email_confirmation' => ['required','email','max:255'],
                         'departure_date' => ['nullable','date'],
                         'phone' => ['required'],
-                        'discount_amount' => ['nullable','numeric','min:0'],
                         'items.*.category_id' => ['nullable','exists:categories,id'],
                         'items.*.subcategory_id' => ['nullable','exists:subcategories,id'],
                         'items.*.price_list_id' => ['nullable','exists:price_lists,id'],
@@ -56,7 +73,14 @@ class ReservationByUserRequest extends FormRequest
                         'items.*.sub_items.*.rq_schedule_datetime' => ['nullable','date'],
                         'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                         'items.*.sub_items.*.refund_status' => ['nullable'],
-                        'stripe_token' => ['required'],
+                        'discount_amount' => ($isAdmin) ? ['required', 'numeric', 'min:0'] : ['exclude'],
+                        'vendor_comissions' => ($isAdmin) ? ['array', 'nullable'] : ['exclude'],
+                        'vendor_comissions.*.user_id' => ($isAdmin) ? ['required'] : ['exclude'],
+                        'vendor_comissions.*.type' => ($isAdmin) ? ['required', Rule::in(['AP', 'AR'])] : ['exclude'],
+                        'vendor_comissions.*.comission_amount' => ($isAdmin) ? ['required', 'numeric'] : ['exclude'], 
+                        'payment_type' => ($isAdmin) ? ['nullable', Rule::in($type)] : ['exclude'],
+                        'credit' => ($isAdmin) ? ['required_if:payment_type,Cash'] : ['exclude'], 
+                        'stripe_token' => ['required_if:payment_type,Credit Card,null']
                     ];
                 } break;
 
