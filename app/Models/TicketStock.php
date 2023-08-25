@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Ticket;
 use App\Models\StockUsed;
+use App\Models\TicketStockPdf;
 
 class TicketStock extends Model
 {
@@ -24,7 +25,7 @@ class TicketStock extends Model
         'QR' => 'QR',
         'BAR' => 'Bar',
         'TEXT' => 'Text',
-        'NA' => 'N/A',
+        'ZIP' => 'Zip',
     ];
 
     const STATUS = [
@@ -49,5 +50,10 @@ class TicketStock extends Model
     public function stocksUsed()
     {
         return $this->hasMany(StockUsed::class);
+    }
+
+    public function pdf()
+    {
+        return $this->hasOne(TicketStockPdf::class);
     }
 }
