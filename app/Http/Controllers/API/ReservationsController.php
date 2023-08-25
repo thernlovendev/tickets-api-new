@@ -135,6 +135,17 @@ class ReservationsController extends Controller
         return $response;
     }
 
+    public function filterScheduleOptionsPost(Request $request) {
+
+        if($request->filled('reservation_sub_item_id')){
+           $response = OptionSchedule::whereIn('reservation_sub_item_id', $request->input('reservation_sub_item_id'))->get();
+        } else {
+            $response = OptionSchedule::get();
+        }
+
+        return $response;
+    }
+
     public function getScheduleOptions(ReservationSubItem $reservation_sub_item) {
         return Response($reservation_sub_item->optionsSchedules()->orderBy('order')->get(), 200);
     }

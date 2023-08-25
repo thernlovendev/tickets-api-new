@@ -62,8 +62,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/{ticket}/price', 'App\Http\Controllers\API\TicketsController@getSinglePrice')->name('ticket.single.price')->middleware();
 		Route::put('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@update')->name('ticket.shcedule.update')->middleware();
 		Route::delete('/{ticket}/ticket-schedules/{ticketSchedule}', 'App\Http\Controllers\API\TicketSchedulesController@delete')->name('ticket.shcedule.delete')->middleware();
-		Route::get('/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
-
 	});
 
 	Route::prefix('reservations')->group(function() {
@@ -112,6 +110,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/', 'App\Http\Controllers\API\TemplatesController@index')->name('templates.index')->middleware();
 		Route::get('/{template}', 'App\Http\Controllers\API\TemplatesController@show')->name('templates.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\TemplatesController@store')->name('templates.create')->middleware();
+		Route::post('/images', 'App\Http\Controllers\API\TemplatesController@createTemplateImage')->name('templates.image.create')->middleware();
 		Route::put('/{template}', 'App\Http\Controllers\API\TemplatesController@update')->name('templates.update')->middleware();
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
 	});
@@ -144,6 +143,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/', 'App\Http\Controllers\API\BookingController@index')->name('booking.index')->middleware();
 	});
 
+	Route::prefix('configurations')->group(function() {
+		Route::get('/payment-type', 'App\Http\Controllers\API\ConfigurationController@getPaymentConfiguration')->name('configuration.payment.get')->middleware();
+		Route::put('/payment-type', 'App\Http\Controllers\API\ConfigurationController@updatePaymentConfiguration')->name('configuration.payment.update')->middleware();
+	});
+
 });
 
 //Tamice users
@@ -170,13 +174,14 @@ Route::prefix('reservations')->group(function() {
 Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
 Route::put('reservations/user-create/{reservation}', 'App\Http\Controllers\API\ReservationsController@updateByUser')->name('reservations.update.by.user')->middleware();
 Route::get('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptions')->name('schedule.options.index')->middleware();
+Route::post('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptionsPost')->name('schedule.options.index.post')->middleware();
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
-
+Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
 
 // Route::get('/test-pdf', function(){
 // 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201558/CY87445.pdf';

@@ -24,6 +24,7 @@ class TicketStock extends Model
     const TYPE = [
         'QR' => 'QR',
         'BAR' => 'Bar',
+        'TEXT' => 'Text',
         'NA' => 'N/A',
     ];
 
