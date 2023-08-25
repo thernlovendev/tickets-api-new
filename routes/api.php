@@ -141,6 +141,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/', 'App\Http\Controllers\API\BookingController@index')->name('booking.index')->middleware();
 	});
 
+	Route::prefix('configurations')->group(function() {
+		Route::get('/payment-type', 'App\Http\Controllers\API\ConfigurationController@getPaymentConfiguration')->name('configuration.payment.get')->middleware();
+		Route::put('/payment-type', 'App\Http\Controllers\API\ConfigurationController@updatePaymentConfiguration')->name('configuration.payment.update')->middleware();
+	});
+
 });
 
 //Tamice users
