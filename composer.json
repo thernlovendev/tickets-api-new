@@ -21,6 +21,7 @@
         "socialiteproviders/naver": "^4.1",
         "socialiteproviders/zoho": "*",
         "spatie/laravel-permission": "^5.10",
+        "square/square": "30.0.0.20230816",
         "stripe/stripe-php": "^10.11",
         "tymon/jwt-auth": "dev-develop"
     },
