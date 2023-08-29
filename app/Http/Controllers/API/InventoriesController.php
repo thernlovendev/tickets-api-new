@@ -170,15 +170,10 @@ class InventoriesController extends Controller
             }
             
             $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
-            $gallery = $ticket->galleryImages->sortBy('priority')->first();
-            $image_logo = public_path('logo.png');
             
-            if($gallery == null){
-                $image = $image_logo;
-            } else {
-                $image = storage_path().'/app/public/'.$gallery->path;
-            }
-            $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
+            $image = storage_path().'/app/public/'.$ticket->template->image->path;
+
+            $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation'));
             
             // Create PDF and Download
             

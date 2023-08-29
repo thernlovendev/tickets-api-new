@@ -23,7 +23,7 @@
 <body>
                         
                         {{-- This code will be implemented when template images are added to the ticket --}}
-                    {{-- <div style="position:relative;">
+                    <div style="position:relative;">
                             @foreach ($data as $item)
                                     <div style="position: relative;margin-bottom:50px">
                                         <!-- Imagen del usuario -->
@@ -34,12 +34,12 @@
                                     </div>
                                 </div>
                             @endforeach
-                    </div> --}}
+                    </div>
                                 
 
 
 
-                <table class="table">
+                {{-- <table class="table">
                     @foreach ($data as $item)
                         
                         @if($item->type == 'QR')
@@ -114,6 +114,6 @@
                     @endforeach
                     
                     </tbody>
-                </table>
+                </table> --}}
 </body>
 </html>

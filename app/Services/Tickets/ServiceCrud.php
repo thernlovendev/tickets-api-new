@@ -47,7 +47,7 @@ class ServiceCrud
                     'city_id' => $data['city_id'],
                     'title_en' => $data['title_en'],
                     'title_kr' => $data['title_kr'],
-                    'ticket_template' => $data['ticket_template'],
+                    'template_id' => $data['template_id'],
                     'ticket_type' => $data['ticket_type'],
                     'status' => $data['status'],
                     'out_of_stock_alert_adult' => $data['out_of_stock_alert_adult'],
