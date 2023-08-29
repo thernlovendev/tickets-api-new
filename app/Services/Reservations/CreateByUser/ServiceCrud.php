@@ -24,7 +24,6 @@ class ServiceCrud
 {
 	public static function create($data)
 	{
-
             do {
                 $order_number =  mt_rand(1000000, 9999999);
                 settype($order_number, 'string');
@@ -34,11 +33,28 @@ class ServiceCrud
 
             $data['customer_name_kr'] = $data['fullname'];
             $data['customer_name_en'] = $data['first_name'].' '.$data['last_name'];
+            
+            $created_by = Auth::user();
 
-            $data['created_by'] = 'Customer';
+            if($created_by){
+                $rol = $created_by->roles()->first();
+                if($rol->name == 'admin' || $rol->name == 'super admin'){
+                    $data['created_by'] = $created_by->name;
+                }else{
+                    $data['created_by'] = 'Customer';
+                }
+            } else {
+                $data['created_by'] = 'Customer';
+            }
 
             $data['order_date'] = Carbon::now()->format('Y-m-d');
-            $data['payment_type'] = 'Credit Card';
+            
+            $user = auth()->user();
+            $isAdmin = $user && $user->roles->first()->name === 'admin' || $user && $user->roles->first()->name === 'super admin';
+
+            if(!$isAdmin){
+                $data['payment_type'] = 'Credit Card';
+            }
             
             $reservation = Reservation::create($data);
             
@@ -108,9 +124,13 @@ class ServiceCrud
                 $reservation->save();
 
                 $data['total'] = $reservation->total;
-               
-                $response = ServiceCreditCard::create($reservation, $data);
-
+                
+                if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                    $response = ServiceCashPayment::create($reservation, $data);
+                }  else{
+                    $response = ServiceCreditCard::create($reservation, $data);
+                }
+                
                 if($reservation->status == Reservation::STATUS['NO_PAID']){
                     throw new \Exception($response);
                 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\InventoryRequest;
 use App\Http\Requests\StockTicketRequest;
+use App\Http\Requests\StockTicketZipRequest;
 use App\Http\Requests\StockCorrectionBalanceRequest;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -23,6 +24,10 @@ use PDF;
 use DB;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+// use Illuminate\Support\Facades\Zip;
 
 class InventoriesController extends Controller
 {
@@ -62,6 +67,65 @@ class InventoriesController extends Controller
 
         Excel::import(new TicketStocksImport($data), $data['file_import']);
         return Response(['message'=> 'Successful Bulk Up'], 200);
+    }
+
+    public function bulkUploadZip(StockTicketZipRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $zipPath = $request->file('file_import')->store('temp');
+            $zip = new \ZipArchive;
+
+            $zip->open(storage_path('app/' . $zipPath));
+            $folder = Carbon::now()->format('YmdHis');
+            $extractPath = storage_path('app/public/stock_pdfs/'.$folder);
+
+            $zip->extractTo($extractPath);
+            $zip->close();
+            
+            $pdfFiles = Storage::files('public/stock_pdfs/'.$folder);
+            $errors = [];
+            $message = 'Successful Bulk Up';
+            foreach ($pdfFiles as $pdfFile) {
+                $pdfContents = Storage::get($pdfFile);
+                $pdfPath = Storage::path($pdfFile);
+    
+                $pdfName = pathinfo($pdfFile, PATHINFO_FILENAME);
+                $stock = TicketStock::where('code_number', $pdfName)->first();
+                if(!$stock){
+                    $ticketStock = TicketStock::create([
+                        'code_number' => $pdfName,
+                        'type' => $request->input('type'),
+                        'expiration_date' => $request->input('expiration_date'),
+                        'status' => TicketStock::STATUS['VALID'],
+                        'range_age_type' => $request->input('range_age_type'),
+                        'ticket_id' => $request->input('ticket_id')
+                    ]);
+        
+                    $ticketStock->pdf()->create([
+                        'name' => $pdfName,
+                        'path' => $pdfPath
+                    ]);
+                } else {
+                    $errors[] = [
+                        'code_number' => $pdfName
+                    ];
+                    $message = 'Some codes are repeated, only the correct ones have been loaded';
+                }
+            }
+
+            if (Storage::exists($zipPath)) {
+                Storage::delete($zipPath);
+            }
+            
+            DB::commit();
+    
+            return response(['message'=> $message, 'errors' => $errors], 200);
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response($e, 400);
+        }
     }
 
     public function details(Request $request, $ticket_id, $type){
