@@ -28,13 +28,14 @@ class ServiceGeneral
             if($used > 0){
                 $stock = $item->stocksUsed->first();
                 $reservation = Reservation::find($stock->reservation_id);
-                $sub_item = ReservationSubItem::find($stock->reservation_id);
+                $sub_item = ReservationSubItem::find($stock->reservation_sub_item_id);
 
-                $item_number = $sub_item->id;
+                $item_number = $sub_item->reservation_item_id;
                 $customer_name = $reservation->customer_name_en;
                 $order_id = $reservation->order_number;
                 $reservation_id = $reservation->id;
                 $sub_item_id = $sub_item->id;
+
 
             }
 
