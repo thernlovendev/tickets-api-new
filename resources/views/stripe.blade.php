@@ -73,6 +73,7 @@
             console.log('token',token)
             stripeTokenHandler(token);
         }
+        
         });
 
         const stripeTokenHandler = (token) => {
