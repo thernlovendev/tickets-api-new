@@ -141,7 +141,23 @@ class InventoriesController extends Controller
         $elements = $this->httpIndex($elements, []);
         $response = ServiceDetail::mapCollection($elements);
         return Response($response, 200);
-        
+    }
+
+    public function downloadPdfZip(Request $request){
+
+        if($request->filled('code_number')){
+            $code_number = $request->input('code_number');
+            $ticket_stock = TicketStock::where('code_number', $code_number)->firstOrFail();
+    
+            if($ticket_stock->pdf){
+                $path = $ticket_stock->pdf->path;
+                $result_file_name = $ticket_stock->pdf->name.'.pdf';
+                return response()->download($path, $result_file_name)->deleteFileAfterSend(false);
+            }
+        }
+
+        return response(['message' => 'The pdf is not available'], 400);
+
     }
 
     public function downloadTickets(Reservation $reservation, ReservationSubItem $reservationSubItem){

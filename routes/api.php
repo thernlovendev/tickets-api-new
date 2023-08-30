@@ -87,6 +87,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	Route::prefix('inventories')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\InventoriesController@index')->name('inventory.index')->middleware();
 		Route::get('/{ticket_id}/{type}', 'App\Http\Controllers\API\InventoriesController@details')->name('inventory.detail')->middleware();
+		Route::get('/download-pdf-zip', 'App\Http\Controllers\API\InventoriesController@downloadPdfZip')->name('inventory.detail')->middleware();
 		Route::get('/stock-balance', 'App\Http\Controllers\API\InventoriesController@stockBalance')->name('inventory.stock.balance')->middleware();
 		Route::put('/{stock}/change-status', 'App\Http\Controllers\API\InventoriesController@changeStatus')->name('inventory.change.status')->middleware();
 		Route::post('/correction-balance', 'App\Http\Controllers\API\InventoriesController@stockCorrection')->name('inventory.correction.balance')->middleware();
