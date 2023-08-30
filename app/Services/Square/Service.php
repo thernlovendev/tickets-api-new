@@ -7,9 +7,14 @@ use Square\Environment;
 use Square\Models\CreatePaymentRequest;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use App\Exceptions\FailException;
+
 
 class Service
 {
+    // private const URL = 'https://connect.squareup.com/v2/';
+    private const URL = 'https://connect.squareupsandbox.com/v2/';
+
     private $access_token;
 
     public function __construct()
@@ -23,32 +28,26 @@ class Service
      */
     public function createPayment($data)
     {
-        $square_client = new SquareClient([
-            'accessToken' => config('square.sandbox_access_token'),
-            'environment' => Environment::SANDBOX,
-        ]);
-        
-        $payments_api = $square_client->getPaymentsApi();
-        
-        dd($data);
-        $create_payment_request = new CreatePaymentRequest([
-            'source_id' => $data['source'], // Reemplaza con un nonce válido
+
+        $response = Http::withToken($this->access_token)->withHeaders([
+            'Square-Version' => '2023-08-16',
+        ])->post(self::URL.'payments', [
+            'source_id' => $data['source'],
             'amount_money' => [
-                'amount' => $data['amount'], // El monto en centavos
+                'amount' => $data['amount'],
                 'currency' => $data['currency'],
             ],
+            'note' => $data['description'],
+            'idempotency_key' => uniqid(),
         ]);
-        
-        try {
-            $response = $payments_api->createPayment($create_payment_request);
-            return $response;
-        } catch (\Square\Exceptions\ApiException $e) {
-            // Manejar la excepción
-            \Log::debug('error excepton square');
-            \Log::debug($e);
-        
-            // if(!$cus_response || !$card_response)   throw new Exception('Error!');
+
+
+        if($response->failed()){
+            throw new FailException($response->json(), 'Something went wrong');
         }
+        
+        return $response->json();
+        
     }
     
 }

@@ -105,9 +105,8 @@ class ReservationsController extends Controller
             DB::commit();
             return Response($reservation, 201);
         } catch (\Exception $e){
-            
             DB::rollback();
-            return Response($e, 422);
+            return Response($e->getMessage(), 422);
         }
     }
 

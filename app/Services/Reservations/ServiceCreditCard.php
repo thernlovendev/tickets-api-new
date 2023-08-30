@@ -11,6 +11,7 @@ use App\Models\ReservationSubItem;
 use App\Models\Configuration;
 use App\Services\Stripe\Service as ServiceStripe;
 use App\Services\Square\Service as ServiceSquare;
+use App\Exceptions\FailException;
 
 class ServiceCreditCard
 {
@@ -25,13 +26,15 @@ class ServiceCreditCard
                 $response = ServiceCreditCard::paymentSquare($reservation, $data);
             } else {
                 $response = ServiceCreditCard::paymentStripe($reservation, $data);
-                dd($reponse);
             }
             
             DB::commit();
 
             return $response;
 
+        } catch (FailException $e) {
+            DB::rollback();
+            return $e->render();
         } catch (\Exception $e){
             DB::rollback();
             return Response($e, 400);
@@ -96,11 +99,9 @@ class ServiceCreditCard
             ];
             
             $response = $service->createPayment($payload);
-            
-            \Log::debug($response);
            
-            $data['payment_status'] = $response['outcome']['seller_message'];
-            $data['card_type'] = $response['payment_method_details']['card']['brand'];
+            $data['payment_status'] = $response['payment']['status'];
+            $data['card_type'] = $response['payment']['card_details']['card']['card_brand'];
 
             $reservation->reservationCreditCardPayments()->create($data);
             

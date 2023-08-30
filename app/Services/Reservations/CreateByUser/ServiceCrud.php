@@ -133,6 +133,7 @@ class ServiceCrud
                 
                 if($reservation->status == Reservation::STATUS['NO_PAID']){
                     throw new \Exception($response);
+                    // throw new StripeTokenFailException($response);
                 }
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
