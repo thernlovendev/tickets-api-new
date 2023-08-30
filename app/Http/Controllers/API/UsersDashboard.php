@@ -15,73 +15,77 @@ use App\Http\Requests\DashboardDownloadRequest;
 use PDF;
 use DB;
 use Mail;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+
 
 class UsersDashboard extends Controller
 {
-    public function downloadTicket(DashboardDownloadRequest $request, Reservation $reservation, ReservationSubItem $reservationSubItem){
-        try {
-            DB::beginTransaction();
+    // public function downloadTicket(DashboardDownloadRequest $request, Reservation $reservation, ReservationSubItem $reservationSubItem){
+    //     try {
+    //         DB::beginTransaction();
             
-            $reservationSubItem->load('reservationItem');
+    //         $reservationSubItem->load('reservationItem');
             
-            $quantity = $reservationSubItem->reservationItem->quantity;
-            $range_age = $reservationSubItem->reservationItem->adult_child_type;
-            $ticket_id = $reservationSubItem->ticket_id;
+    //         $quantity = $reservationSubItem->reservationItem->quantity;
+    //         $range_age = $reservationSubItem->reservationItem->adult_child_type;
+    //         $ticket_id = $reservationSubItem->ticket_id;
             
-            $now = Carbon::now()->format('Y-m-d H:i:s');
+    //         $now = Carbon::now()->format('Y-m-d H:i:s');
             
-            $stocks = TicketStock::where('status',TicketStock::STATUS['VALID'])
-                        ->where('expiration_date','>', $now)
-                        ->where('ticket_id', $ticket_id)
-                        ->where('range_age_type',$range_age)
-                        ->take($quantity)
-                        ->get();
+    //         $stocks = TicketStock::where('status',TicketStock::STATUS['VALID'])
+    //                     ->where('expiration_date','>', $now)
+    //                     ->where('ticket_id', $ticket_id)
+    //                     ->where('range_age_type',$range_age)
+    //                     ->take($quantity)
+    //                     ->get();
             
-            if(isset($stocks)){
-                $data = [];
-                foreach ($stocks as  $key => $stock) {
-                    $data[] = StockUsed::create([
-                        'date_used' => $now,
-                        'reservation_id' => $reservation->id,
-                        'ticket_stock_id' => $stock->id,
-                        'reservation_sub_item_id' => $reservationSubItem->id
-                    ]);
+    //         if(isset($stocks)){
+    //             $data = [];
+    //             foreach ($stocks as  $key => $stock) {
+    //                 $data[] = StockUsed::create([
+    //                     'date_used' => $now,
+    //                     'reservation_id' => $reservation->id,
+    //                     'ticket_stock_id' => $stock->id,
+    //                     'reservation_sub_item_id' => $reservationSubItem->id
+    //                 ]);
                     
-                    $stock->update([
-                        'status' => TicketStock::STATUS['USED']
-                    ]);
+    //                 $stock->update([
+    //                     'status' => TicketStock::STATUS['USED']
+    //                 ]);
                     
-                    $data[$key]['code'] = $stock->code_number;
-                    $data[$key]['expiration_date'] = $stock->expiration_date;
-                    $data[$key]['type'] = $stock->type;
-                }
+    //                 $data[$key]['code'] = $stock->code_number;
+    //                 $data[$key]['expiration_date'] = $stock->expiration_date;
+    //                 $data[$key]['type'] = $stock->type;
+    //             }
                 
-                $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
-                $gallery = $ticket->galleryImages->sortBy('priority')->first();
-                $image_logo = public_path('logo.png');
+    //             $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
+    //             $gallery = $ticket->galleryImages->sortBy('priority')->first();
+    //             $image_logo = public_path('logo.png');
                 
-                if($gallery == null){
-                    $image = $image_logo;
-                } else {
-                    $image = storage_path().'/app/public/'.$gallery->path;
-                }
+    //             if($gallery == null){
+    //                 $image = $image_logo;
+    //             } else {
+    //                 $image = storage_path().'/app/public/'.$gallery->path;
+    //             }
 
-                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
+    //             $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
                 
-                DB::commit();
+    //             DB::commit();
                 
-                return $pdf->download('tickets'.$now.'.pdf');
+    //             return $pdf->download('tickets'.$now.'.pdf');
                 
-            } else {
-                return 'Empty Stock';
-            }
+    //         } else {
+    //             return 'Empty Stock';
+    //         }
         
-        } catch(\Exception $e) {
-            DB::rollback();
-            return Response($e,400);
+    //     } catch(\Exception $e) {
+    //         DB::rollback();
+    //         return Response($e,400);
 
-        }
-    }
+    //     }
+    // }
 
     public function emailDownloadTicket(DashboardDownloadRequest $request, Reservation $reservation, ReservationSubItem $reservationSubItem){
         try {
@@ -103,9 +107,12 @@ class UsersDashboard extends Controller
                         ->get();
             
             if(isset($stocks)){
+
+                $oMerger = PDFMerger::init();
+
                 $data = [];
                 foreach ($stocks as  $key => $stock) {
-                    $data[] = StockUsed::create([
+                    $stock_used = StockUsed::create([
                         'date_used' => $now,
                         'reservation_id' => $reservation->id,
                         'ticket_stock_id' => $stock->id,
@@ -115,10 +122,15 @@ class UsersDashboard extends Controller
                     $stock->update([
                         'status' => TicketStock::STATUS['USED']
                     ]);
-                    
-                    $data[$key]['code'] = $stock->code_number;
-                    $data[$key]['expiration_date'] = $stock->expiration_date;
-                    $data[$key]['type'] = $stock->type;
+
+                    if($stock->type == TicketStock::TYPE['ZIP']){
+                        //ubica el pdf guardado para el ticketStock
+                       $oMerger->addPDF($stock->pdf->path, 'all');
+                    } else {
+                        $data[$key]['code'] = $stock->code_number;
+                        $data[$key]['expiration_date'] = $stock->expiration_date;
+                        $data[$key]['type'] = $stock->type;
+                    }
                 }
                 
                 $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
@@ -131,10 +143,22 @@ class UsersDashboard extends Controller
                     $image = storage_path().'/app/public/'.$gallery->path;
                 }
 
-                $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
+                //if data is not empty, create a pdf with tickets (autogenerated).
+                if(isset($data)){
+                    $data = json_decode(json_encode($data), false);
+                    $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
+                    //save pdf
+                    $pdf_content = $pdf->output();
+                   
+                    $temp_file_path = storage_path('app/public/'.time().'.pdf');
+                    File::put($temp_file_path, $pdf_content);
+                    $oMerger->addPDF($temp_file_path, 'all');
+                }
+
                 
                 $template = Template::where('title','After Tickets Uploaded By Admin')->first();
         
+
                 if($template->subject == 'default'){
                     $subject = "Tickets of reservation";
                 } else {
@@ -146,9 +170,20 @@ class UsersDashboard extends Controller
                 //     $message->subject($subject);
                 //     $message->attachData($pdf->output(), 'tickets.pdf');
                 // });
-                DB::commit();
+
+                $oMerger->merge();
+                $result_file_name = 'tickets_all_' . time() . '.pdf';
+
+                // Save Pdf result
+                $save_path = storage_path('app/public/' . $result_file_name);
+                $oMerger->setFileName($result_file_name)->save($save_path);
+
+                $reservationSubItem->update(['pdf_path' => $save_path]);
                 
-                return $pdf->download('tickets'.$now.'.pdf');
+                DB::commit();
+
+                //download pdf result
+                return response()->download($save_path, $result_file_name)->deleteFileAfterSend(false);
                 
             } else {
                 return 'Empty Stock';

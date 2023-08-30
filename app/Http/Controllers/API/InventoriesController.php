@@ -145,52 +145,12 @@ class InventoriesController extends Controller
     }
 
     public function downloadTickets(Reservation $reservation, ReservationSubItem $reservationSubItem){
-        try {
-            DB::beginTransaction();
-            
-            $reservationSubItem->load('reservationItem');
-            
-            $stocks = StockUsed::where('reservation_id',$reservation->id)
-                               ->where('reservation_sub_item_id',$reservationSubItem->id)
-                               ->get();
+        $result_file_name = 'tickets_all_' . time() . '.pdf';
 
-                               $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
-            $image = storage_path().'/app/public/'.$ticket->template->image->path;
-            
-            $oMerger = PDFMerger::init();
-
-            foreach ($stocks as  $key => $stock) {
-                $ticket_stock = TicketStock::find($stock->ticket_stock_id);
-                
-                $code = $ticket_stock->code_number;
-                $expiration_date = $ticket_stock->expiration_date;
-                $type = $ticket_stock->type;
-                
-                if($ticket_stock->type != TicketStock::TYPE['ZIP']){
-                    //generar pdf y guardarlo temporalmente y retornar un path
-                    $pdf = PDF::loadView('ticketDownloadCombine',compact('code','expiration_date', 'type','ticket','image','reservation'));
-                    $pdf_content = $pdf->output();
-                    $folder = Carbon::now()->format('YmdHis');
-                    // Guardar el PDF generado en el almacenamiento temporal
-                    $temp_file_path = storage_path('app/public/'.$code.'.pdf');
-                    File::put($temp_file_path, $pdf_content);
-                    $oMerger->addPDF($temp_file_path, 'all');
-                    
-                } else {
-                    //ubica el pdf guardado para el ticketStock
-                   $oMerger->addPDF($ticket_stock->pdf->path, 'all');
-                }
-            }
-
-            $oMerger->merge();
-            $result_file_name = 'tickets_' . time() . '.pdf';
-
-            return $oMerger->setFileName($result_file_name)->download();
-    
-        } catch(\Exception $e) {
-            DB::rollback();
-            return Response($e,400);
-
+        if($reservationSubItem->pdf_path){
+            return response()->download($reservationSubItem->pdf_path, $result_file_name)->deleteFileAfterSend(false);
+        } else {
+            return response(['message'=> 'The PDF is not available'], 400);
         }
     }
 

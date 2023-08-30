@@ -39,4 +39,5 @@ class TicketStockPdf extends Model
 		}
 	}
 
+
 }
