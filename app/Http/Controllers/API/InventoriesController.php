@@ -163,10 +163,12 @@ class InventoriesController extends Controller
                 $ticket_stock = TicketStock::find($stock->ticket_stock_id);
                 
                 $code = $ticket_stock->code_number;
+                $expiration_date = $ticket_stock->expiration_date;
+                $type = $ticket_stock->type;
                 
                 if($ticket_stock->type != TicketStock::TYPE['ZIP']){
                     //generar pdf y guardarlo temporalmente y retornar un path
-                    $pdf = PDF::loadView('ticketDownloadCombine',compact('code','ticket','image','reservation'));
+                    $pdf = PDF::loadView('ticketDownloadCombine',compact('code','expiration_date', 'type','ticket','image','reservation'));
                     $pdf_content = $pdf->output();
                     $folder = Carbon::now()->format('YmdHis');
                     // Guardar el PDF generado en el almacenamiento temporal
