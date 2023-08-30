@@ -28,6 +28,7 @@ use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 // use Illuminate\Support\Facades\Zip;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class InventoriesController extends Controller
 {
@@ -149,37 +150,40 @@ class InventoriesController extends Controller
             
             $reservationSubItem->load('reservationItem');
             
-            $quantity = $reservationSubItem->reservationItem->quantity;
-            $range_age = $reservationSubItem->reservationItem->adult_child_type;
-            $ticket_id = $reservationSubItem->ticket_id;
-            
-            $now = Carbon::now()->format('Y-m-d H:i:s');
-
             $stocks = StockUsed::where('reservation_id',$reservation->id)
                                ->where('reservation_sub_item_id',$reservationSubItem->id)
                                ->get();
-            $data = [];
+
+                               $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
+            $image = storage_path().'/app/public/'.$ticket->template->image->path;
+            
+            $oMerger = PDFMerger::init();
 
             foreach ($stocks as  $key => $stock) {
                 $ticket_stock = TicketStock::find($stock->ticket_stock_id);
-                $data[] = $stock;
                 
-                $data[$key]['code'] = $ticket_stock->code_number;
-                $data[$key]['expiration_date'] = $ticket_stock->expiration_date;
-                $data[$key]['type'] = $ticket_stock->type;
+                $code = $ticket_stock->code_number;
+                
+                if($ticket_stock->type != TicketStock::TYPE['ZIP']){
+                    //generar pdf y guardarlo temporalmente y retornar un path
+                    $pdf = PDF::loadView('ticketDownloadCombine',compact('code','ticket','image','reservation'));
+                    $pdf_content = $pdf->output();
+                    $folder = Carbon::now()->format('YmdHis');
+                    // Guardar el PDF generado en el almacenamiento temporal
+                    $temp_file_path = storage_path('app/public/'.$code.'.pdf');
+                    File::put($temp_file_path, $pdf_content);
+                    $oMerger->addPDF($temp_file_path, 'all');
+                    
+                } else {
+                    //ubica el pdf guardado para el ticketStock
+                   $oMerger->addPDF($ticket_stock->pdf->path, 'all');
+                }
             }
-            
-            $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
-            
-            $image = storage_path().'/app/public/'.$ticket->template->image->path;
 
-            $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation'));
-            
-            // Create PDF and Download
-            
-            DB::commit();
-            
-            return $pdf->download('tickets'.$now.'.pdf');
+            $oMerger->merge();
+            $result_file_name = 'tickets_' . time() . '.pdf';
+
+            return $oMerger->setFileName($result_file_name)->download();
     
         } catch(\Exception $e) {
             DB::rollback();

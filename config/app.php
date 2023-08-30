@@ -180,6 +180,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class
+
     ],
 
     /*
@@ -239,6 +241,8 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+
+        'PDFMerger' => Webklex\PDFMerger\Facades\PDFMergerFacade::class
 
     ],
 

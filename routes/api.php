@@ -183,7 +183,7 @@ Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name(
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
 
-// Route::get('/test-pdf', function(){
-// 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201558/CY87445.pdf';
-// 	return Response::download($file);
-// });
+Route::get('/test-pdf', function(){
+	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
+	return Response::download($file);
+});
