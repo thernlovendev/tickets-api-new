@@ -50,7 +50,16 @@ class TemplateImageRequest extends FormRequest
                     } break;
     
                 case 'PUT':{
-                        return [];
+                        $template = $this->route('template');
+                        return [
+                            'title' => ['required',Rule::unique('templates')->ignore($template->id)],
+                            'image' => ['required'],
+                            'image.id' => ['required','exists:images,id'],
+                            'image.name' => ['required'],
+                            'image.type' => ['required'],
+                            'image.priority' => ['required',"numeric"],
+                            'image.priority_type' => ['required']
+                        ];
                 } break;
 
             case 'DELETE': break;

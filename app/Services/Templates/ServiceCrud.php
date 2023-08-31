@@ -86,6 +86,17 @@ class ServiceCrud
 
 	}
 
+    public static function updateImage($data, $template){
+        $image = collect($data['image']);
+
+        if($template->image->id !== $data['image']['id']){
+            $template->image->delete();
+            ImageService::attach($image, $template);
+        } 
+
+        return $template->load('image');
+    }
+
     public static function response($template)
     {
         return $template;
