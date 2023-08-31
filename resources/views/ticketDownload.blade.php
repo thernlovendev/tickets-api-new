@@ -27,7 +27,7 @@
                             @foreach ($data as $item)
                                     <div style="position: relative;margin-bottom:50px">
                                         <!-- Imagen del usuario -->
-                                        <img width=400 height=auto src="{{$image}}" alt="Imagen del usuario">
+                                        <img width=700 height=450 src="{{$image}}" alt="Imagen del usuario">
                                         @if($item->type == 'QR')
                                         <!-- Código QR -->
                                         <div style="position: absolute; top: 5px; left: 500px;"> {!! DNS2D::getBarcodeHTML("$item->code", 'QRCODE',7,7) !!}

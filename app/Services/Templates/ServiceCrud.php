@@ -87,6 +87,8 @@ class ServiceCrud
 	}
 
     public static function updateImage($data, $template){
+
+        $template->update($data);
         $image = collect($data['image']);
 
         if($template->image->id !== $data['image']['id']){
