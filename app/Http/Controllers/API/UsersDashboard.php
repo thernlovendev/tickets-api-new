@@ -144,7 +144,6 @@ class UsersDashboard extends Controller
                     $data = json_decode(json_encode($data), false);
                     $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation'));
                     
-                    return $pdf->download('tickets.pdf');
                     //save pdf
                     $pdf_content = $pdf->output();
                    
