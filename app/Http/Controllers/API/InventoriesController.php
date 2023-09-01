@@ -257,7 +257,7 @@ class InventoriesController extends Controller
             } else if($balance_type == 'Negative'){
                 return strval($item['balance_general']) < 0;
             } else return true;
-        });
+        })->values();
 
         return $tickets;
     }
