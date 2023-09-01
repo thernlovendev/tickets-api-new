@@ -27,24 +27,34 @@
                             @foreach ($data as $item)
                                     <div style="position: relative;margin-bottom:50px">
                                         <!-- Imagen del usuario -->
-                                        <img width=400 height=auto src="{{$image}}" alt="Imagen del usuario">
+                                        <img width=700 height=auto src="{{$image}}" alt="Imagen del usuario">
                                         @if($item->type == 'QR')
                                         <!-- Código QR -->
-                                        <div style="position: absolute; top: 5px; left: 500px;"> {!! DNS2D::getBarcodeHTML("$item->code", 'QRCODE',7,7) !!}
-                                        
-                                        <br>
-                                        <span style="font-weight:800">Expiration Date: {{$item->expiration_date}}</span>
+                                        <div style="position: absolute; top: 30px; left: 520px;"> {!! DNS2D::getBarcodeHTML("$item->code", 'QRCODE',7,7) !!}
+                                                                              
                                         </div>
+
+                                        <div style="position: absolute; top: 200px; left: 500px;"> 
+                                        <span style="font-weight:800">Expiration Date: {{$item->expiration_date}}</span>
+                                        
+                                        </div>
+
+                                        
                                         @elseif($item->type == 'Bar')
-                                        <div style="position: absolute; top: 5px; left: 420px;"> 
+                                        <div style="position: absolute; top: 30px; left: 470px;"> 
                                         {!! DNS1D::getBarcodeHTML("$item->code", 'C39',2,36) !!}
                                         <br>
                                         <span style="font-weight:800">Expiration Date: {{$item->expiration_date}}</span>
                                         
                                         </div>
 
+                                        <div style="position: absolute; top: 60px; left: 545px;"> 
+                                        <span style="font-weight:800">{{$item->code}}</span>
+                                        
+                                        </div>
+
                                         @elseif($item->type == 'Text')
-                                        <div style="position: absolute; top: 5px; left: 500px;"> 
+                                        <div style="position: absolute; top: 30px; left: 500px;"> 
                                         <span style="font-weight:800">{{$item->code}}</span>
                                         <br>
                                         <span style="font-weight:800">Expiration Date: {{$item->expiration_date}}</span>
