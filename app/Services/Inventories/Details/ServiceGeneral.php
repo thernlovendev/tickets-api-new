@@ -51,7 +51,8 @@ class ServiceGeneral
                 'uploaded_date' => Carbon::parse($item->created_at)->format('Y-m-d'),
                 'reservation_id' => $reservation_id,
                 'sub_item_id' => $sub_item_id,
-                'type' => $item->type
+                'type' => $item->type,
+                'ticket_title_en' => $ticket->title_en
             ];
         });
 
