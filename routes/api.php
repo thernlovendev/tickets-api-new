@@ -68,7 +68,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/', 'App\Http\Controllers\API\ReservationsController@store')->name('reservations.create')->middleware();
 		Route::put('/{reservation}', 'App\Http\Controllers\API\ReservationsController@update')->name('reservations.update')->middleware();
 		// Route::post('/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
-		Route::post('/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\UsersDashboard@downloadTicket')->name('reservations.ticket.download')->middleware();
+		// Route::post('/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\UsersDashboard@downloadTicket')->name('reservations.ticket.download')->middleware();
 		Route::post('/{reservation}/reservation-subitems/{reservationSubItem}/email', 'App\Http\Controllers\API\UsersDashboard@emailDownloadTicket')->name('reservations.ticket.email')->middleware();
 		Route::delete('/{reservation}', 'App\Http\Controllers\API\ReservationsController@delete')->name('reservation.delete')->middleware();
 		
@@ -87,6 +87,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	Route::prefix('inventories')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\InventoriesController@index')->name('inventory.index')->middleware();
 		Route::get('/{ticket_id}/{type}', 'App\Http\Controllers\API\InventoriesController@details')->name('inventory.detail')->middleware();
+		Route::get('/download-pdf-zip', 'App\Http\Controllers\API\InventoriesController@downloadPdfZip')->name('inventory.detail')->middleware();
 		Route::get('/stock-balance', 'App\Http\Controllers\API\InventoriesController@stockBalance')->name('inventory.stock.balance')->middleware();
 		Route::put('/{stock}/change-status', 'App\Http\Controllers\API\InventoriesController@changeStatus')->name('inventory.change.status')->middleware();
 		Route::post('/correction-balance', 'App\Http\Controllers\API\InventoriesController@stockCorrection')->name('inventory.correction.balance')->middleware();
@@ -113,6 +114,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/images', 'App\Http\Controllers\API\TemplatesController@createTemplateImage')->name('templates.image.create')->middleware();
 		Route::put('/{template}', 'App\Http\Controllers\API\TemplatesController@update')->name('templates.update')->middleware();
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
+		Route::get('/{template}/image', 'App\Http\Controllers\API\TemplatesController@showTemplateImage')->name('templates.image.show')->middleware();
+		Route::put('/{template}/image', 'App\Http\Controllers\API\TemplatesController@updateImage')->name('templates.image.update')->middleware();
 	});
 
 	Route::prefix('header-gallery')->group(function() {
@@ -183,7 +186,7 @@ Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name(
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
 
-// Route::get('/test-pdf', function(){
-// 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201558/CY87445.pdf';
-// 	return Response::download($file);
-// });
+Route::get('/test-pdf', function(){
+	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
+	return Response::download($file);
+});

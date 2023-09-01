@@ -14,12 +14,16 @@ class Service
 	public static function attach($data, $model)
 	{
 		$image = Image::find($data['id']);
+		
 		$image->update([
 			'imageable_id' => $model->id,
 			'imageable_type' => get_class($model),
 			'priority' => $data['priority'] ?? null,
-            'priority_type' => $data['priority_type'] ?? null
+            'priority_type' => $data['priority_type'] ?? null,
+            'type' => $data['type'] ?? null,
+            'name' => $data['name'] ?? null,
 		]);
+
 		return $image;
 	}
 
