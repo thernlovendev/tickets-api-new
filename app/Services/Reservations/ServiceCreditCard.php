@@ -99,7 +99,7 @@ class ServiceCreditCard
             ];
             
             $response = $service->createPayment($payload);
-           
+            
             $data['payment_status'] = $response['payment']['status'];
             $data['card_type'] = $response['payment']['card_details']['card']['card_brand'];
 

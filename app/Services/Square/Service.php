@@ -43,7 +43,11 @@ class Service
 
 
         if($response->failed()){
-            throw new FailException($response->json(), 'Something went wrong');
+            if(isset($response->json()['errors'])){
+                throw new FailException($response->json()['errors'], 'Something went wrong');
+            } else {
+                throw new FailException($response->json(), 'Something went wrong');
+            }
         }
         
         return $response->json();

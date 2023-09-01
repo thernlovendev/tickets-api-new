@@ -45,7 +45,7 @@ class ReservationsController extends Controller
         } catch (\Exception $e){
             
             DB::rollback();
-            return Response($e, 422);
+            return Response($e->getMessage(), 422);
         }
     }
 
@@ -70,7 +70,7 @@ class ReservationsController extends Controller
         } catch (\Exception $e){
             
             DB::rollback();
-            return Response($e, 422);
+            return Response($e->getMessage(), 422);
         }
 
     }
