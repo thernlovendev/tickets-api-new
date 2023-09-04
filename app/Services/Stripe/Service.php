@@ -8,6 +8,7 @@ namespace App\Services\Stripe;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
+use App\Exceptions\FailException;
 
 class Service
 {
@@ -27,15 +28,17 @@ class Service
     {
         $stripe = new \Stripe\StripeClient(
             $this->access_token
-          );
-          $response = $stripe->charges->create($data);
+        );
 
-          //probar con errores para añadir este codigo
-        // if($response->failed()){
-        //     throw new FailException($response->json(), 'Something went wrong');
-        // }
-
-        return $response;
+        try{
+            $response = $stripe->charges->create($data);
+    
+            return $response;
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+            
+            throw new FailException($error, 'Something went wrong');
+        }
     }
 
     public function saveCard($data)
