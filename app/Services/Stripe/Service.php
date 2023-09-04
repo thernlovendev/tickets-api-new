@@ -30,6 +30,11 @@ class Service
           );
           $response = $stripe->charges->create($data);
 
+          //probar con errores para añadir este codigo
+        // if($response->failed()){
+        //     throw new FailException($response->json(), 'Something went wrong');
+        // }
+
         return $response;
     }
 

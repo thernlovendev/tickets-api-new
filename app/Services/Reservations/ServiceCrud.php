@@ -125,6 +125,10 @@ class ServiceCrud
                     $response = ServiceCreditCard::create($reservation, $data);
                 }
 
+                if($reservation->status == Reservation::STATUS['NO_PAID']){
+                    throw new \Exception($response);
+                }
+
                 $template = Template::where('title','After Payment Completed')->first();
         
                 if($template->subject == 'default'){
@@ -261,6 +265,10 @@ class ServiceCrud
                     $response = ServiceCashPayment::create($reservation_old, $data);
                 }  else{
                     $response = ServiceCreditCard::create($reservation_old, $data);
+                    if (array_key_exists('original', $response) && array_key_exists('errors', $response->original)) {
+                        throw new \Exception($response);
+                    } 
+                    
                 }
 
                 $template = Template::where('title','After Upgraded Order')->first();

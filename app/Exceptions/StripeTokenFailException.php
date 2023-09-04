@@ -13,7 +13,7 @@ class StripeTokenFailException extends Exception
         $this->errors = $errors;
     }
 
-    public function render($request)
+    public function render($request = null)
     {
         return response()->json(['message' => 'The given data was invalid. Need to pay an additional amount', 'errors' => $this->errors], 422);
     }
