@@ -44,6 +44,10 @@ return [
         'base_uri' => env('STRIPE_URL'),
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET')
+      ],
+      'square' => [
+        'access_token' => env('SQUARE_ACCESS_TOKEN'),
+        'application_id' => env('SQUARE_APPLICATION_ID')
       ]
 
 ];

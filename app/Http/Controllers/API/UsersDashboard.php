@@ -189,7 +189,6 @@ class UsersDashboard extends Controller
         } catch(\Exception $e) {
             DB::rollback();
             return Response($e,400);
-
         }
     }
     

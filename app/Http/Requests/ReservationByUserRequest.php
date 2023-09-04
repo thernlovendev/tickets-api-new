@@ -78,7 +78,7 @@ class ReservationByUserRequest extends FormRequest
                         'vendor_comissions.*.user_id' => ($isAdmin) ? ['required'] : ['exclude'],
                         'vendor_comissions.*.type' => ($isAdmin) ? ['required', Rule::in(['AP', 'AR'])] : ['exclude'],
                         'vendor_comissions.*.comission_amount' => ($isAdmin) ? ['required', 'numeric'] : ['exclude'], 
-                        'payment_type' => ($isAdmin) ? ['nullable', Rule::in($type)] : ['exclude'],
+                        'payment_type' => ($isAdmin) ? ['required', Rule::in($type)] : ['exclude'],
                         'credit' => ($isAdmin) ? ['required_if:payment_type,Cash'] : ['exclude'], 
                         'stripe_token' => ['required_if:payment_type,Credit Card,null']
                     ];

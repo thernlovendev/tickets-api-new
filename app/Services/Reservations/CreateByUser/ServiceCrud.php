@@ -228,9 +228,9 @@ class ServiceCrud
                 
                 $response = ServiceCreditCard::create($reservation_old, $data);
                 
-                if($reservation_old->status == Reservation::STATUS['NO_PAID']){
+                if (array_key_exists('original', $response) && array_key_exists('errors', $response->original)) {
                     throw new \Exception($response);
-                }
+                } 
 
                 $template = Template::where('title','After Upgraded Order')->first();
         
