@@ -27,8 +27,6 @@ class TicketStockPdf extends Model
 
     protected $hidden = [
         'path',
-		'imageable_id',
-		'imageable_type',
     ];
 
 	public function getUrlAttribute($value)
