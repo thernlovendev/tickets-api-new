@@ -20,41 +20,49 @@
     </style>
 </head>
 
-<body>
-                        
-                        {{-- This code will be implemented when template images are added to the ticket --}}
-                        <div style="position:relative;">
-                            <div style="position: relative;margin-bottom:50px">
-                                <!-- Imagen del usuario -->
-                                <img width=400 height=auto src="{{$image}}" alt="Imagen del usuario">
-
-                                @if($type == 'QR')
-                                <!-- Código QR -->
-                                <div style="position: absolute; top: 5px; left: 500px;"> {!! DNS2D::getBarcodeHTML("$code", 'QRCODE',7,7) !!}
-                                
-                                <br>
-                                <span style="font-weight:800">Expiration Date: {{$expiration_date}}</span>
-                                </div>
-                                @elseif($type == 'Bar')
-                                <div style="position: absolute; top: 5px; left: 420px;"> 
-                                {!! DNS1D::getBarcodeHTML("$code", 'C39',2,36) !!}
-                                <br>
-                                <span style="font-weight:800">Expiration Date: {{$expiration_date}}</span>
-                                
-                                </div>
-
-                                @elseif($type == 'Text')
-                                <div style="position: absolute; top: 5px; left: 500px;"> 
-                                <span style="font-weight:800">{{$code}}</span>
-                                <br>
-                                <span style="font-weight:800">Expiration Date: {{$expiration_date}}</span>
-                                
-                                </div>
-
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+    <body>
                             
-</body>
+        <div style="position:relative;">
+            <div style="position: relative;margin-bottom:50px">
+                <!-- Imagen del usuario -->
+                <img width=700 height=auto src="{{$image}}" alt="Imagen del usuario">
+                @if($type == 'QR')
+                <!-- Código QR -->
+                <div style="position: absolute; top: 30px; left: 520px;"> {!! DNS2D::getBarcodeHTML("$code", 'QRCODE',7,7) !!}
+                                                        
+                </div>
+
+                <div style="position: absolute; top: 200px; left: 500px;"> 
+                <span style="font-weight:800">Expiration Date: {{$expiration_date}}</span>
+                
+                </div>
+
+                
+                @elseif($type == 'Bar')
+                <div style="position: absolute; top: 30px; left: 470px;"> 
+                {!! DNS1D::getBarcodeHTML("$code", 'C39',2,36) !!}
+                <br>
+                <span style="font-weight:800">Expiration Date: {{$expiration_date}}</span>
+                
+                </div>
+
+                <div style="position: absolute; top: 60px; left: 545px;"> 
+                <span style="font-weight:800">{{$code}}</span>
+                
+                </div>
+
+                @elseif($type == 'Text')
+                <div style="position: absolute; top: 30px; left: 500px;"> 
+                <span style="font-weight:800">{{$code}}</span>
+                <br>
+                <span style="font-weight:800">Expiration Date: {{$expiration_date}}</span>
+                
+                </div>
+
+                @endif
+            </div>
+        </div>
+        </div>
+
+    </body>
 </html>

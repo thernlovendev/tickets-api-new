@@ -9,6 +9,7 @@ use App\Http\Requests\InventoryRequest;
 use App\Http\Requests\StockTicketRequest;
 use App\Http\Requests\StockTicketZipRequest;
 use App\Http\Requests\StockCorrectionBalanceRequest;
+use App\Http\Requests\DownloadMultipleTicketsRequest;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
@@ -24,7 +25,7 @@ use PDF;
 use DB;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 // use Illuminate\Support\Facades\Zip;
@@ -145,11 +146,11 @@ class InventoriesController extends Controller
 
     public function downloadPdfZip(Request $request){
 
-        if($request->filled('code_number')){
-            $code_number = $request->input('code_number');
-            $ticket_stock = TicketStock::where('code_number', $code_number)->firstOrFail();
+        if($request->filled('ticket_stock_id')){
+            $ticket_stock_id = $request->input('ticket_stock_id');
+            $ticket_stock = TicketStock::find($ticket_stock_id);
     
-            if($ticket_stock->pdf){
+            if($ticket_stock && $ticket_stock->pdf){
                 $path = $ticket_stock->pdf->path;
                 $result_file_name = $ticket_stock->pdf->name.'.pdf';
                 return response()->download($path, $result_file_name)->deleteFileAfterSend(false);
@@ -168,6 +169,72 @@ class InventoriesController extends Controller
         } else {
             return response(['message'=> 'The PDF is not available'], 400);
         }
+    }
+
+    public function downloadMultipleTickets(DownloadMultipleTicketsRequest $request){
+
+        //validator custom
+        $validator = Validator::make($request->all(), [
+            'ticket_stock_ids' => function ($attribute, $value, $fail) use ($request) {
+                $firstType = TicketStock::find($value[0])->type;
+    
+                if (!collect($value)->every(function ($ticketStockId) use ($firstType) {
+                    $type = TicketStock::find($ticketStockId)->type;
+                    return $type === $firstType;
+                })) {
+                    $fail('Tickets must be of the same type.');
+                }
+            },
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors()->toArray(),
+            ], 422);
+        }
+
+        $ticket_stock_ids = $request->input('ticket_stock_ids');
+        $quantity = collect($ticket_stock_ids)->count();
+
+        $ticket_stocks = TicketStock::whereIn('id', $ticket_stock_ids)->with('pdf')->get();
+        
+        if($quantity <= env('QUANTITY_TO_DOWNLOAD_PDF')){
+            //download pdf in one merge
+            $oMerger = PDFMerger::init();
+
+            foreach ($ticket_stocks as $ticket_stock) {
+                $oMerger->addPDF($ticket_stock->pdf->path, 'all');
+            }
+
+            $oMerger->merge();
+            $result_file_name = 'Ticket_stocks_' . time() . '.pdf';
+            $save_path = storage_path('app/public/' . $result_file_name);
+            $oMerger->setFileName($result_file_name)->save($save_path);
+
+            return response()->download($save_path, $result_file_name)->deleteFileAfterSend(true);
+
+        } else {
+            //download pdf individual in a zip file
+            Storage::disk('local')->makeDirectory('tobedownload',$mode=0775); // zip store here
+            $zip_file=storage_path('app/tobedownload/tickets_'.time().'.zip');
+            $zip = new \ZipArchive();
+            $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+            $pdf_paths = $ticket_stocks->pluck('pdf.path');
+        
+            foreach ($pdf_paths as $pdf_path) {
+                if (file_exists($pdf_path)) { // verify if file exists
+                    $file_path = $pdf_path;
+                    $relative_path = basename($pdf_path); // name relative route
+                    $zip->addFile($file_path, $relative_path);
+                }
+            }
+            $zip->close();
+            $zip_new_name = "Tickets-".date("y-m-d-h-i-s").".zip";
+            return response()->download($zip_file,$zip_new_name)->deleteFileAfterSend(true);
+        }
+
     }
 
     public function stockBalance(Request $request){
