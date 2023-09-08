@@ -10,6 +10,7 @@ use App\Http\Requests\StockTicketRequest;
 use App\Http\Requests\StockTicketZipRequest;
 use App\Http\Requests\StockCorrectionBalanceRequest;
 use App\Http\Requests\DownloadMultipleTicketsRequest;
+use App\Http\Requests\DestroyMultipleUploadedRequest;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
@@ -40,19 +41,20 @@ class InventoriesController extends Controller
         $params = $request->query();
 
         if($stock->count() > 0){
-            // $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult, tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type');
 
-            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child');
+            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, file_name_upload, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, SUM(CASE 
+            WHEN ticket_stocks.status = "Valid" AND ticket_stocks.expiration_date >= NOW() THEN 1 ELSE 0 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'file_name_upload', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child')->orderBy('ticket_id', 'ASC')
+            ->orderBy('range_age_type', 'ASC');
 
             $elements = ServiceGeneral::filterCustom($params, $stocks);
             $elements = $this->httpIndex($elements, []);
             $response = ServiceGeneral::mapCollection($elements);
+            
             return Response($response, 200);
         } else {
             return [];
         }
 
-        
     }
 
     public function stockCorrection(StockCorrectionBalanceRequest $request)
@@ -67,6 +69,7 @@ class InventoriesController extends Controller
     {
         $data = $request->validated();
 
+        $data['file_name_upload'] = $request->file('file_import')->getClientOriginalName();
         Excel::import(new TicketStocksImport($data), $data['file_import']);
         return Response(['message'=> 'Successful Bulk Up'], 200);
     }
@@ -340,6 +343,18 @@ class InventoriesController extends Controller
         }
         return Response($stock, 200);
 
+    }
+
+    public function destroyMultipleUploaded($ticket_id, DestroyMultipleUploadedRequest $request){
+
+        $data = $request->validated();
+
+        $stocks = TicketStock::where('ticket_id', $ticket_id)
+            ->where('file_name_upload', $data['file_name_upload'])
+            ->where('range_age_type', $data['range_age_type'])
+            ->delete();
+
+        return Response(['Successfully deleted'], 204);
     }
 
     

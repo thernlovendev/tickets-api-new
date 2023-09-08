@@ -95,6 +95,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/reservation/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\InventoriesController@downloadTickets')->name('inventory.download.reservation')->middleware();
 		Route::post('/download-multiple-tickets', 'App\Http\Controllers\API\InventoriesController@downloadMultipleTickets')->name('download.multiple.tickets');
 	
+		Route::delete('/{ticket_id}/destroy-multiple-uploaded', 'App\Http\Controllers\API\InventoriesController@destroyMultipleUploaded')->name('inventory.destroy.multiple.uploaded')->middleware();
+
 	});
 
 	Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
