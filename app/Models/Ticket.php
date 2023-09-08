@@ -28,7 +28,7 @@ class Ticket extends Model
 
     const TYPE = [
         'REGULAR' => 'Regular',
-        'BAR_QR' => 'Bar/QR',
+        'BAR_QR' => 'Bar/QR code',
         'GUIDE_TOUR' => 'Guide Tour',
         'HARD_COPY' => 'Hard Copy',
         'MUSICAL_SHOW' => 'Musical & Shows',

@@ -40,12 +40,12 @@
 
                 
                 @elseif($type == 'Bar')
-                <div style="position: absolute; top: 35px; left: 508px;"> 
+                <div style="position: absolute; top: 35px; left: 188px;"> 
                 <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,36) !!}</span>
                 
                 </div>
 
-                <div style="position: absolute; top: 65px; left: 578px;"> 
+                <div style="position: absolute; top: 65px; left: 358px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>
@@ -57,7 +57,7 @@
                 </div>
                 @elseif($type == 'Text')
 
-                 <div style="position: absolute; top: 30px; left: 640px;"> 
+                 <div style="position: absolute; top: 30px; left: 560px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>

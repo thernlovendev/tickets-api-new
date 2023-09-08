@@ -40,24 +40,24 @@
 
                 
                 @elseif($type == 'Bar')
-                <div style="position: absolute; top: 35px; left: 508px;"> 
+                <div style="position: absolute; top: 35px; left: 156px;"> 
                 <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,36) !!}</span>
                 
                 </div>
 
-                <div style="position: absolute; top: 65px; left: 578px;"> 
+                <div style="position: absolute; top: 65px; left: 336px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>
 
-                <div style="position: absolute; top: 95px; left: 510px;"> 
+                <div style="position: absolute; top:95px; left: 510px;"> 
                     <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
                     {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
                 
                 </div>
                 @elseif($type == 'Text')
 
-                 <div style="position: absolute; top: 30px; left: 640px;"> 
+                 <div style="position: absolute; top: 30px; left: 552px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>

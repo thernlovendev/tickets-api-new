@@ -31,6 +31,7 @@ class TicketStock extends Model
     const STATUS = [
         'USED' => 'Used',
         'VALID' => 'Valid',
+        'EXPIRED' => 'Expired'
     ];
 
     protected $fillable = [

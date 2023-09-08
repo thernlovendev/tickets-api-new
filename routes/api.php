@@ -94,6 +94,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::post('/bulk-upload-zip', 'App\Http\Controllers\API\InventoriesController@bulkUploadZip')->name('inventory.bulk.upload.zip')->middleware();
 		Route::post('/reservation/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\InventoriesController@downloadTickets')->name('inventory.download.reservation')->middleware();
 		Route::post('/download-multiple-tickets', 'App\Http\Controllers\API\InventoriesController@downloadMultipleTickets')->name('download.multiple.tickets');
+		Route::delete('/delete-multiple-tickets-detail', 'App\Http\Controllers\API\InventoriesController@deleteMultipleTicketStockDetail')->name('delete.multiple.tickets.detail');
 	
 	});
 

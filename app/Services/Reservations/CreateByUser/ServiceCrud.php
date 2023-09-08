@@ -5,6 +5,7 @@ use DB;
 use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
+use App\Models\TicketStock;
 use App\Models\Template;
 use App\Models\Subcategory;
 use App\Models\PriceList;
@@ -19,6 +20,7 @@ use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
 use App\Exceptions\StripeTokenFailException;
 use Carbon\Carbon;
+use App\Exceptions\FailException;
 
 class ServiceCrud
 {
@@ -86,6 +88,23 @@ class ServiceCrud
 
                             case Ticket::TYPE['BAR_QR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                
+                                $quantity = $reserve_item->quantity;
+                                $range_age = $reserve_item->adult_child_type;
+                                $ticket_id = $ticket->id;
+
+                                $now = Carbon::now()->format('Y-m-d H:i:s');
+
+                                $stocks = TicketStock::where('status',TicketStock::STATUS['VALID'])
+                                        ->where('expiration_date','>', $now)
+                                        ->where('ticket_id', $ticket_id)
+                                        ->where('range_age_type',$range_age)
+                                        ->take($quantity)
+                                        ->get();
+
+                                if(count($stocks) < $quantity){
+                                    return Response('Quantity exceeds available stock',400);
+                                }
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];

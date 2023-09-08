@@ -9,7 +9,9 @@ use App\Http\Requests\InventoryRequest;
 use App\Http\Requests\StockTicketRequest;
 use App\Http\Requests\StockTicketZipRequest;
 use App\Http\Requests\StockCorrectionBalanceRequest;
+use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\DownloadMultipleTicketsRequest;
+use App\Http\Requests\DeleteMultipleTicketDetail;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
@@ -329,16 +331,45 @@ class InventoriesController extends Controller
         return $tickets;
     }
 
-    public function changeStatus(TicketStock $stock){
+    public function changeStatus(ChangeStatusRequest $request,TicketStock $stock){
 
-        if($stock->status == $stock->status = TicketStock::STATUS['VALID'] ){
-            $stock->status = TicketStock::STATUS['USED'];
-            $stock->save();
-        } else {
-            $stock->status = TicketStock::STATUS['VALID'];
-            $stock->save();
-        }
+        $new_type = $request->validated();
+        
+
+        $stock->update(['status' => $new_type['status']]);
+
         return Response($stock, 200);
+
+    }
+
+    public function deleteMultipleTicketStockDetail(DeleteMultipleTicketDetail $request){
+
+        $validator = Validator::make($request->all(), [
+            'ticket_stock_ids' => function ($attribute, $value, $fail) use ($request) {
+                    $invalidIds = TicketStock::whereIn('id', $value)
+                        ->where('status', 'Used')
+                        ->pluck('id');
+    
+                    if ($invalidIds->count() > 0) {
+
+                        $fail('It is only allowed to delete if the tickets are not used');
+                    }
+                },
+            ],
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors()->toArray(),
+            ], 422);
+        }       
+    
+        $ticket_stock_ids = $request->input('ticket_stock_ids');
+
+        TicketStock::whereIn('id',$ticket_stock_ids)->forceDelete();
+
+        return response(['message' => 'Tickets delete successfully'], 204);
 
     }
 

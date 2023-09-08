@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Tickets;
+use Carbon\Carbon;
 
 class ServiceGeneral
 {
@@ -8,7 +9,24 @@ class ServiceGeneral
         $request = request();
         $data_map = $request->per_page ? $data['data'] : $data;
 
-        $mapCollection = $data_map->map( function($item){
+        $mapCollection = $data_map->map( function($item) use($request) {
+            
+            if($request->filled('stock_available')){
+                $now = Carbon::now()->format('Y-m-d');
+                $stocks_adult = $item->ticketStocks()->where('range_age_type', 'Adult')
+                ->where('status', 'Valid')
+                ->where('expiration_date', '>', $now)
+                ->count();
+
+                $stocks_child = $item->ticketStocks()->where('range_age_type', 'Child')
+                ->where('status', 'Valid')
+                ->where('expiration_date', '>', $now)
+                ->count();
+
+                $item['can_sell_adult'] = $item->out_of_stock_alert_adult > $stocks_adult ? false: true;
+                $item['can_sell_child'] = $item->out_of_stock_alert_child > $stocks_child ? false: true;
+
+            }
 
             return $item;
         });
