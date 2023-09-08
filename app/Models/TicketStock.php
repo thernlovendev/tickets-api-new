@@ -40,7 +40,7 @@ class TicketStock extends Model
         'expiration_date',
         'status',
         'range_age_type',
-        'ticket_id'
+        'ticket_id',
     ];
     
     public function ticket()

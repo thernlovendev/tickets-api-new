@@ -12,6 +12,7 @@ use App\Http\Requests\StockCorrectionBalanceRequest;
 use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\DownloadMultipleTicketsRequest;
 use App\Http\Requests\DeleteMultipleTicketDetail;
+use App\Http\Requests\DestroyMultipleUploadedRequest;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
@@ -42,19 +43,19 @@ class InventoriesController extends Controller
         $params = $request->query();
 
         if($stock->count() > 0){
-            // $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult, tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type');
 
-            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child');
+            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, count(*) as total, SUM(CASE 
+            WHEN ticket_stocks.status = "Valid" AND ticket_stocks.expiration_date >= NOW() THEN 1 ELSE 0 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child');
 
             $elements = ServiceGeneral::filterCustom($params, $stocks);
             $elements = $this->httpIndex($elements, []);
             $response = ServiceGeneral::mapCollection($elements);
+            
             return Response($response, 200);
         } else {
             return [];
         }
 
-        
     }
 
     public function stockCorrection(StockCorrectionBalanceRequest $request)
@@ -370,7 +371,17 @@ class InventoriesController extends Controller
         TicketStock::whereIn('id',$ticket_stock_ids)->forceDelete();
 
         return response(['message' => 'Tickets delete successfully'], 204);
+    }
 
+    public function destroyMultipleUploaded($ticket_id, DestroyMultipleUploadedRequest $request){
+
+        $data = $request->validated();
+
+        $stocks = TicketStock::where('ticket_id', $ticket_id)
+            ->where('range_age_type', $data['range_age_type'])
+            ->delete();
+
+        return Response(['Successfully deleted'], 204);
     }
 
     
