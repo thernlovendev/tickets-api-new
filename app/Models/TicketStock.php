@@ -40,7 +40,6 @@ class TicketStock extends Model
         'status',
         'range_age_type',
         'ticket_id',
-        'file_name_upload'
     ];
     
     public function ticket()

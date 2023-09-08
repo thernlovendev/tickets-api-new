@@ -31,7 +31,6 @@ class TicketStocksImport implements ToCollection
                 'status' => TicketStock::STATUS['VALID'],
                 'range_age_type' => $this->data['range_age_type'],
                 'ticket_id' => $this->data['ticket_id'],
-                'file_name_upload' => $this->data['file_name_upload']
             ]);
         }
     }

@@ -42,9 +42,8 @@ class InventoriesController extends Controller
 
         if($stock->count() > 0){
 
-            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, file_name_upload, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, SUM(CASE 
-            WHEN ticket_stocks.status = "Valid" AND ticket_stocks.expiration_date >= NOW() THEN 1 ELSE 0 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'file_name_upload', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child')->orderBy('ticket_id', 'ASC')
-            ->orderBy('range_age_type', 'ASC');
+            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, count(*) as total, SUM(CASE 
+            WHEN ticket_stocks.status = "Valid" AND ticket_stocks.expiration_date >= NOW() THEN 1 ELSE 0 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child');
 
             $elements = ServiceGeneral::filterCustom($params, $stocks);
             $elements = $this->httpIndex($elements, []);
@@ -69,7 +68,6 @@ class InventoriesController extends Controller
     {
         $data = $request->validated();
 
-        $data['file_name_upload'] = $request->file('file_import')->getClientOriginalName();
         Excel::import(new TicketStocksImport($data), $data['file_import']);
         return Response(['message'=> 'Successful Bulk Up'], 200);
     }
@@ -350,7 +348,6 @@ class InventoriesController extends Controller
         $data = $request->validated();
 
         $stocks = TicketStock::where('ticket_id', $ticket_id)
-            ->where('file_name_upload', $data['file_name_upload'])
             ->where('range_age_type', $data['range_age_type'])
             ->delete();
 

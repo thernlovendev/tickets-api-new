@@ -27,7 +27,6 @@ class DestroyMultipleUploadedRequest extends FormRequest
     public function rules()
     {
         $stocks = TicketStock::where('ticket_id', $this->route('ticket_id'))
-            ->where('file_name_upload', $this->file_name_upload)
             ->where('range_age_type', $this->range_age_type)
             ->where('status', TicketStock::STATUS['USED'])
             ->count();
@@ -38,7 +37,6 @@ class DestroyMultipleUploadedRequest extends FormRequest
             ]);
         }
         return [
-            'file_name_upload' => ['required', 'exists:ticket_stocks,file_name_upload'],
             'range_age_type' => ['required', Rule::in(TicketStock::RANGE_AGE)]
         ];
     }
