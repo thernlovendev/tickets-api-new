@@ -184,6 +184,8 @@ class UsersDashboard extends Controller
                                 }else {
                                     $pdf = PDF::loadView('ticketDownloadCombine16',compact('code','type', 'expiration_date', 'ticket','image','reservation')); 
                                 }
+
+                                return $pdf->download();
                                 
                                 //save pdf
                                 $pdf_content = $pdf->output();

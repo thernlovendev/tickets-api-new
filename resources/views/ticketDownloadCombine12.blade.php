@@ -28,11 +28,11 @@
                 <img width=700 height=auto src="{{$image}}" alt="Imagen del usuario">
                 @if($type == 'QR')
                 <!-- Código QR -->
-                <div style="position: absolute; top: 30px; left: 520px;"> {!! DNS2D::getBarcodeHTML("$code", 'QRCODE',7,7) !!}
+                <div style="position: absolute; top: 45px; left: 508px;"> {!! DNS2D::getBarcodeHTML("$code", 'QRCODE',7,7) !!}
                                                         
                 </div>
 
-                <div style="position: absolute; top: 200px; left: 510px;"> 
+                <div style="position: absolute; top: 200px; left: 498px;"> 
                 <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
                 {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
                 
@@ -40,28 +40,28 @@
 
                 
                 @elseif($type == 'Bar')
-                <div style="position: absolute; top: 35px; left: 220px;"> 
+                <div style="position: absolute; top: 45px; left: 208px;"> 
                 <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,36) !!}</span>
                 
                 </div>
 
-                <div style="position: absolute; top: 65px; left: 380px;"> 
+                <div style="position: absolute; top: 75px; left: 368px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>
 
-                <div style="position: absolute; top: 95px; left: 510px;"> 
+                <div style="position: absolute; top: 95px; left: 496px;"> 
                     <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
                     {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
                 
                 </div>
                 @elseif($type == 'Text')
 
-                 <div style="position: absolute; top: 30px; left: 568px;"> 
+                 <div style="position: absolute; top: 38px; left: 556px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>
-                <div style="position: absolute; top: 65px; left: 510px;"> 
+                <div style="position: absolute; top: 68px; left: 496px;"> 
                 <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
                 {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
                 
