@@ -376,12 +376,17 @@ class InventoriesController extends Controller
     public function destroyMultipleUploaded($ticket_id, DestroyMultipleUploadedRequest $request){
 
         $data = $request->validated();
-
         $stocks = TicketStock::where('ticket_id', $ticket_id)
             ->where('range_age_type', $data['range_age_type'])
-            ->delete();
+            ->forceDelete();
 
-        return Response(['Successfully deleted'], 204);
+        if ($stocks > 0) {
+            // Se eliminaron registros, devolver una respuesta exitosa con un mensaje
+            return response()->json(['message' => 'Records successfully deleted'], 200);
+        } else {
+            // No se eliminaron registros, devolver un mensaje de error
+            return response()->json(['message' => 'No records found to delete'], 404);
+        }
     }
 
     
