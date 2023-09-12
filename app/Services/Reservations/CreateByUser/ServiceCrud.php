@@ -186,6 +186,24 @@ class ServiceCrud
     
                             case Ticket::TYPE['BAR_QR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                $quantity = $item_model->quantity;
+                                $range_age = $item_model->adult_child_type;
+                                $ticket_id = $ticket->id;
+
+                                $now = Carbon::now()->format('Y-m-d H:i:s');
+
+                                $stocks = TicketStock::where('status',TicketStock::STATUS['VALID'])
+                                        ->where('expiration_date','>', $now)
+                                        ->where('ticket_id', $ticket_id)
+                                        ->where('range_age_type',$range_age)
+                                        ->take($quantity)
+                                        ->get();
+
+                                if(count($stocks) < $quantity){
+                                    $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
+                                    throw new \Exception($message);
+                                }
+                                
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];

@@ -111,7 +111,7 @@ class UsersDashboard extends Controller
                         ->get();
 
                 if(count($stocks) < $quantity){
-                    return Response('Your ticket has expired, please contact the Admin for the error for code: 4848',400);
+                    return Response('There was a problem in the inventory. Please contact the Admin for the error for code: 4848',422);
                 } else {
 
                         $oMerger = PDFMerger::init();
