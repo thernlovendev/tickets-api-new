@@ -104,7 +104,7 @@ class ServiceCrud
 
                                 if(count($stocks) < $quantity){
                                     $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
-                                    return Response($message,400);
+                                    throw new \Exception($message);
                                 }
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
