@@ -17,7 +17,7 @@ class ServiceGeneral
                 'id' => $item->id,
                 'created_by' => $item->created_by,
                 'departure_date' => $item->departure_date,
-                'order_date' => $item->order_date,
+                'order_date' => $item->created_at->format('Y-m-d g:i A'),
                 'order_number' => $item->order_number,
                 'customer_name_en' => $item->customer_name_en,
                 'customer_name_kr' => $item->customer_name_kr,
@@ -27,6 +27,7 @@ class ServiceGeneral
                 'ticket_sent_status' => $item->ticket_sent_status,
                 'status' => $item->status,
                 'email' => $item->email,
+                'total' => $item->total,
                 'reservation_items' => $item->reservationItems,
                 'vendor_comissions' => $item->vendorComissions,
                 'user' => $customer ? $customer : $item->customer_name_en
