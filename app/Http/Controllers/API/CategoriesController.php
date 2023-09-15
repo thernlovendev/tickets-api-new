@@ -107,4 +107,11 @@ class CategoriesController extends Controller
         $sub_category = Subcategory::whereIn('category_id',$query['categories'])->get();
         return Response($sub_category, 200);
     }
+
+    public function getSubcategoriesMultiple(Request $request)
+    {
+        $ids_filter = $request->input('ids_filter');
+        $sub_category = Subcategory::whereIn('category_id',$ids_filter)->get();
+        return Response($sub_category, 200);
+    }
 }

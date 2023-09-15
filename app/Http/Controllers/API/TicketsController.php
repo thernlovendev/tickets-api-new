@@ -119,5 +119,17 @@ class TicketsController extends Controller
 
     }
 
+    public function multiple(Request $request)
+    {
+        $ids_filter = $request->input('ids_filter');
+        $tickets = Ticket::whereIn('id',$ids_filter)->with(['categories','subcategories','cardImage', 'ticketPrices','ticketContent']);
+        $params = $request->query();
+        $elements = ServiceGeneral::filterCustom($params, $tickets);
+        $elements = $this->httpIndex($elements, ['id', 'status']);
+        $response = ServiceGeneral::mapCollection($elements);
+        return Response($response, 200);
+    }
+
+
 
 }

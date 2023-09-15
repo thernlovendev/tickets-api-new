@@ -21,6 +21,9 @@ use Illuminate\Validation\ValidationException;
 use App\Exceptions\StripeTokenFailException;
 use Carbon\Carbon;
 use App\Exceptions\FailException;
+use PDF;
+use Mail;
+use App\Mail\InvoiceEmail;
 
 class ServiceCrud
 {
@@ -154,6 +157,36 @@ class ServiceCrud
                 if($reservation->status == Reservation::STATUS['NO_PAID']){
                     throw new \Exception($response);
                 }
+
+                $template = Template::where('title','After Payment Completed')->first();
+        
+                if($template->subject == 'default'){
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
+                } else {
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
+                }
+               
+
+                // Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
+                //     $message->to($reservation->email);
+                //     $message->subject($subject);
+                //     $fullname = $reservation->customer_name_en;
+                //     $orderNumber = $reservation->order_number;
+                //     $orderDate = $reservation->created_at->format('Y-m-d g:i A');
+                //     $amount = $data['total'];
+                //     $iconDashboardSquare = public_path('images/dashboard-square.svg');
+                //     $iconBookOpen = public_path('images/book-open.svg');
+                //     $iconDollarCircle = public_path('images/dollar-circle.svg');
+                //     $iconMessage = public_path('images/message.svg');
+                //     $iconLocation = public_path('images/location.svg');
+                //     $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name')->get();
+
+
+                //     $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems'));
+
+                //     $message->attachData($pdf->output(), 'archivo.pdf');
+                // });
+
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
 

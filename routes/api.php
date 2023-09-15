@@ -163,17 +163,20 @@ Route::get('categories', 'App\Http\Controllers\API\CategoriesController@index')-
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
 Route::prefix('categories')->group(function() {
 	Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
+	Route::post('/subcategories-multiple', 'App\Http\Controllers\API\CategoriesController@getSubcategoriesMultiple')->name('subcategory.show.multiple')->middleware();
 });
 Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
 Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
 Route::get('price-lists-selected', 'App\Http\Controllers\API\PriceListsController@index')->name('price.lists.selected')->middleware();
+Route::post('price-lists-selected-multiple', 'App\Http\Controllers\API\PriceListsController@multiple')->name('price.lists.selected.multiple')->middleware();
 Route::prefix('price-lists')->group(function() {
 	Route::get('/{price_list}', 'App\Http\Controllers\API\PriceListsController@show')->name('price.lists.show')->middleware();
 });
 Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->name('seats.index')->middleware();
 Route::get('product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.get.by.subcategory')->middleware();
 Route::get('reservations', 'App\Http\Controllers\API\ReservationsController@index')->name('reservation.index')->middleware();	
+Route::post('reservations-multiple', 'App\Http\Controllers\API\ReservationsController@multiple')->name('reservation.multiple.show')->middleware();
 Route::prefix('reservations')->group(function() {
 	Route::get('/{reservation}', 'App\Http\Controllers\API\ReservationsController@show')->name('reservation.show')->middleware();
 	Route::post('/{reservation}/reservation-subitems/{reservationSubItem}/email', 'App\Http\Controllers\API\UsersDashboard@emailDownloadTicket')->name('reservations.ticket.email')->middleware();
@@ -187,6 +190,7 @@ Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'Ap
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
+Route::post('tickets-multiple', 'App\Http\Controllers\API\TicketsController@multiple')->name('tickets.multiple')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
 

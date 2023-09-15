@@ -106,4 +106,15 @@ class PriceListsController extends Controller
        return Response($response, 200);
     }
 
+    public function multiple(Request $request)
+    {
+       $ids_filter = $request->input('ids_filter');
+       $reservation = PriceList::whereIn('id',$ids_filter)->with(['subcategory']);
+       $params = $request->query();
+       $elements = ServiceGeneral::filterCustom($params, $reservation);
+       $elements = $this->httpIndex($elements, []);
+       $response = ServiceGeneral::mapCollection($elements);
+       return Response($response, 200);
+    }
+
 }

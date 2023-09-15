@@ -9,7 +9,6 @@
     <title>{{__('Payment Successfully')}}</title>
 </head>
 
-@if($template->content == 'default')
 <body style="margin: 0;
     box-sizing: border-box;
     background-color: rgb(224, 224, 224);
@@ -46,6 +45,7 @@
                 font-family: sans-serif;
                 font-size: 0.9em;
                 line-height: 1.5"> {{__('Hi!')}} {{$fullname}}, <br>
+                @if($template->content == 'default')
                 {{__('We’ve received the payment for your reservation for amount of:')}} {{$amount}}$</p>
                <p style="margin: 0;
                         box-sizing: border-box;
@@ -55,6 +55,16 @@
                         line-height: 1.5;
                         padding-bottom: 1em">{{__('Thanks')}},<br>
                 {{env('APP_NAME')}} Team</p>
+                @else
+                <p style="margin: 0;
+                box-sizing: border-box;
+                color: #9A9A9A;
+                font-family: sans-serif;
+                font-size: 0.9em;
+                line-height: 1.5">
+                {!!$template->content!!}
+                </p>
+                @endif
                 <footer style="margin: 0;
                         box-sizing: border-box;
                         width: 100%;
@@ -108,10 +118,5 @@
     </div>
     
 </body>
-@else
 
-<body>
-    {!!$template->content!!}
-</body>
-@endif
 </html>

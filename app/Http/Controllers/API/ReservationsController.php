@@ -181,4 +181,17 @@ class ReservationsController extends Controller
             }
 
     }
+
+    public function multiple(Request $request)
+    {
+       $ids_filter = $request->input('ids_filter');
+       $reservation = Reservation::whereIn('id',$ids_filter)->with(['reservationItems.reservationSubItems.optionsSchedules','vendorComissions']);
+       
+       $params = $request->query();
+       $elements = ServiceGeneral::filterCustom($params, $reservation);
+       $elements = $this->httpIndex($elements, ['id', 'order_number']);
+       $response = ServiceGeneral::mapCollection($elements);
+       return Response($response, 200);
+    }
+
 }
