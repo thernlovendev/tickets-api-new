@@ -193,8 +193,10 @@ Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name(
 Route::post('tickets-multiple', 'App\Http\Controllers\API\TicketsController@multiple')->name('tickets.multiple')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
+Route::get('/new-order', 'App\Http\Controllers\API\NewOrderController@index')->name('new.order')->middleware();
 
 Route::get('/test-pdf', function(){
 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
 	return Response::download($file);
 });
+
