@@ -27,6 +27,9 @@ class ServiceGeneral
     }
 
     public static function filterCustom($filters, $models){
+        if(!isset($filters['sort'])){
+            $models->orderBy('created_at','DESC');
+        }
         
         return $models;
     }

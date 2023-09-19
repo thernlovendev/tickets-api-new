@@ -41,6 +41,11 @@ class ServiceGeneral
     }
 
     public static function filterCustom($filters, $models){
+
+
+        if(!isset($filters['sort'])){
+            $models->orderBy('created_at','DESC');
+        }
         
         if(isset($filters['title_en'])){
             $models->where('title_en','LIKE', '%'.$filters['title_en'].'%');
