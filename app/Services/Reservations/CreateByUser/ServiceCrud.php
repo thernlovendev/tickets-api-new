@@ -166,7 +166,6 @@ class ServiceCrud
                     $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
                 }
                
-
                 // Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
                 //     $message->to($reservation->email);
                 //     $message->subject($subject);

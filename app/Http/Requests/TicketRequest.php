@@ -46,7 +46,7 @@ class TicketRequest extends FormRequest
                         'city_id' => ['required','exists:cities,id'],
                         'title_en' => ['required','unique:tickets,title_en'],
                         'title_kr' => ['required','unique:tickets,title_kr'],
-                        'template_id' => ['required',Rule::exists('templates', 'id')->where(function ($query) {
+                        'template_id' => ['nullable',Rule::exists('templates', 'id')->where(function ($query) {
                             $query->where('type', 'Image');
                         }),'integer'],
                         'ticket_type' => ['required'],
