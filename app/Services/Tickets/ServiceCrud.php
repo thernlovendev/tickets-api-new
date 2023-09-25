@@ -73,9 +73,11 @@ class ServiceCrud
                 $ticket->subcategories()->attach($subcategory['subcategory_id']);
             }
 
-            foreach ($data['tickets_prices'] as $price) {
-                $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
-                
+            if(isset($data['tickets_prices'])){
+                foreach ($data['tickets_prices'] as $price) {
+                    $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
+                    
+                }
             }
             
             // if(isset($data['tickets_content'])){

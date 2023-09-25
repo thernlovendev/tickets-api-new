@@ -66,11 +66,13 @@ class Ticket extends Model
         'announcement',
         'premium_amount',
         'premium_s_amount',
-        'order'
+        'order',
+        'single_price'
     ];
 
     protected $casts = [
-        'show_in_schedule_page' => 'boolean'
+        'show_in_schedule_page' => 'boolean',
+        'single_price' => 'boolean'
     ];
 
     public function categories()
