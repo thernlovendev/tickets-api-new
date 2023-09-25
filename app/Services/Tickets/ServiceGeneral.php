@@ -44,7 +44,7 @@ class ServiceGeneral
 
 
         if(!isset($filters['sort'])){
-            $models->orderBy('order','ASC');
+            $models->orderBy('order','DESC');
         }
         
         if(isset($filters['title_en'])){
