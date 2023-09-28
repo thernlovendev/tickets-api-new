@@ -8,7 +8,7 @@
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>{{__('Payment Successfully')}}</title>
     <style>
-    body { font-family: poppins; }
+    body { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
 
@@ -78,6 +78,7 @@
                 <div>
                     <span style="font-weight: bold;">Payment: Cash</span>
                 </div> 
+                <br>
                 <div style="border-top: 2px solid #A3A3A3"></div>
 
                 @elseif($credit_type == true)
@@ -102,6 +103,7 @@
                     <span>xxxx-xxxx-xxxx-{{$bill_data->last_four_digits}}</span>
                     
                 </div> 
+                <br>
                 <div style="border-top: 2px solid #A3A3A3"></div>
                 
                 @endif

@@ -158,52 +158,52 @@ class ServiceCrud
                     throw new \Exception($response);
                 }
 
-                // $template = Template::where('title','After Payment Completed')->first();
+                $template = Template::where('title','After Payment Completed')->first();
         
-                // if($template->subject == 'default'){
-                //     $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
-                // } else {
-                //     $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
-                // }
+                if($template->subject == 'default'){
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
+                } else {
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
+                }
 
                 
 
-                // Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
-                //     $message->to($reservation->email);
-                //     $message->subject($subject);
-                //     $fullname = $reservation->customer_name_en;
-                //     $orderNumber = $reservation->order_number;
-                //     $orderDate = $reservation->created_at->format('Y-m-d g:i A');
-                //     $discount = $reservation->discount_amount;
-                //     $amount = $data['total'];
-                //     $iconDashboardSquare = public_path('images/dashboard-square.svg');
-                //     $iconBookOpen = public_path('images/book-open.svg');
-                //     $iconDollarCircle = public_path('images/dollar-circle.svg');
-                //     $iconMessage = public_path('images/message.svg');
-                //     $iconLocation = public_path('images/location.svg');
-                //     $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
+                    $message->to($reservation->email);
+                    $message->subject($subject);
+                    $fullname = $reservation->customer_name_en;
+                    $orderNumber = $reservation->order_number;
+                    $orderDate = $reservation->created_at->format('Y-m-d g:i A');
+                    $discount = $reservation->discount_amount;
+                    $amount = $data['total'];
+                    $iconDashboardSquare = public_path('images/dashboard-square.svg');
+                    $iconBookOpen = public_path('images/book-open.svg');
+                    $iconDollarCircle = public_path('images/dollar-circle.svg');
+                    $iconMessage = public_path('images/message.svg');
+                    $iconLocation = public_path('images/location.svg');
+                    $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
 
-                //     $cash_type =false; 
-                //     $credit_type =false; 
+                    $cash_type =false; 
+                    $credit_type =false; 
 
-                //     if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
-                //         $bill_data = $reservation->reservationCashPayments()->get()->last();
-                //         $cash_type =true; 
-                //     } else {
-                //         $bill_data = $reservation->reservationCreditCardPayments()->get()->last();
-                //         $credit_type =true; 
-                //     }
+                    if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                        $bill_data = $reservation->reservationCashPayments()->get()->last();
+                        $cash_type =true; 
+                    } else {
+                        $bill_data = $reservation->reservationCreditCardPayments()->get()->last();
+                        $credit_type =true; 
+                    }
 
-                //     if($data['created_by'] == 'Customer'){
-                //         $auth = false;
-                //     } else {
-                //         $auth = true;
-                //     }
+                    if($data['created_by'] == 'Customer'){
+                        $auth = false;
+                    } else {
+                        $auth = true;
+                    }
 
-                //     $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
 
-                //     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
-                // });
+                    $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
+                });
 
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);

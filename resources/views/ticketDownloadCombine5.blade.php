@@ -14,7 +14,8 @@
             border-bottom: 2px dotted #000000;
         }
         body{
-            padding-top:25px
+            padding-top:25px;
+            font-family: 'Poppins', sans-serif;
         }
 
     </style>
