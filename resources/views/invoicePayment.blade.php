@@ -9,6 +9,13 @@
     <title>{{__('Payment Successfully')}}</title>
     <style>
     body { font-family: 'Poppins', sans-serif; }
+    .invoice-text {
+        position: absolute;
+        top: 16px; /* Ajusta la posición vertical según tus necesidades */
+        left: 20px; /* Ajusta la posición horizontal según tus necesidades */
+        font-family: 'Poppins', sans-serif; /* Fuente personalizada */
+        font-weight: bold; /* Color del texto */
+    }
     </style>
 </head>
 
@@ -37,6 +44,8 @@
                 width: 100%;
                 max-width: 150px;
                 " src="https://tamice.com/site/images/tamice/logo/tamice-logo-225px.png" alt="logo-tamice">
+                <br>
+                <br>
         </div>
         <div style="margin: 0;
                 box-sizing: border-box;
@@ -47,36 +56,39 @@
                 
                 font-size: 0.9em;
                 line-height: 1.5">
+        <div style="border-top: 2px solid #A3A3A3"></div>
+
             <p style="margin-top: 0.5em;
                 box-sizing: border-box;
                 color: #9A9A9A;
                 
                 font-size: 0.9em;
                 line-height: 1.5">
+
                 <div>
-                    <span style="font-weight: bold;">Order Number: {{$orderNumber}}</span>
+                    <span style="font-weight: bold;">Order Number: </span> <span style="color:#5D5D5F">{{$orderNumber}}</span>
                 </div>
                 <div>
-                    <span style="font-weight: bold;">Order Date: {{$orderDate}}</span>
+                    <span style="font-weight: bold;">Order Date: </span> <span style="color:#5D5D5F">{{$orderDate}}</span>
                 </div>
                 <div>
-                    <span style="font-weight: bold;">Total: ${{$amount}} </span>
+                    <span style="font-weight: bold;">Total: </span> <span style="color:#5D5D5F">${{$amount}}</span>
                 </div>
                 @if($cash_type == true)
                 <div>
-                    <span style="font-weight: bold;">Cash: ${{$bill_data->credit}} </span>
+                    <span style="font-weight: bold;">Cash: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} </span>
                 </div>
                 @if($auth == true)
                     <div>
-                        <span style="font-weight: bold;">Discount: ${{$discount}} </span>
+                        <span style="font-weight: bold;">Discount: </span> <span style="color:#5D5D5F">${{$discount}} </span>
                     </div>
                 @endif
                 <div>
-                    <span style="font-weight: bold;">Debt: ${{$bill_data->debit}} </span>
+                    <span style="font-weight: bold;">Debt:  </span> <span style="color:#5D5D5F">${{$bill_data->debit}}</span>
                 </div> 
                 <br>
                 <div>
-                    <span style="font-weight: bold;">Payment: Cash</span>
+                    <span style="font-weight: bold;">Payment: </span> <span style="color:#5D5D5F">Cash</span>
                 </div> 
                 <br>
                 <div style="border-top: 2px solid #A3A3A3"></div>
@@ -84,23 +96,22 @@
                 @elseif($credit_type == true)
                 
                 <div>
-                    <span style="font-weight: bold;">Total Paid: ${{$bill_data->total}} </span>
+                    <span style="font-weight: bold;">Total Paid: </span> <span style="color:#5D5D5F">${{$bill_data->total}} </span>
                 </div>
                 @if($auth == true)
                     <div>
-                        <span style="font-weight: bold;">Discount: ${{$discount}} </span>
+                        <span style="font-weight: bold;">Discount: </span> <span style="color:#5D5D5F">${{$discount}} </span>
                     </div>
                 @endif
                 <br>
                 <div>
-                    <span style="font-weight: bold;">Payment: Credit Card</span>
+                    <span style="font-weight: bold;">Payment: </span> <span style="color:#5D5D5F">Credit Card</span>
                 </div> 
                 <div>
-                    <span style="font-weight: bold;">Card Type: {{$bill_data->card_type}}</span>
+                    <span style="font-weight: bold;">Card Type: </span> <span style="color:#5D5D5F">{{$bill_data->card_type}}</span>
                 </div> 
                 <div>
-                    <span style="font-weight: bold;">Credit Card: </span>
-                    <span>xxxx-xxxx-xxxx-{{$bill_data->last_four_digits}}</span>
+                    <span style="font-weight: bold;">Credit Card: </span> <span style="color:#5D5D5F">xxxx-xxxx-xxxx-{{$bill_data->last_four_digits}}</span>
                     
                 </div> 
                 <br>
@@ -110,7 +121,7 @@
             </p>
             
             <p style="box-sizing: border-box;
-                color: #9A9A9A;
+                color: #5D5D5F;
                 
                 font-size: 0.9em;
                 line-height: 1.5">
@@ -126,7 +137,7 @@
                     <br>
                     @foreach($item->reservationSubItems as $subitem)
                         <div style="margin-left:1rem">
-                            <span style="text-decoration: underline;">{{$subitem->ticket->title_en}}</span>
+                            <span style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_en}}</span>
                         </div>
                     @endforeach
                 <br>
@@ -137,6 +148,9 @@
                 @endforeach
             </p>
         </div>
+    </div>
+    <div class="invoice-text">
+        <h2>INVOICE</h2>
     </div>
     
 </body>

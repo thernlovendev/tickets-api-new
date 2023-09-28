@@ -122,15 +122,16 @@
                 padding: 0 3em 0 3em">
             <p style="margin: 0;
                 box-sizing: border-box;
-                color: #9A9A9A;
+                color: #5D5D5F;
                 font-family: sans-serif;
                 font-size: 0.9em;
                 line-height: 1.5"> {{__('Hi!')}} {{$fullname}}, <br>
                 @if($template->content == 'default')
-                {{__('We’ve received the payment for your reservation for amount of:')}} {{$amount}}$</p>
+                {{__('We’ve received the payment for your reservation for amount of:')}} {{$amount}}$
+            </p>
                <p style="margin: 0;
                         box-sizing: border-box;
-                        color: #9A9A9A;
+                        color: #5D5D5F;
                         font-family: sans-serif;
                         font-size: 0.9em;
                         line-height: 1.5;
@@ -139,7 +140,7 @@
                 @else
                 <p style="margin: 0;
                 box-sizing: border-box;
-                color: #9A9A9A;
+                color: #5D5D5F;
                 font-family: sans-serif;
                 font-size: 0.9em;
                 line-height: 1.5">
