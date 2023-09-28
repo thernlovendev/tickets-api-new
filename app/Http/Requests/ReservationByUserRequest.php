@@ -99,6 +99,8 @@ class ReservationByUserRequest extends FormRequest
                         'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                         'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
                         'items.*.sub_items.*.refund_status' => 'nullable',
+                        'payment_type' => ($isAdmin) ? ['nullable', Rule::in($type)] : ['exclude'],
+                        'credit' => ($isAdmin) ? ['nullable'] : ['exclude'], 
                         'stripe_token' => ['nullable'],
                     ];
                 } break;

@@ -35,7 +35,7 @@
                 width: 100%;
                 max-width: 300px;" src="https://tamice.com/site/images/tamice/logo/tamice-logo-225px.png" alt="logo-joga">
         </div>
-        <table style="margin-left:-85px">
+        <table style="margin-left:-45px">
             <tr>
                 <td style="padding: 4px;">
                     <div style=" width: 100px; height: 100px; display: inline-block;">
@@ -148,50 +148,58 @@
                         width: 100%;
                         justify-content: center;
                         border-top: 1px solid #A3A3A3;
-                        padding-top: 1em;
-                        justify-content: space-between;">
-                    <div style="margin: 0;
-                        box-sizing: border-box;
-                        display: inline-block;">
+                        padding-top: 1em;">
+                    <div style="justify-content: space-between;">
+                        <div style="margin: 0;
+                            box-sizing: border-box;
+                            display: inline-block;">
+                        </div>
+                        <div style="margin: 0 auto;
+                            box-sizing: border-box;
+                            display: inline-block;
+                            float: right">
+                            <a style="margin: 0;
+                            box-sizing: border-box;
+                            color:#A3A3A3;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 0.8em;
+                            margin-right: 0.5em" href="https://blog.naver.com/tamice">
+                                <img style="margin: 0 auto; width: 20px; height: 20px" src="https://testing.thernloven.com/tickets-api-new/public/images/circle-blog.png">
+                            </a>
+                            <a style="margin: 0;
+                            box-sizing: border-box;
+                            color:#A3A3A3;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 0.8em;
+                            margin-right: 0.5em" href="https://www.facebook.com/NYTamice">
+                                <img style="margin: 0 auto; width: 20px; height: 20px" src="https://testing.thernloven.com/tickets-api-new/public/images/circle-facebook.png">
+                            <a style="margin: 0;
+                            box-sizing: border-box;
+                            color:#A3A3A3;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 0.8em;
+                            margin-right: 0.5em" href="https://www.instagram.com/with.tamice">
+                                <img style="margin: 0 auto; width: 20px; height: 20px" src="https://testing.thernloven.com/tickets-api-new/public/images/circle-instagram.png">
+                            </a>
+                            <a style="margin: 0;
+                            box-sizing: border-box;
+                            color:#A3A3A3;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 0.8em;" href="#"></a>
+                        </div>           
                     </div>
-                    <div style="margin: 0 auto;
-                        box-sizing: border-box;
-                        display: inline-block;
-                        float: right">
-                        <a style="margin: 0;
-                        box-sizing: border-box;
-                        color:#A3A3A3;
-                        text-decoration: none;
-                        font-weight: bold;
-                        font-size: 0.8em;
-                        margin-right: 0.5em" href="https://blog.naver.com/tamice">
-                            <img style="margin: 0 auto; width: 20px; height: 20px" src="https://testing.thernloven.com/tickets-api-new/public/images/circle-blog.png">
-                        </a>
-                        <a style="margin: 0;
-                        box-sizing: border-box;
-                        color:#A3A3A3;
-                        text-decoration: none;
-                        font-weight: bold;
-                        font-size: 0.8em;
-                        margin-right: 0.5em" href="https://www.facebook.com/NYTamice">
-                            <img style="margin: 0 auto; width: 20px; height: 20px" src="https://testing.thernloven.com/tickets-api-new/public/images/circle-facebook.png">
-                        <a style="margin: 0;
-                        box-sizing: border-box;
-                        color:#A3A3A3;
-                        text-decoration: none;
-                        font-weight: bold;
-                        font-size: 0.8em;
-                        margin-right: 0.5em" href="https://www.instagram.com/with.tamice">
-                            <img style="margin: 0 auto; width: 20px; height: 20px" src="https://testing.thernloven.com/tickets-api-new/public/images/circle-instagram.png">
-                        </a>
-                        <a style="margin: 0;
-                        box-sizing: border-box;
-                        color:#A3A3A3;
-                        text-decoration: none;
-                        font-weight: bold;
-                        font-size: 0.8em;" href="#"></a>
+                    <div style="justify-content: center; text-align: center">
+                        <span>@2023 Tamice INC Privacy Policy</span>
+                    </div>
+                    <div style="justify-content: center; text-align: center;margin-left: -84px;">
+                        <span>151 West 46th Street, Suite 1002, New York, NY 10036</span>
                     </div>
                 </footer>
+                <div></div>
         </div>
     </div>
     

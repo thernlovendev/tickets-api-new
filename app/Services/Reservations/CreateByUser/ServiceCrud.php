@@ -158,32 +158,51 @@ class ServiceCrud
                     throw new \Exception($response);
                 }
 
-                $template = Template::where('title','After Payment Completed')->first();
+                // $template = Template::where('title','After Payment Completed')->first();
         
-                if($template->subject == 'default'){
-                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
-                } else {
-                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
-                }
-               
+                // if($template->subject == 'default'){
+                //     $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
+                // } else {
+                //     $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
+                // }
+
+                
+
                 // Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
                 //     $message->to($reservation->email);
                 //     $message->subject($subject);
                 //     $fullname = $reservation->customer_name_en;
                 //     $orderNumber = $reservation->order_number;
                 //     $orderDate = $reservation->created_at->format('Y-m-d g:i A');
+                //     $discount = $reservation->discount_amount;
                 //     $amount = $data['total'];
                 //     $iconDashboardSquare = public_path('images/dashboard-square.svg');
                 //     $iconBookOpen = public_path('images/book-open.svg');
                 //     $iconDollarCircle = public_path('images/dollar-circle.svg');
                 //     $iconMessage = public_path('images/message.svg');
                 //     $iconLocation = public_path('images/location.svg');
-                //     $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name')->get();
+                //     $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
 
+                //     $cash_type =false; 
+                //     $credit_type =false; 
 
-                //     $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems'));
+                //     if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                //         $bill_data = $reservation->reservationCashPayments()->get()->last();
+                //         $cash_type =true; 
+                //     } else {
+                //         $bill_data = $reservation->reservationCreditCardPayments()->get()->last();
+                //         $credit_type =true; 
+                //     }
 
-                //     $message->attachData($pdf->output(), 'archivo.pdf');
+                //     if($data['created_by'] == 'Customer'){
+                //         $auth = false;
+                //     } else {
+                //         $auth = true;
+                //     }
+
+                //     $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+
+                //     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 // });
 
 
@@ -193,6 +212,14 @@ class ServiceCrud
 
     public static function update($data, $reservation_old)
 	{
+        
+            $user = auth()->user();
+            $isAdmin = $user && $user->roles->first()->name === 'admin' || $user && $user->roles->first()->name === 'super admin';
+
+            if(!$isAdmin){
+                $data['payment_type'] = 'Credit Card';
+            }
+
             $total_old = $reservation_old->total;
 
             foreach ($data['items'] as $item){
@@ -284,8 +311,11 @@ class ServiceCrud
             if($reservation_old->total - $total_old > 0){    
                 
                 $validator = Validator::make($data,[
-                    'stripe_token' => ['required'],
+                    'payment_type' =>['nullable'],
+                    'credit' => ['required_if:payment_type,Cash'],
+                    'stripe_token' => ['required_if:payment_type,Credit Card,null'],
                 ]);
+
                 if( $validator->fails()){
                     throw new StripeTokenFailException($validator->messages());
                 }
@@ -293,28 +323,63 @@ class ServiceCrud
                 $data = $validator->validate();
 
                 $data['total'] = $reservation_old->total - $total_old;             
-                    
-                $reservation_old->status = Reservation::STATUS['NO_PAID'];
                 
-                $response = ServiceCreditCard::create($reservation_old, $data);
+                $reservation_old->status = Reservation::STATUS['NO_PAID'];
+
+                if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                    $response = ServiceCashPayment::create($reservation_old, $data);
+                }  else{
+                    $response = ServiceCreditCard::create($reservation_old, $data);
+                }
                 
                 if (array_key_exists('original', $response) && array_key_exists('errors', $response->original)) {
                     throw new \Exception($response);
                 } 
 
-                $template = Template::where('title','After Upgraded Order')->first();
-        
-                if($template->subject == 'default'){
-                    $subject = "Order Upgraded";
-                } else {
-                    $subject = $template->subject;
-                }
+                // $template = Template::where('title','After Upgraded Order')->first();
 
-                // Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount' => $data['total']], function($message) use ($reservation_old, $subject){
+                // if($template->subject == 'default'){
+                //     $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_en." Payment Completed";
+                // } else {
+                //     $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_en." ".$template->subject;
+                // }
+
+                
+
+                // Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation_old, $template, $subject, $data){
                 //     $message->to($reservation_old->email);
                 //     $message->subject($subject);
+                //     $fullname = $reservation_old->customer_name_en;
+                //     $orderNumber = $reservation_old->order_number;
+                //     $orderDate = $reservation_old->created_at->format('Y-m-d g:i A');
+                //     $discount = $reservation_old->discount_amount;
+                //     $amount = $data['total'];
+                //     $iconDashboardSquare = public_path('images/dashboard-square.svg');
+                //     $iconBookOpen = public_path('images/book-open.svg');
+                //     $iconDollarCircle = public_path('images/dollar-circle.svg');
+                //     $iconMessage = public_path('images/message.svg');
+                //     $iconLocation = public_path('images/location.svg');
+                //     $reservationItems = $reservation_old->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+
+                //     $cash_type =false; 
+                //     $credit_type =false; 
+
+                //     if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                //         $bill_data = $reservation_old->reservationCashPayments()->get()->last();
+                //         $cash_type =true; 
+                //     } else {
+                //         $bill_data = $reservation_old->reservationCreditCardPayments()->get()->last();
+                //         $credit_type =true; 
+                //     }
+
+                //     $auth = false;
+
+                //     $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+
+                //     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 // });
-                
+        
+
             }
             
           return $reservation_old->load('reservationItems.reservationSubItems');

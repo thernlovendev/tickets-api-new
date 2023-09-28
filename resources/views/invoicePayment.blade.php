@@ -18,7 +18,7 @@
     align-items: center;">
     <div style="margin: 0 auto;
         box-sizing: border-box;
-        width: 80%;
+        width: 95%;
         height: 80%;
         background-color: #fff;
         border-radius: 5px;
@@ -47,96 +47,93 @@
                 
                 font-size: 0.9em;
                 line-height: 1.5">
-            <p style="margin-top: 2em;
+            <p style="margin-top: 0.5em;
                 box-sizing: border-box;
                 color: #9A9A9A;
                 
                 font-size: 0.9em;
                 line-height: 1.5">
                 <div>
-                    <span>Order Number: {{$orderNumber}}</span>
+                    <span style="font-weight: bold;">Order Number: {{$orderNumber}}</span>
                 </div>
                 <div>
-                    <span>Order Date: {{$orderDate}}</span>
+                    <span style="font-weight: bold;">Order Date: {{$orderDate}}</span>
                 </div>
+                <div>
+                    <span style="font-weight: bold;">Total: ${{$amount}} </span>
+                </div>
+                @if($cash_type == true)
+                <div>
+                    <span style="font-weight: bold;">Cash: ${{$bill_data->credit}} </span>
+                </div>
+                @if($auth == true)
+                    <div>
+                        <span style="font-weight: bold;">Discount: ${{$discount}} </span>
+                    </div>
+                @endif
+                <div>
+                    <span style="font-weight: bold;">Debt: ${{$bill_data->debit}} </span>
+                </div> 
+                <br>
+                <div>
+                    <span style="font-weight: bold;">Payment: Cash</span>
+                </div> 
+                <div style="border-top: 2px solid #A3A3A3"></div>
+
+                @elseif($credit_type == true)
+                
+                <div>
+                    <span style="font-weight: bold;">Total Paid: ${{$bill_data->total}} </span>
+                </div>
+                @if($auth == true)
+                    <div>
+                        <span style="font-weight: bold;">Discount: ${{$discount}} </span>
+                    </div>
+                @endif
+                <br>
+                <div>
+                    <span style="font-weight: bold;">Payment: Credit Card</span>
+                </div> 
+                <div>
+                    <span style="font-weight: bold;">Card Type: {{$bill_data->card_type}}</span>
+                </div> 
+                <div>
+                    <span style="font-weight: bold;">Credit Card: </span>
+                    <span>xxxx-xxxx-xxxx-{{$bill_data->last_four_digits}}</span>
+                    
+                </div> 
+                <div style="border-top: 2px solid #A3A3A3"></div>
+                
+                @endif
             </p>
             
-            <p style="margin-top: 2em;
-                box-sizing: border-box;
+            <p style="box-sizing: border-box;
                 color: #9A9A9A;
                 
                 font-size: 0.9em;
                 line-height: 1.5">
-                <table class="default">
+
                 @foreach($reservationItems as $item)
-                    <tr>
-                        <th style="">Ticket Name</th>
-                        <th style="">Adult/Child</th>
-                        <th style="">Scheduled Date</td>
-                        <th style="">Price</td>
-                        <th style="">Quantity</td>
-                        <th style="">Addition</td>
-                        <th style="">Subtotal</td>
-                    </tr>
+                    <div style="font-weight: bold;">
 
-                    <tr>
-                        <td>{{$item->category->name}} - {{$item->subcategory->name}}</td>
-                        <td>Celda 5</td>
-                        <td>Celda 6</td>
-                        <td>Celda 4</td>
-                        <td>Celda 5</td>
-                        <td>Celda 6</td>
-                        <td>Celda 6</td>
-                    </tr>
+                    @isset($item->priceList)
+                        <span>{{$item->priceList->product_type}} </span>
+                    @endisset
+                       <span>(Price: ${{$item->total}}, Quantity: {{$item->quantity}})</span>
+                    </div>
+                    <br>
                     @foreach($item->reservationSubItems as $subitem)
-
-                        <tr>
-                            <th style="">Header subitem</th>
-                            <th style="">Adult/Child</th>
-                            <th style="">Scheduled Date</td>
-                            <th style="">Price</td>
-                            <th style="">Quantity</td>
-                            <th style="">Addition</td>
-                            <th style="">Subtotal</td>
-                        </tr>
-                        <tr>
-                            <td>{{$subitem->ticket->title_en}}</td>
-                            <td>Celda 5</td>
-                            <td>Celda 6</td>
-                            <td>Celda 4</td>
-                            <td>Celda 5</td>
-                            <td>Celda 6</td>
-                            <td>Celda 6</td>
-                        </tr>
+                        <div style="margin-left:1rem">
+                            <span style="text-decoration: underline;">{{$subitem->ticket->title_en}}</span>
+                        </div>
                     @endforeach
+                <br>
+
+                <div style="border-top: 2px solid #A3A3A3"></div>
+                <br>
 
                 @endforeach
-
-                
-                </table>
             </p>
-                <footer style="margin: 0;
-                        box-sizing: border-box;
-                        width: 100%;
-                        justify-content: center;
-                        border-top: 1px solid #A3A3A3;
-                        padding-top: 1em;
-                        justify-content: center; ">
-                    <div style="margin: 0 auto;
-                        box-sizing: border-box;
-                        display: inline-block;
-                        float: center; margin-left: 35%;">
-                        <a style="margin: 0;
-                        box-sizing: border-box;
-                        color:#000000;
-                        text-decoration: none;
-                        font-weight: bold;
-                        font-size: 0.8em;
-                        margin-right: 0.5em" href="#">
-                            <span>2023 Privace Content Footer</span>
-                        </a>
-                    </div>
-                </footer>
         </div>
     </div>
     

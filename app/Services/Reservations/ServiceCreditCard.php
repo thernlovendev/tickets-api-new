@@ -76,6 +76,7 @@ class ServiceCreditCard
             
             $data['payment_status'] = $response['outcome']['seller_message'];
             $data['card_type'] = $response['payment_method_details']['card']['brand'];
+            $data['last_four_digits'] = $response['payment_method_details']['card']['last4'];
 
             $reservation->reservationCreditCardPayments()->create($data);
             
@@ -102,6 +103,7 @@ class ServiceCreditCard
             
             $data['payment_status'] = $response['payment']['status'];
             $data['card_type'] = $response['payment']['card_details']['card']['card_brand'];
+            $data['last_four_digits'] = $response['payment']['card_details']['card']['last_4'];
 
             $reservation->reservationCreditCardPayments()->create($data);
             
