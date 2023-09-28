@@ -159,3 +159,6 @@ Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsCo
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
 Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
+
+Route::post('select-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@selectSeat')->name('select.seat')->middleware();
+Route::post('buy-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@buySeat')->name('buy.seat')->middleware();
