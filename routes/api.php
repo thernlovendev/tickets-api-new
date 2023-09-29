@@ -189,6 +189,13 @@ Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
+
+Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
+Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
+
+Route::post('select-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@selectSeat')->name('select.seat')->middleware();
+Route::post('buy-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@buySeat')->name('buy.seat')->middleware();
+
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
 Route::post('tickets-multiple', 'App\Http\Controllers\API\TicketsController@multiple')->name('tickets.multiple')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
@@ -199,4 +206,3 @@ Route::get('/test-pdf', function(){
 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
 	return Response::download($file);
 });
-
