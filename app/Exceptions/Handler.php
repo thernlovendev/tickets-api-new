@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Exceptions\StripeTokenFailException;
+use App\Exceptions\FailException;
+
 
 class Handler extends ExceptionHandler
 {
@@ -37,5 +40,18 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof StripeTokenFailException) {
+            return $exception->render($request);
+        }
+
+        if ($exception instanceof FailException) {
+            return $exception->render($request);
+        }
+
+        return parent::render($request, $exception);
     }
 }

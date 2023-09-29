@@ -49,7 +49,7 @@ class BookingController extends Controller
             $sub_item->rq_schedule_datetime = $data['rq_schedule_datetime'];
             
             $ticket_attach = Ticket::find($sub_item['ticket_id']);
-            if($ticket_attach->type == TICKET::TYPE['GUIDE_TOUR'] ){
+            if($ticket_attach->ticket_type == TICKET::TYPE['GUIDE_TOUR'] ){
                 $sub_item->ticket_sent_status = ReservationSubItem::SEND_STATUS['SENT'];
             } 
 

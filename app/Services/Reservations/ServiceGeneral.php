@@ -17,14 +17,20 @@ class ServiceGeneral
                 'id' => $item->id,
                 'created_by' => $item->created_by,
                 'departure_date' => $item->departure_date,
-                'order_date' => $item->order_date,
+                'order_date' => $item->created_at->format('Y-m-d g:i A'),
                 'order_number' => $item->order_number,
+                'customer_name_en' => $item->customer_name_en,
+                'customer_name_kr' => $item->customer_name_kr,
+                'phone' => $item->phone,
                 'customer' =>$customer ? $customer->name : $item->customer_name_en,
                 'payment_type' => $item->payment_type,
                 'ticket_sent_status' => $item->ticket_sent_status,
                 'status' => $item->status,
-                'phone' => $item->phone,
-                'email' => $item->email
+                'email' => $item->email,
+                'total' => $item->total,
+                'reservation_items' => $item->reservationItems,
+                'vendor_comissions' => $item->vendorComissions,
+                'user' => $customer ? $customer : $item->customer_name_en
             ];
         });
 
@@ -38,6 +44,11 @@ class ServiceGeneral
     }
 
     public static function filterCustom($filters, $models){
+
+        if(!isset($filters['sort'])){
+            $models->orderBy('created_at','DESC');
+        }
+        
         if(isset($filters['customer'])){
             $models->where('customer_name_en','LIKE', '%'.$filters['customer'].'%')
                     ->orWhere('customer_name_kr','LIKE', '%'.$filters['customer'].'%');
@@ -53,6 +64,10 @@ class ServiceGeneral
 
         if(isset($filters['username'])){
             $models->where('created_by','LIKE', '%'.$filters['username'].'%');
+        }
+
+        if(isset($filters['ids_filter'])){
+            $models->whereIn('id', $filters['ids_filter']);
         }
 
         return $models;

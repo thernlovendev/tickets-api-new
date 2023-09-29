@@ -24,6 +24,10 @@ class ServiceGeneral
 
     public static function filterCustom($filters, $models){
         //filer by razon social
+
+        if(isset($filters['ids_filter'])){
+            $models->whereIn('id', $filters['ids_filter']);
+        }
         
         return $models;
     }

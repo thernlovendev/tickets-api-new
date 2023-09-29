@@ -7,7 +7,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\InventoryRequest;
 use App\Http\Requests\StockTicketRequest;
+use App\Http\Requests\StockTicketZipRequest;
 use App\Http\Requests\StockCorrectionBalanceRequest;
+use App\Http\Requests\ChangeStatusRequest;
+use App\Http\Requests\DownloadMultipleTicketsRequest;
+use App\Http\Requests\DeleteMultipleTicketDetail;
+use App\Http\Requests\DestroyMultipleUploadedRequest;
 use App\Imports\TicketStocksImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TicketStock;
@@ -23,6 +28,11 @@ use PDF;
 use DB;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+// use Illuminate\Support\Facades\Zip;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class InventoriesController extends Controller
 {
@@ -33,19 +43,19 @@ class InventoriesController extends Controller
         $params = $request->query();
 
         if($stock->count() > 0){
-            // $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult, tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type');
 
-            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, count(*) as total, count(CASE WHEN ticket_stocks.status = "Valid" THEN 1 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child');
+            $stocks = $stock->join('tickets', 'ticket_stocks.ticket_id', '=', 'tickets.id')->selectRaw('ticket_id, title_en, product_code, range_age_type, tickets.out_of_stock_alert_adult,tickets.out_of_stock_alert_child, count(*) as total, SUM(CASE 
+            WHEN ticket_stocks.status = "Valid" AND ticket_stocks.expiration_date >= NOW() THEN 1 ELSE 0 END) AS total_valid, MAX(ticket_stocks.created_at) AS last_update')->groupBy('ticket_id', 'range_age_type','title_en', 'product_code', 'tickets.out_of_stock_alert_adult','tickets.out_of_stock_alert_child');
 
             $elements = ServiceGeneral::filterCustom($params, $stocks);
             $elements = $this->httpIndex($elements, []);
             $response = ServiceGeneral::mapCollection($elements);
+            
             return Response($response, 200);
         } else {
             return [];
         }
 
-        
     }
 
     public function stockCorrection(StockCorrectionBalanceRequest $request)
@@ -64,6 +74,65 @@ class InventoriesController extends Controller
         return Response(['message'=> 'Successful Bulk Up'], 200);
     }
 
+    public function bulkUploadZip(StockTicketZipRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $zipPath = $request->file('file_import')->store('temp');
+            $zip = new \ZipArchive;
+
+            $zip->open(storage_path('app/' . $zipPath));
+            $folder = Carbon::now()->format('YmdHis');
+            $extractPath = storage_path('app/public/stock_pdfs/'.$folder);
+
+            $zip->extractTo($extractPath);
+            $zip->close();
+            
+            $pdfFiles = Storage::files('public/stock_pdfs/'.$folder);
+            $errors = [];
+            $message = 'Successful Bulk Up';
+            foreach ($pdfFiles as $pdfFile) {
+                $pdfContents = Storage::get($pdfFile);
+                $pdfPath = Storage::path($pdfFile);
+    
+                $pdfName = pathinfo($pdfFile, PATHINFO_FILENAME);
+                $stock = TicketStock::where('code_number', $pdfName)->first();
+                if(!$stock){
+                    $ticketStock = TicketStock::create([
+                        'code_number' => $pdfName,
+                        'type' => $request->input('type'),
+                        'expiration_date' => $request->input('expiration_date'),
+                        'status' => TicketStock::STATUS['VALID'],
+                        'range_age_type' => $request->input('range_age_type'),
+                        'ticket_id' => $request->input('ticket_id')
+                    ]);
+        
+                    $ticketStock->pdf()->create([
+                        'name' => $pdfName,
+                        'path' => $pdfPath
+                    ]);
+                } else {
+                    $errors[] = [
+                        'code_number' => $pdfName
+                    ];
+                    $message = 'Some codes are repeated, only the correct ones have been loaded';
+                }
+            }
+
+            if (Storage::exists($zipPath)) {
+                Storage::delete($zipPath);
+            }
+            
+            DB::commit();
+    
+            return response(['message'=> $message, 'errors' => $errors], 200);
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response($e, 400);
+        }
+    }
+
     public function details(Request $request, $ticket_id, $type){
 
         $stock = TicketStock::query();
@@ -76,57 +145,99 @@ class InventoriesController extends Controller
         $elements = $this->httpIndex($elements, []);
         $response = ServiceDetail::mapCollection($elements);
         return Response($response, 200);
-        
+    }
+
+    public function downloadPdfZip(Request $request){
+
+        if($request->filled('ticket_stock_id')){
+            $ticket_stock_id = $request->input('ticket_stock_id');
+            $ticket_stock = TicketStock::find($ticket_stock_id);
+    
+            if($ticket_stock && $ticket_stock->pdf){
+                $path = $ticket_stock->pdf->path;
+                $result_file_name = $ticket_stock->pdf->name.'.pdf';
+                return response()->download($path, $result_file_name)->deleteFileAfterSend(false);
+            }
+        }
+
+        return response(['message' => 'The pdf is not available'], 400);
+
     }
 
     public function downloadTickets(Reservation $reservation, ReservationSubItem $reservationSubItem){
-        try {
-            DB::beginTransaction();
-            
-            $reservationSubItem->load('reservationItem');
-            
-            $quantity = $reservationSubItem->reservationItem->quantity;
-            $range_age = $reservationSubItem->reservationItem->adult_child_type;
-            $ticket_id = $reservationSubItem->ticket_id;
-            
-            $now = Carbon::now()->format('Y-m-d H:i:s');
+        $result_file_name = 'tickets_all_' . time() . '.pdf';
 
-            $stocks = StockUsed::where('reservation_id',$reservation->id)
-                               ->where('reservation_sub_item_id',$reservationSubItem->id)
-                               ->get();
-            $data = [];
-
-            foreach ($stocks as  $key => $stock) {
-                $ticket_stock = TicketStock::find($stock->ticket_stock_id);
-                $data[] = $stock;
-                
-                $data[$key]['code'] = $ticket_stock->code_number;
-                $data[$key]['expiration_date'] = $ticket_stock->expiration_date;
-                $data[$key]['type'] = $ticket_stock->type;
-            }
-            
-            $ticket = Ticket::where('id',$reservationSubItem->ticket_id)->first();
-            $gallery = $ticket->galleryImages->sortBy('priority')->first();
-            $image_logo = public_path('logo.png');
-            
-            if($gallery == null){
-                $image = $image_logo;
-            } else {
-                $image = storage_path().'/app/public/'.$gallery->path;
-            }
-            $pdf = PDF::loadView('ticketDownload',compact('data','ticket','image','reservation','image_logo'));
-            
-            // Create PDF and Download
-            
-            DB::commit();
-            
-            return $pdf->download('tickets'.$now.'.pdf');
-    
-        } catch(\Exception $e) {
-            DB::rollback();
-            return Response($e,400);
-
+        if($reservationSubItem->pdf_path){
+            return response()->download($reservationSubItem->pdf_path, $result_file_name)->deleteFileAfterSend(false);
+        } else {
+            return response(['message'=> 'The PDF is not available'], 400);
         }
+    }
+
+    public function downloadMultipleTickets(DownloadMultipleTicketsRequest $request){
+
+        //validator custom
+        $validator = Validator::make($request->all(), [
+            'ticket_stock_ids' => function ($attribute, $value, $fail) use ($request) {
+                $firstType = TicketStock::find($value[0])->type;
+    
+                if (!collect($value)->every(function ($ticketStockId) use ($firstType) {
+                    $type = TicketStock::find($ticketStockId)->type;
+                    return $type === $firstType;
+                })) {
+                    $fail('Tickets must be of the same type.');
+                }
+            },
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors()->toArray(),
+            ], 422);
+        }
+
+        $ticket_stock_ids = $request->input('ticket_stock_ids');
+        $quantity = collect($ticket_stock_ids)->count();
+
+        $ticket_stocks = TicketStock::whereIn('id', $ticket_stock_ids)->with('pdf')->get();
+        
+        if($quantity <= env('QUANTITY_TO_DOWNLOAD_PDF')){
+            //download pdf in one merge
+            $oMerger = PDFMerger::init();
+
+            foreach ($ticket_stocks as $ticket_stock) {
+                $oMerger->addPDF($ticket_stock->pdf->path, 'all');
+            }
+
+            $oMerger->merge();
+            $result_file_name = 'Ticket_stocks_' . time() . '.pdf';
+            $save_path = storage_path('app/public/' . $result_file_name);
+            $oMerger->setFileName($result_file_name)->save($save_path);
+
+            return response()->download($save_path, $result_file_name)->deleteFileAfterSend(true);
+
+        } else {
+            //download pdf individual in a zip file
+            Storage::disk('local')->makeDirectory('tobedownload',$mode=0775); // zip store here
+            $zip_file=storage_path('app/tobedownload/tickets_'.time().'.zip');
+            $zip = new \ZipArchive();
+            $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+            $pdf_paths = $ticket_stocks->pluck('pdf.path');
+        
+            foreach ($pdf_paths as $pdf_path) {
+                if (file_exists($pdf_path)) { // verify if file exists
+                    $file_path = $pdf_path;
+                    $relative_path = basename($pdf_path); // name relative route
+                    $zip->addFile($file_path, $relative_path);
+                }
+            }
+            $zip->close();
+            $zip_new_name = "Tickets-".date("y-m-d-h-i-s").".zip";
+            return response()->download($zip_file,$zip_new_name)->deleteFileAfterSend(true);
+        }
+
     }
 
     public function stockBalance(Request $request){
@@ -216,8 +327,67 @@ class InventoriesController extends Controller
             } else if($balance_type == 'Negative'){
                 return strval($item['balance_general']) < 0;
             } else return true;
-        });
+        })->values();
 
         return $tickets;
     }
+
+    public function changeStatus(ChangeStatusRequest $request,TicketStock $stock){
+
+        $new_type = $request->validated();
+        
+
+        $stock->update(['status' => $new_type['status']]);
+
+        return Response($stock, 200);
+
+    }
+
+    public function deleteMultipleTicketStockDetail(DeleteMultipleTicketDetail $request){
+
+        $validator = Validator::make($request->all(), [
+            'ticket_stock_ids' => function ($attribute, $value, $fail) use ($request) {
+                    $invalidIds = TicketStock::whereIn('id', $value)
+                        ->where('status', 'Used')
+                        ->pluck('id');
+    
+                    if ($invalidIds->count() > 0) {
+
+                        $fail('It is only allowed to delete if the tickets are not used');
+                    }
+                },
+            ],
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors()->toArray(),
+            ], 422);
+        }       
+    
+        $ticket_stock_ids = $request->input('ticket_stock_ids');
+
+        TicketStock::whereIn('id',$ticket_stock_ids)->forceDelete();
+
+        return response(['message' => 'Tickets delete successfully'], 204);
+    }
+
+    public function destroyMultipleUploaded($ticket_id, DestroyMultipleUploadedRequest $request){
+
+        $data = $request->validated();
+        $stocks = TicketStock::where('ticket_id', $ticket_id)
+            ->where('range_age_type', $data['range_age_type'])
+            ->forceDelete();
+
+        if ($stocks > 0) {
+            // Se eliminaron registros, devolver una respuesta exitosa con un mensaje
+            return response()->json(['message' => 'Records successfully deleted'], 200);
+        } else {
+            // No se eliminaron registros, devolver un mensaje de error
+            return response()->json(['message' => 'No records found to delete'], 404);
+        }
+    }
+
+    
 }

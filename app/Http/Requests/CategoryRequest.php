@@ -38,7 +38,7 @@ class CategoryRequest extends FormRequest
                                               where(fn ($query) => $query->where('city_id',$this->city_id)),
                                     'max:30'],
                         'subcategories' =>[
-                            'required'
+                            'nullable'
                         ],
                         'subcategories.*.name'=>['required','distinct'],
                     ];
@@ -49,7 +49,7 @@ class CategoryRequest extends FormRequest
                     'name' => ['required','max:30',Rule::unique('categories')->ignore($this->route('category'))->
                     where(fn ($query) => $query->where('city_id',$this->city_id))],
                     'subcategories' =>[
-                        'required'
+                        'nullable'
                     ],
                     'subcategories.*.name'=>['required','distinct'],
                 ];

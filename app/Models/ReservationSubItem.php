@@ -31,7 +31,8 @@ class ReservationSubItem extends Model
         'ticket_sent_status',
         'ticket_sent_date',
         'refund_status',
-        'refund_sent_date'
+        'refund_sent_date',
+        'pdf_path'
     ];
 
     public function reservationItem()

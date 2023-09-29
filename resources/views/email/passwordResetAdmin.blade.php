@@ -7,6 +7,9 @@
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>{{__('Password Reset by Admin')}}</title>
+    <style>
+    body { font-family: 'Poppins', sans-serif; }
+    </style>
 </head>
 
 @if($template->content == 'default')

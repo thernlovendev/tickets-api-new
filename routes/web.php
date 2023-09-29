@@ -35,3 +35,7 @@ Route::get('/', function () {
 Route::get('/stripe', function () {
     return view('stripe');
 })->name('stripe');
+
+Route::get('/square', function () {
+    return view('square');
+})->name('square');

@@ -14,23 +14,25 @@ use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
-use App\Services\Stripe\Service as ServiceStripe;
+// use App\Services\Stripe\Service as ServiceStripe;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
+use App\Exceptions\StripeTokenFailException;
 use Mail;
+use Carbon\Carbon;
 
 class ServiceCrud
 {
 	public static function create($data)
 	{
-            if($data['payment_type'] == 'Credit Card'){
-                $service = new ServiceStripe();
+            // if($data['payment_type'] == 'Credit Card'){
+            //     $service = new ServiceStripe();
         
-                $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
-                $token_credit_card = $service->createTokenCreditCard($credit_card); 
+            //     $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
+            //     $token_credit_card = $service->createTokenCreditCard($credit_card); 
                 
-                $data['token_id'] = $token_credit_card['id'];
-            }
+            //     $data['token_id'] = $token_credit_card['id'];
+            // }
             do {
                 $order_number =  mt_rand(1000000, 9999999);
                 settype($order_number, 'string');
@@ -123,6 +125,10 @@ class ServiceCrud
                     $response = ServiceCreditCard::create($reservation, $data);
                 }
 
+                if($reservation->status == Reservation::STATUS['NO_PAID']){
+                    throw new \Exception($response);
+                }
+
                 $template = Template::where('title','After Payment Completed')->first();
         
                 if($template->subject == 'default'){
@@ -143,9 +149,11 @@ class ServiceCrud
 
 	public static function update($data, $reservation_old)
 	{
-		
+            $reservation_old->update($data);
 
             $total_old = $reservation_old->total;
+
+            ModelCrud::deleteUpdateOrCreate($reservation_old->vendorComissions(), $data['vendor_comissions']);
 
             foreach ($data['items'] as $item){
                 $item_model = $reservation_old->reservationItems()->where('id', $item['id'])->first();
@@ -171,7 +179,7 @@ class ServiceCrud
                             case Ticket::TYPE['BAR_QR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
                                 break;
-                            case Ticket::TYPE['TOUR_TICKET']:
+                            case Ticket::TYPE['GUIDE_TOUR']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 
                                 break;
@@ -182,8 +190,18 @@ class ServiceCrud
                         }
 
                     } 
+
+                    if($sub_item['rq_schedule_datetime'] !== null){
+                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                    } else {
+                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                    }
                     
                     $item['sub_items'][$index]['addition'] = $ticket->additional_price_amount;
+
+                    if($sub_item['refund_status'] !== null){
+                        $item['sub_items'][$index]['refund_sent_date'] = Carbon::now();
+                    }
                 }
 
                 $addition = collect($item['sub_items'])->sum('addition');
@@ -198,6 +216,8 @@ class ServiceCrud
             
             $reservation_old->total = round($reservation_old->subtotal - $reservation_old->discount_amount, 2);
 
+            $reservation_old->order_date = Carbon::now()->format('Y-m-d');
+
             $reservation_old->save();
 
             if($reservation_old->total - $total_old > 0){    
@@ -206,27 +226,24 @@ class ServiceCrud
                 
                     $validator = Validator::make($data,[
                         'payment_type' => ['required',Rule::in(Reservation::PAYMENT_TYPE)],
-                        'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
-                        'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
-                        'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
-                        'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string']
+                        'stripe_token' => ['required_if:payment_type,Credit Card'],
+
+                        // 'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
+                        // 'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
+                        // 'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
+                        // 'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string']
                     ]);
                     
-                    if( $validator->fails() ){
-                        throw ValidationException::withMessages([
-                            'errors' => $validator->errors()
-                        ]);
+                    if( $validator->fails()){
+                        throw new StripeTokenFailException($validator->messages());
                     }
                    
-                    $service = new ServiceStripe();
-            
-                    $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
-                 
-                    $token_credit_card = $service->createTokenCreditCard($credit_card); 
+                    // $service = new ServiceStripe();
+                    // $credit_card = collect($data)->only('credit_number', 'cvc','exp_month','exp_year');
+                    // $token_credit_card = $service->createTokenCreditCard($credit_card); 
+                    // $data['token_id'] = $token_credit_card['id'];
                     
                     $data = $validator->validate();
-
-                    $data['token_id'] = $token_credit_card['id'];
 
                 } else {
                     $validator = Validator::make($data, [
@@ -248,6 +265,10 @@ class ServiceCrud
                     $response = ServiceCashPayment::create($reservation_old, $data);
                 }  else{
                     $response = ServiceCreditCard::create($reservation_old, $data);
+                    if (array_key_exists('original', $response) && array_key_exists('errors', $response->original)) {
+                        throw new \Exception($response);
+                    } 
+                    
                 }
 
                 $template = Template::where('title','After Upgraded Order')->first();
@@ -264,8 +285,9 @@ class ServiceCrud
                 // });
                 
             }
+
             
-          return $reservation_old->load('reservationItems.reservationSubItems');
+          return $reservation_old->load('reservationItems.reservationSubItems','vendorComissions');
 	}
 
 	public static function delete($reservation)

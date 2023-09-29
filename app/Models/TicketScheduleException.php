@@ -31,12 +31,44 @@ class TicketScheduleException extends Model
         'show_on_calendar'
     ];
 
+    protected $appends = [
+        'total_quantity_sold',
+        'show_on_calendar_exception'
+    ];
+
+    protected $casts = [
+        'show_on_calendar' => 'boolean',
+    ];
+
     public function ticketSchedule()
     {
         return $this->belongsTo(TicketSchedule::class, 'ticket_schedule_id');
     }
 
-    protected $casts = [
-        'show_on_calendar' => 'boolean',
-    ];
+    public function getTotalQuantitySoldAttribute()
+    {
+        $ticket_id = $this->ticketSchedule ? $this->ticketSchedule->ticket_id : null;
+        $datetime = $this->date.' '.$this->time;
+
+        if($ticket_id){
+            
+            $quantity_sold = ReservationItem::whereHas('reservationSubItems', function($query) use ($ticket_id, $datetime){
+                    $query->where('ticket_id', $ticket_id)->where('rq_schedule_datetime', $datetime);
+                })->sum('quantity');
+
+            return $this->attributes['total_quantity_sold'] = $quantity_sold;
+
+        } 
+
+        return $this->attributes['total_quantity_sold'] = 0;
+    }
+
+    public function getShowOnCalendarExceptionAttribute($value)
+    {
+        if($this->total_quantity_sold >= $this->max_people){
+            return false;
+        }
+        return $this->show_on_calendar;
+    }
+
 }

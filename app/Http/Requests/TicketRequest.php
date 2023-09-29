@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\TicketSchedule;
 use App\Models\TicketPrice;
@@ -28,6 +29,7 @@ class TicketRequest extends FormRequest
     {
         $days = TicketSchedule::DAYS;
         $ticket_type = Ticket::TYPE['GUIDE_TOUR'];
+        $qr_bar = Ticket::TYPE['BAR_QR'];
         $status = Ticket::STATUS;
         $type_images = Ticket::TYPE_IMAGES;
         $additional_type = Ticket::ADDITIONAL_PRICE_TYPE;
@@ -45,7 +47,9 @@ class TicketRequest extends FormRequest
                         'city_id' => ['required','exists:cities,id'],
                         'title_en' => ['required','unique:tickets,title_en'],
                         'title_kr' => ['required','unique:tickets,title_kr'],
-                        'ticket_template' => ['required'],
+                        'template_id' => ['nullable','required_if:ticket_type,'.$qr_bar,Rule::exists('templates', 'id')->where(function ($query) {
+                            $query->where('type', 'Image');
+                        }),'integer'],
                         'ticket_type' => ['required'],
                         'status' => ['required', Rule::in($status)],
                         'out_of_stock_alert_adult' => ['nullable', 'integer'],
@@ -73,7 +77,8 @@ class TicketRequest extends FormRequest
                         'tickets_categories.*.category_id' => ['required','exists:categories,id'],
                         'tickets_subcategories' => ['required'],
                         'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
-                        'tickets_prices' => ['required'],
+                        'single_price' =>['nullable','boolean'],
+                        'tickets_prices' => ['nullable','required_if:single_price,true'],
                         'tickets_prices.*.type' => ['required',Rule::in($price_types)],
                         'tickets_prices.*.age_limit' => ['nullable'],
                         'tickets_prices.*.window_price' => ['nullable'],
@@ -85,6 +90,10 @@ class TicketRequest extends FormRequest
                         'tickets_schedule.*.max_people' => 'integer|required_if:ticket_type,'.$ticket_type,
                         'tickets_schedule.*.week_days' => ['array','required_if:ticket_type,'.$ticket_type, Rule::in($days)],
                         'tickets_schedule.*.time' => ['required_if:ticket_type,'.$ticket_type,'date_format:H:i'],
+                        'tickets_schedule.*.ticket_schedule_exceptions' => ['nullable'],
+                        'tickets_schedule.*.ticket_schedule_exceptions.*.date' => ['required','date','date_format:Y-m-d'],
+                        'tickets_schedule.*.ticket_schedule_exceptions.*.max_people' => ['required','integer','min:0'],
+                        'tickets_schedule.*.ticket_schedule_exceptions.*.show_on_calendar' => ['required','boolean']
                     ];
                 } break;
 
@@ -93,7 +102,9 @@ class TicketRequest extends FormRequest
                 return [
                         'title_en' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
                         'title_kr' => ['required',Rule::unique('tickets')->ignore($ticket->id)],
-                        'ticket_template' => ['required'],
+                        'template_id' => ['nullable','required_if:ticket_type,'.$qr_bar,Rule::exists('templates', 'id')->where(function ($query) {
+                            $query->where('type', 'Image');
+                        }),'integer'],
                         'ticket_type' => ['required'],
                         'status' => ['required', Rule::in($status)],
                         'out_of_stock_alert_adult' => ['nullable', 'integer'],
@@ -121,7 +132,8 @@ class TicketRequest extends FormRequest
                         'tickets_categories.*.category_id' => ['required','exists:categories,id'],
                         'tickets_subcategories' => ['required'],
                         'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
-                        'tickets_prices' => ['required'],
+                        'single_price' =>['nullable','boolean'],
+                        'tickets_prices' => ['nullable','required_if:single_price,true'],
                         'tickets_prices.*.id' => ['nullable'],
                         'tickets_prices.*.type' => ['required',Rule::in($price_types)],
                         'tickets_prices.*.age_limit' => ['nullable'],

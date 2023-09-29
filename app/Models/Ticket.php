@@ -28,7 +28,7 @@ class Ticket extends Model
 
     const TYPE = [
         'REGULAR' => 'Regular',
-        'BAR_QR' => 'Bar/QR',
+        'BAR_QR' => 'Bar/QR code',
         'GUIDE_TOUR' => 'Guide Tour',
         'HARD_COPY' => 'Hard Copy',
         'MUSICAL_SHOW' => 'Musical & Shows',
@@ -52,7 +52,7 @@ class Ticket extends Model
         'city_id',
         'title_en',
         'title_kr',
-        'ticket_template',
+        'template_id',
         'ticket_type',
         'status',
         'out_of_stock_alert_adult',
@@ -65,11 +65,14 @@ class Ticket extends Model
         'show_in_schedule_page',
         'announcement',
         'premium_amount',
-        'premium_s_amount'
+        'premium_s_amount',
+        'order',
+        'single_price'
     ];
 
     protected $casts = [
-        'show_in_schedule_page' => 'boolean'
+        'show_in_schedule_page' => 'boolean',
+        'single_price' => 'boolean'
     ];
 
     public function categories()
@@ -130,5 +133,10 @@ class Ticket extends Model
     public function reservationSubItems()
     {
         return $this->hasMany(ReservationSubItem::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class, 'template_id');
     }
 }
