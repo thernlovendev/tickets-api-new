@@ -70,6 +70,18 @@ class ServiceGeneral
             $models->whereIn('id', $filters['ids_filter']);
         }
 
+        if(isset($filters['order_number'])){
+            $models->where('order_number','LIKE', '%'.$filters['order_number'].'%');
+        }
+
+        if(isset($filters['sent_status'])){
+            $models->whereHas('reservationItems', function($query) use($filters){
+                $query->whereHas('reservationSubItems', function($q) use($filters){
+                    $q->where('ticket_sent_status', 'LIKE', '%'.$filters['sent_status'].'%');
+                });
+            });
+        }
+
         return $models;
     }
 

@@ -29,7 +29,7 @@ class ReservationsController extends Controller
        $reservation = Reservation::with(['reservationItems.reservationSubItems.optionsSchedules','vendorComissions']);
        $params = $request->query();
        $elements = ServiceGeneral::filterCustom($params, $reservation);
-       $elements = $this->httpIndex($elements, ['id', 'order_number']);
+       $elements = $this->httpIndex($elements, ['id']);
        $response = ServiceGeneral::mapCollection($elements);
        return Response($response, 200);
     }
