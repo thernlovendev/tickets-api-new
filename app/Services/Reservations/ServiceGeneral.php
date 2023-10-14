@@ -75,11 +75,23 @@ class ServiceGeneral
         }
 
         if(isset($filters['sent_status'])){
-            $models->whereHas('reservationItems', function($query) use($filters){
-                $query->whereHas('reservationSubItems', function($q) use($filters){
-                    $q->where('ticket_sent_status', 'LIKE', '%'.$filters['sent_status'].'%');
+
+            if($filters['sent_status'] == 'Sent'){
+                $models->whereHas('reservationItems', function ($query) use ($filters) {
+                    $query->whereDoesntHave('reservationSubItems', function ($q) use ($filters) {
+                        // Asegúrate de que ningún subelemento esté en estado diferente a 'Sent'
+                        $q->where('ticket_sent_status', 'NOT LIKE', '%' . $filters['sent_status'] . '%');
+                    });
                 });
-            });
+
+            } else {
+                $models->whereHas('reservationItems', function($query) use($filters){
+                    $query->whereHas('reservationSubItems', function($q) use($filters){
+                        $q->where('ticket_sent_status', 'LIKE', '%'.$filters['sent_status'].'%');
+                    });
+                });
+
+            }
         }
 
         return $models;

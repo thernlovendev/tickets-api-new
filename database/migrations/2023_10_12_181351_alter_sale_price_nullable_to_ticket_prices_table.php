@@ -15,6 +15,7 @@ class AlterSalePriceNullableToTicketPricesTable extends Migration
     {
         Schema::table('ticket_prices', function (Blueprint $table) {
             $table->float('sale_price')->nullable()->change();
+            $table->string('type')->nullable()->change();
 
         });
     }
@@ -28,6 +29,7 @@ class AlterSalePriceNullableToTicketPricesTable extends Migration
     {
         Schema::table('ticket_prices', function (Blueprint $table) {
             $table->float('sale_price')->change();
+            $table->string('type')->change();
         });
     }
 }
