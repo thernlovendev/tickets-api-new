@@ -77,10 +77,31 @@ class ServiceGeneral
         if(isset($filters['sent_status'])){
 
             if($filters['sent_status'] == 'Sent'){
-                $models->whereHas('reservationItems', function ($query) use ($filters) {
-                    $query->whereDoesntHave('reservationSubItems', function ($q) use ($filters) {
-                        // Asegúrate de que ningún subelemento esté en estado diferente a 'Sent'
-                        $q->where('ticket_sent_status', 'NOT LIKE', '%' . $filters['sent_status'] . '%');
+                // $models->whereHas('reservationItems', function ($query) use ($filters) {
+                //     $query->whereDoesntHave('reservationSubItems', function ($q) use ($filters) {
+                //         // Asegúrate de que ningún subelemento esté en estado diferente a 'Sent'
+                //         $q->where('ticket_sent_status', 'NOT LIKE', '%' . $filters['sent_status'] . '%');
+                //     });
+                // });
+
+                // $models->whereHas('reservationItems', function ($query) {
+                //     // Utiliza una subconsulta para verificar que todos los reservationSubItems tengan ticket_sent_status igual a 'Sent'
+                //     $query->whereDoesntHave('reservationSubItems', function ($subQuery) {
+                //         $subQuery->where('ticket_sent_status', '!=', 'Sent');
+                //     });
+                // });
+
+                // dd($models);
+
+                // $models->whereDoesntHave('reservationItems', function ($query) use ($filters) {
+                //     $query->whereHas('reservationSubItems', function ($subQuery) use ($filters) {
+                //         $subQuery->where('ticket_sent_status', '!=', $filters['sent_status']);
+                //     });
+                // });
+                $models->whereHas('reservationItems.reservationSubItems')->whereDoesntHave('reservationItems.reservationSubItems', function ($query) {
+                    $query->where(function ($subQuery) {
+                        $subQuery->where('ticket_sent_status', '!=', 'Sent')
+                                 ->orWhereNull('ticket_sent_status');
                     });
                 });
 
