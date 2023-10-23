@@ -143,47 +143,53 @@ class UsersDashboard extends Controller
 
                                 $code_lenght = strlen($code);
 
-                                if($code_lenght <= 3){
-                                    $pdf = PDF::loadView('ticketDownloadCombine',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
-                                }else if($code_lenght == 4){
-                                    $pdf = PDF::loadView('ticketDownloadCombine4',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                $bar_wid = 585 - $code_lenght*4;
+                                $text_wid = 668 - $code_lenght*8;
 
-                                }else if($code_lenght == 5){
-                                    $pdf = PDF::loadView('ticketDownloadCombine5',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                $pdf = PDF::loadView('ticketDownloadCombine',compact('code','type', 'expiration_date', 'ticket','image','reservation','bar_wid','text_wid'));
+
+                                // return $pdf->download();
+                                // if($code_lenght <= 3){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 4){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine4',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+
+                                // }else if($code_lenght == 5){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine5',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 6){
-                                    $pdf = PDF::loadView('ticketDownloadCombine6',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 6){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine6',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 7){
-                                    $pdf = PDF::loadView('ticketDownloadCombine7',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 7){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine7',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 8){
-                                    $pdf = PDF::loadView('ticketDownloadCombine8',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 8){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine8',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 9){
-                                    $pdf = PDF::loadView('ticketDownloadCombine9',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 9){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine9',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 10){
-                                    $pdf = PDF::loadView('ticketDownloadCombine10',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 10){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine10',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 11){
-                                    $pdf = PDF::loadView('ticketDownloadCombine11',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 11){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine11',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 12){
-                                    $pdf = PDF::loadView('ticketDownloadCombine12',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 12){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine12',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 13){
-                                    $pdf = PDF::loadView('ticketDownloadCombine13',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 13){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine13',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 14){
-                                    $pdf = PDF::loadView('ticketDownloadCombine14',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 14){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine14',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else if($code_lenght == 15){
-                                    $pdf = PDF::loadView('ticketDownloadCombine15',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
+                                // }else if($code_lenght == 15){
+                                //     $pdf = PDF::loadView('ticketDownloadCombine15',compact('code','type', 'expiration_date', 'ticket','image','reservation'));
                                     
-                                }else {
-                                    $pdf = PDF::loadView('ticketDownloadCombine16',compact('code','type', 'expiration_date', 'ticket','image','reservation')); 
-                                }
+                                // }else {
+                                //     $pdf = PDF::loadView('ticketDownloadCombine16',compact('code','type', 'expiration_date', 'ticket','image','reservation')); 
+                                // }
 
                                 //save pdf
                                 $pdf_content = $pdf->output();

@@ -5,6 +5,7 @@ use DB;
 use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
+use App\Models\TicketSchedule;
 use App\Models\TicketStock;
 use App\Models\Template;
 use App\Models\Subcategory;
@@ -111,8 +112,50 @@ class ServiceCrud
                                 }
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 
+                                if($item['sub_items'][$index]['rq_schedule_datetime'] !== null){
+                                    $selectedDateTime = Carbon::parse($item['sub_items'][$index]['rq_schedule_datetime']);
+                                    $ticketId = $item['sub_items'][$index]['ticket_id'];
+
+
+                                    $ticketSchedule = TicketSchedule::where('ticket_id', $ticketId)
+                                                                    ->where('date_start', '<=', $selectedDateTime)
+                                                                    ->where('date_end', '>=', $selectedDateTime)
+                                                                    ->whereJsonContains('week_days', [ucfirst(strtolower($selectedDateTime->englishDayOfWeek))]) // Verifica si el día de la semana coincide
+                                                                    ->where('time', $selectedDateTime->format('H:i:s'))
+                                                                    ->first();
+
+                                    if ($ticketSchedule) {
+                                        $matches = ReservationSubItem::where('rq_schedule_datetime', $selectedDateTime->format('Y-m-d H:i'))->where('ticket_id',$ticketId)->get();
+                                        $sold_tickets = 0;
+                                        
+                                        foreach ($matches as $match) {
+                                            $sold_tickets += $match->reservationItem->quantity;
+                                        }
+                                        
+                                        $exception_schedule = $ticketSchedule->ticketScheduleExceptions()->whereDate('date', $selectedDateTime->toDateString());
+                                        
+                                        if($exception_schedule->count() == 0){
+                                            $availableSlots = $ticketSchedule->max_people - $sold_tickets;
+                                        } else {
+                                            $exception = $exception_schedule->first();
+                                            $availableSlots = $exception->max_people - $sold_tickets;
+                                        }
+                                        if ($availableSlots >= $item['quantity']) {
+                                            $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                        } else {
+                                            $message = 'Your purchase exceeds the number of available seats, you can only request a maximum '.$availableSlots.' of the ticket '.$ticket->title_en;
+                                            throw new \Exception($message);
+                                        }
+                                    } else {
+                                        $message = 'There is no schedule assigned to the date and time entered, please check again';
+                                        throw new \Exception($message);
+                                    }
+                                    
+                                }else {
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                }
+
                                 break;
                             case Ticket::TYPE['HARD_COPY']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];

@@ -19,6 +19,9 @@
         }
 
     </style>
+    @php
+        $backgroundColor = '#FF0000'; // Establece el color de fondo
+    @endphp
 </head>
 
     <body>
@@ -41,12 +44,13 @@
 
                 
                 @elseif($type == 'Bar')
-                <div style="position: absolute; top: 32px; left: 508px;"> 
-                <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,48) !!}</span>
-                
+                <div style="position: absolute; top: 32px; left: 492px;"> 
+                {{-- <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,48) !!}</span> --}}
+
+                <img width=178 height=50 src="data:image/png;base64,{{ DNS1D::getBarcodePNG("$code", 'C39') }}" alt="barcode" />
                 </div>
 
-                <div style="position: absolute; top: 75px; left: 577px;"> 
+                <div style="position: absolute; top: 75px; left: {{$bar_wid}}px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>
@@ -58,7 +62,7 @@
                 </div>
                 @elseif($type == 'Text')
 
-                 <div style="position: absolute; top: 38px; left: 628px;"> 
+                 <div style="position: absolute; top: 38px; left: {{$text_wid}}px;"> 
                 <span style="font-weight:800">{{$code}}</span>
                 
                 </div>
