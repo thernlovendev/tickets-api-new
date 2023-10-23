@@ -142,7 +142,7 @@ class ServiceCrud
                                             $availableSlots = $exception->max_people - $sold_tickets;
                                         }
                                         if ($availableSlots >= $item['quantity']) {
-                                            $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                            $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                         } else {
                                             $message = 'Your purchase exceeds the number of available seats, you can only request a maximum '.$availableSlots.' of the ticket '.$ticket->title_en;
                                             throw new \Exception($message);
