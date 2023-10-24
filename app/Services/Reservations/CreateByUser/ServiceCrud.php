@@ -119,8 +119,8 @@ class ServiceCrud
 
 
                                     $ticketSchedule = TicketSchedule::where('ticket_id', $ticketId)
-                                                                    ->where('date_start', '<=', $selectedDateTime)
-                                                                    ->where('date_end', '>=', $selectedDateTime)
+                                                                    ->where('date_start', '<=', $selectedDateTime->format('Y-m-d'))
+                                                                    ->where('date_end', '>=', $selectedDateTime->format('Y-m-d'))
                                                                     ->whereJsonContains('week_days', [ucfirst(strtolower($selectedDateTime->englishDayOfWeek))]) // Verifica si el día de la semana coincide
                                                                     ->where('time', $selectedDateTime->format('H:i:s'))
                                                                     ->first();
