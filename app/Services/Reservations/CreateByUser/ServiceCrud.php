@@ -91,7 +91,7 @@ class ServiceCrud
                                 break;
 
                             case Ticket::TYPE['BAR_QR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
                                 
                                 $quantity = $reserve_item->quantity;
                                 $range_age = $reserve_item->adult_child_type;
@@ -153,14 +153,22 @@ class ServiceCrud
                                     }
                                     
                                 }else {
-                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
                                 }
 
                                 break;
+
                             case Ticket::TYPE['HARD_COPY']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+
+                            case Ticket::TYPE['SIM_CARD']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
                                 break;
                             
+                            case Ticket::TYPE['MUSICAL_SHOW']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                break;
                            }
                             if ($ticket->additional_price_type == 'Premium'){
                             $item['sub_items'][$index]['addition'] = $ticket->premium_amount;
@@ -287,7 +295,7 @@ class ServiceCrud
                                 break;
     
                             case Ticket::TYPE['BAR_QR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
                                 $quantity = $item_model->quantity;
                                 $range_age = $item_model->adult_child_type;
                                 $ticket_id = $ticket->id;
@@ -312,19 +320,21 @@ class ServiceCrud
                                 
                                 break;
                             case Ticket::TYPE['HARD_COPY']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+
+                            case Ticket::TYPE['SIM_CARD']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+                            
+                            case Ticket::TYPE['MUSICAL_SHOW']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 break;
                             
                         }
 
                     } 
 
-                    if($sub_item['rq_schedule_datetime'] !== null){
-                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
-                    } else {
-                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
-                    }
-                    
                     if ($ticket->additional_price_type == 'Premium'){
                     $item['sub_items'][$index]['addition'] = $ticket->premium_amount;
 

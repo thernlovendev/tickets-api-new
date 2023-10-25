@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
-    <title>{{__('Payment Successfully')}}</title>
+    <title>{{__('Forgot Password Mail')}}</title>
     <style>
     body { font-family: 'Poppins', sans-serif; }
     </style>
@@ -27,6 +27,7 @@
         padding-bottom: 1.2em;
         margin-bottom: 0.5em;
         min-width: 320px;">
+        
         <div style="margin: 0 auto;
         box-sizing: border-box;
         width: 100%;
@@ -127,16 +128,8 @@
                 font-size: 0.9em;
                 line-height: 1.5"> {{__('Hi!')}} {{$fullname}}, <br>
                 @if($template->content == 'default')
-                {{__('We’ve received the payment for your reservation for amount of:')}} {{$amount}}$
+                {{__('We’ve received a request to reset your password. If you didn’t make the request, just ignore this mail. Otherwise, you can reset your password using this link')}}:
             </p>
-               <p style="margin: 0;
-                        box-sizing: border-box;
-                        color: #5D5D5F;
-                        font-family: sans-serif;
-                        font-size: 0.9em;
-                        line-height: 1.5;
-                        padding-bottom: 1em">{{__('Thanks')}},<br>
-                {{env('APP_NAME')}} Team</p>
                 @else
                 <p style="margin: 0;
                 box-sizing: border-box;
@@ -146,7 +139,20 @@
                 line-height: 1.5">
                 {!!$template->content!!}
                 </p>
+            </p>
                 @endif
+                <a style="margin: 0;
+                        box-sizing: border-box;
+                        display: block;
+                        width: 100%;
+                        padding: 0.9em 0 0.9em 0;
+                        text-align: center;
+                        font-family: sans-serif;
+                        font-weight: bold;
+                        text-decoration: none;
+                        color: #fff;
+                        background: #46BCF7;
+                        margin: 2em 0 2em 0;" href="{{route('reset.password.get', $token)}}">{{__('Click here to reset your password')}}</a>
                 <footer style="margin: 0;
                         box-sizing: border-box;
                         width: 100%;
@@ -208,5 +214,4 @@
     </div>
     
 </body>
-
 </html>

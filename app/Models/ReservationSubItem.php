@@ -18,6 +18,7 @@ class ReservationSubItem extends Model
     protected $table = 'reservation_sub_items';
     
     const SEND_STATUS = [
+        'OFFICE_PICKUP' => 'Office Pickup',
         'TO_DO' => 'To-Do',
         'SENT' => 'Sent',
         'TBD' => 'TBD',

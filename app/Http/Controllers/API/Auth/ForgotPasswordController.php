@@ -40,14 +40,14 @@ class ForgotPasswordController extends Controller
             'created_at' => Carbon::now()
           ]);
 
-        $template = Template::where('title','After Password Reset')->first();
+        // $template = Template::where('title','After Password Reset Request By User')->first();
 
         if($template->subject == 'default'){
             $subject = 'Reset Password';
         } else {
             $subject = $template->subject;
         }
-        // Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template], function($message) use($request, $template,$subject){
+        // Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template], function($message) use($request, $template,$subject){
         //     $message->to($request->email);
         //     $message->subject($subject);
         // });

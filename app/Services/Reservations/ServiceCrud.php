@@ -184,9 +184,16 @@ class ServiceCrud
                                 
                                 break;
                             case Ticket::TYPE['HARD_COPY']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+
+                            case Ticket::TYPE['SIM_CARD']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
                                 break;
                             
+                            case Ticket::TYPE['MUSICAL_SHOW']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                break;
                         }
 
                     } 

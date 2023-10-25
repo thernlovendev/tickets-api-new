@@ -155,6 +155,8 @@ class ReservationsController extends Controller
         if($reservation_sub_item->optionsSchedules->isEmpty()){
             $reservation_sub_item->optionsSchedules()->createMany($data['schedules']);
 
+            $reservation_sub_item->update(['ticket_sent_status' => ReservationSubItem::SEND_STATUS['TO_DO']]);
+            
             return Response($reservation_sub_item->load('optionsSchedules'),201);
         }else {
 
