@@ -316,7 +316,9 @@ class ServiceCrud
                                 
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                if($sub_item['rq_schedule_datetime'] !== null){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                } 
                                 
                                 break;
                             case Ticket::TYPE['HARD_COPY']:

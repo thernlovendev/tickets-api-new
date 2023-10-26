@@ -30,9 +30,9 @@ class Ticket extends Model
         'REGULAR' => 'Regular',
         'BAR_QR' => 'Bar/QR code',
         'GUIDE_TOUR' => 'Guide Tour',
-        'HARD_COPY' => 'Hard Copy',
-        'MUSICAL_SHOW' => 'Musical & Shows',
-        'SIM_CARD' => 'SIM Card'
+        'HARD_COPY' => 'Hard copy',
+        'MUSICAL_SHOW' => 'Musicals & Shows',
+        'SIM_CARD' => 'SIM card'
     ];
 
     const ADDITIONAL_PRICE_TYPE = [
