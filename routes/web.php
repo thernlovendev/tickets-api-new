@@ -26,7 +26,7 @@ Route::get('/auth/google/callback', 'App\Http\Controllers\GoogleAuthController@h
 Route::get('/naver-login', 'App\Http\Controllers\NaverAuthController@redirectToNaver')->name('naver.auth');
 Route::get('/auth/naver/callback', 'App\Http\Controllers\NaverAuthController@handleNaverCallback')->name('naver.callback');
 
-Route::get('reset-password/{token}', 'App\Http\Controllers\RestorePasswordController@showResetPasswordForm')->name('reset.password.get');
+Route::get('reset-password/{token}/{email}', 'App\Http\Controllers\RestorePasswordController@showResetPasswordForm')->name('reset.password.get');
 
 Route::get('/', function () {
     return view('welcome');

@@ -90,6 +90,17 @@ class UserController extends Controller
         $user->assignRole('customer');
         $token = JWTAuth::fromUser($user);
         // $user->sendEmailVerificationNotification();
+        $template = Template::where('title','After Signed Up')->first();
+
+        if($template->subject == 'default'){
+            $subject = 'Tamice Sign Up ';
+        } else {
+            $subject = $template->subject;
+        }
+        Mail::send('email.notificationAfterRegistered', ['fullname' => $user->name, 'template' => $template], function($message) use($request, $template,$subject){
+            $message->to($request->email);
+            $message->subject($subject);
+        });
         
         return response()->json(compact('user','token'),201);
     }
@@ -195,18 +206,18 @@ class UserController extends Controller
 
         if($request->filled('password')){
             $user->password = Hash::make($response['password']);
-            $template = Template::where('title','After Password Reset Request By User')->first();
+            $template = Template::where('title','After Password Reset')->first();
         
             if($template->subject == 'default'){
-                $subject = "Password Reset By Admin";
+                $subject = "Password Reset successful";
             } else {
                 $subject = $template->subject;
             }
             
-            // Mail::send('email.passwordResetAdmin', ['fullname' => $user->name, 'template' => $template], function($message) use($user, $template, $subject){
-            //     $message->to($user->email);
-            //     $message->subject($subject);
-            // });
+            Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user->name, 'template' => $template], function($message) use($user, $template, $subject){
+                $message->to($user->email);
+                $message->subject($subject);
+            });
             
         }
 

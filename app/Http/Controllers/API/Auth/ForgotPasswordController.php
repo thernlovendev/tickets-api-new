@@ -40,17 +40,17 @@ class ForgotPasswordController extends Controller
             'created_at' => Carbon::now()
           ]);
 
-        // $template = Template::where('title','After Password Reset Request By User')->first();
+        $template = Template::where('title','After Password Reset Request By User')->first();
 
         if($template->subject == 'default'){
             $subject = 'Reset Password';
         } else {
             $subject = $template->subject;
         }
-        // Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template], function($message) use($request, $template,$subject){
-        //     $message->to($request->email);
-        //     $message->subject($subject);
-        // });
+        Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template,'email' => $request->input('email')], function($message) use($request, $template,$subject){
+            $message->to($request->email);
+            $message->subject($subject);
+        });
             
             return response()->json(['message', 'We have e-mailed your password reset link!']);
         }
@@ -79,6 +79,21 @@ class ForgotPasswordController extends Controller
  
           DB::table('password_resets')->where(['email'=> $request->email])->delete();
   
-          return redirect('/')->with('message', 'Your password has been changed!');
+          $template = Template::where('title','After Password Reset')->first();
+        
+            if($template->subject == 'default'){
+                $subject = "Password Reset successful";
+            } else {
+                $subject = $template->subject;
+            }
+            $user_email =  User::find($user);
+            
+            Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
+                $message->to($user_email->email);
+                $message->subject($subject);
+            });
+
+          $url = env('APP_URL_WEB_PAGE');
+          return redirect($url)->with('message', 'Your password has been changed!');
       }
     }
