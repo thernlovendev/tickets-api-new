@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
-    <title>{{__('Delete my account')}}</title>
+    <title>{{__('After Password Reset')}}</title>
     <style>
     body { font-family: 'Poppins', sans-serif; }
     </style>
@@ -49,7 +49,7 @@
                 font-family: sans-serif;
                 font-size: 0.9em;
                 line-height: 1.5"> {{__('Hi!')}} {{$fullname}}, <br>
-                {{__('Your Account has been deleted successfully')}}:</p>
+                {{__('Your Password has been updated successfully')}}:</p>
                <p style="margin: 0;
                         box-sizing: border-box;
                         color: #9A9A9A;
