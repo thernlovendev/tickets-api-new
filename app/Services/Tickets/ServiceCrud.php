@@ -7,11 +7,13 @@ use App\Models\Subcategory;
 use App\Models\TicketPrice;
 use App\Models\TicketSchedule;
 use App\Models\TicketContent;
+use App\Models\TicketScheduleException;
 use DB;
 use Validator;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\Rule;
 use App\Services\Images\Service as ImageService;
+use Carbon\Carbon;
 
 class ServiceCrud
 {
@@ -35,13 +37,17 @@ class ServiceCrud
                 $code = $prefix.$number_code;
             } while (Ticket::where("product_code", "=", $code)->exists());
 
+            $last_ticket_order = Ticket::where('company_id', $data['company_id'])->orderByDesc('order')->first();
+
+            $order = $last_ticket_order ? $last_ticket_order->order + 1 : 1;
+
             $ticket = Ticket::create(
                 [
                     'company_id' => $data['company_id'],
                     'city_id' => $data['city_id'],
                     'title_en' => $data['title_en'],
                     'title_kr' => $data['title_kr'],
-                    'ticket_template' => $data['ticket_template'],
+                    'template_id' => $data['template_id'],
                     'ticket_type' => $data['ticket_type'],
                     'status' => $data['status'],
                     'out_of_stock_alert_adult' => $data['out_of_stock_alert_adult'],
@@ -54,6 +60,7 @@ class ServiceCrud
                     'premium_s_amount' => $data['premium_s_amount'],
                     'show_in_schedule_page' => $data['show_in_schedule_page'],
                     'announcement' =>$data['announcement'],
+                    'order' => $order
                 ]);
 
             TicketContent::create(['ticket_id' => $ticket->id,'content' => $data['ticket_content']['content']]); 
@@ -66,9 +73,11 @@ class ServiceCrud
                 $ticket->subcategories()->attach($subcategory['subcategory_id']);
             }
 
-            foreach ($data['tickets_prices'] as $price) {
-                $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
-                
+            if(isset($data['tickets_prices'])){
+                foreach ($data['tickets_prices'] as $price) {
+                    $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
+                    
+                }
             }
             
             // if(isset($data['tickets_content'])){
@@ -81,7 +90,22 @@ class ServiceCrud
                 foreach ($data['tickets_schedule'] as $schedule) {
                     $schedule['ticket_id'] = $ticket['id'];
 
-                    TicketSchedule::create($schedule); 
+                    $ticket_schedule = TicketSchedule::create($schedule); 
+
+                    if(isset($schedule['ticket_schedule_exceptions'])){
+                        $schedule_exceptions = collect($schedule['ticket_schedule_exceptions'])
+                            ->map( function($item) use ($ticket_schedule) {
+                                return [
+                                    'date' => $item['date'],
+                                    'max_people' => $item['max_people'],
+                                    'time' => $ticket_schedule->time,
+                                    'day' => Carbon::parse($item['date'])->format('l'),
+                                    'show_on_calendar' => $item['show_on_calendar']
+                                ];
+                        });
+
+                        $schedule_exception = $ticket_schedule->ticketScheduleExceptions()->createMany($schedule_exceptions);
+                    }
                     
                 }
             }

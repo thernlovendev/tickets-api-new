@@ -67,18 +67,15 @@ class ReservationRequest extends FormRequest
                         'vendor_comissions.*.type' => ['required', Rule::in('AP', 'AR')],
                         'vendor_comissions.*.comission_amount' => ['required','numeric'],
                         'payment_type' => ['required',Rule::in($type)],
-                        'credit' => ['required_if:payment_type,Cash'],
-                        'credit_number'=> ['required_if:payment_type,Credit Card','min:14','max:19','string'],
-                        'exp_month'=> ['required_if:payment_type,Credit Card','integer','min:1','max:12'],
-                        'exp_year'=> ['required_if:payment_type,Credit Card','integer'],
-                        'cvc'=> ['required_if:payment_type,Credit Card','min:3','max:4','string'],
+                        'stripe_token' => ['required_if:payment_type,Credit Card'],
+                        'credit' => ['required_if:payment_type,Cash']
                     ];
                 } break;
 
             case 'PUT':{
                 return [
-                    'memo' => ['max:800'],
-                    'history' => ['max:800'],
+                    'memo' => ['nullable','max:800'],
+                    'history' => ['nullable','max:800'],
                     'items.*.id' => 'nullable','exists:reservation_items,id',
                     'items.*.category_id' => 'required','exists:categories,id',
                     'items.*.subcategory_id' =>'nullable','exists:subcategories,id',
@@ -87,21 +84,23 @@ class ReservationRequest extends FormRequest
                     'items.*.child_age' => 'nullable',
                     'items.*.price' => 'required|numeric',
                     'items.*.quantity' => 'integer',
+                    'items.*.refund_status'=> 'nullable',
+                    'items.*.refund_sent_date'=> 'nullable|date',
+                    'items.*.ticket_sent_status' => 'nullable',
                     'items.*.sub_items' => 'array',
+                    'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
                     'items.*.sub_items.*.rq_schedule_datetime' => 'nullable|date',
                     'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
-                    'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
-                    'items.*.sub_items.*.refund_status' => 'nullable',
+                    'items.*.sub_items.*.refund_status' => ['nullable'],
+                    'items.*.sub_items.*.refund_sent_date' => ['nullable'],
                     'vendor_comissions' => 'array|nullable',
+                    'vendor_comissions.*.id' => 'nullable',
                     'vendor_comissions.*.user_id' => 'required',
                     'vendor_comissions.*.type' => ['required', Rule::in('AP', 'AR')],
                     'vendor_comissions.*.comission_amount' => 'required|numeric',
                     'payment_type' => ['nullable',Rule::in($type)],
-                    'credit' => ['nullable'],
-                    'credit_number'=> ['nullable'],
-                    'exp_month'=> ['nullable'],
-                    'exp_year'=> ['nullable'],
-                    'cvc'=> ['nullable'],
+                    'stripe_token' => ['required_if:payment_type,Credit Card'],
+                    'credit' => ['required_if:payment_type,Cash']
                 ];
             } break;
 

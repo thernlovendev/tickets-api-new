@@ -17,7 +17,8 @@ class ReservationCreditCardPayment extends Model
         'reservation_id',
         'total',
         'card_type',
-        'payment_status'
+        'payment_status',
+        'last_four_digits'
     ];
 
     public function reservation()

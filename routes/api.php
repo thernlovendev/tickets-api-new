@@ -36,7 +36,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     Route::prefix('categories')->group(function() {
 		Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
-		Route::get('/', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\CategoriesController@store')->name('category.create')->middleware();
 		Route::put('/{category}', 'App\Http\Controllers\API\CategoriesController@update')->name('category.update')->middleware();
 		Route::delete('/{category}', 'App\Http\Controllers\API\CategoriesController@destroy')->name('category.delete')->middleware();
@@ -57,6 +56,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 	Route::prefix('tickets')->group(function() {
 		Route::post('/', 'App\Http\Controllers\API\TicketsController@store')->name('tickets.create')->middleware();
+		Route::put('/ordering', 'App\Http\Controllers\API\TicketsOrderingController@updateOrdering')->name('ticket.ordering.update')->middleware();
 		Route::put('/{ticket}', 'App\Http\Controllers\API\TicketsController@update')->name('tickets.update')->middleware();
 		Route::delete('/{ticket}', 'App\Http\Controllers\API\TicketsController@delete')->name('tickets.delete')->middleware();
 		Route::get('/{ticket}/price', 'App\Http\Controllers\API\TicketsController@getSinglePrice')->name('ticket.single.price')->middleware();
@@ -65,19 +65,15 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	});
 
 	Route::prefix('reservations')->group(function() {
-		Route::get('/', 'App\Http\Controllers\API\ReservationsController@index')->name('reservation.index')->middleware();
-		Route::get('/{reservation}', 'App\Http\Controllers\API\ReservationsController@show')->name('reservation.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\ReservationsController@store')->name('reservations.create')->middleware();
 		Route::put('/{reservation}', 'App\Http\Controllers\API\ReservationsController@update')->name('reservations.update')->middleware();
 		// Route::post('/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
-		Route::post('/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\UsersDashboard@downloadTicket')->name('reservations.ticket.download')->middleware();
-		Route::post('/{reservation}/reservation-subitems/{reservationSubItem}/email', 'App\Http\Controllers\API\UsersDashboard@emailDownloadTicket')->name('reservations.ticket.email')->middleware();
+		// Route::post('/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\UsersDashboard@downloadTicket')->name('reservations.ticket.download')->middleware();
 		Route::delete('/{reservation}', 'App\Http\Controllers\API\ReservationsController@delete')->name('reservation.delete')->middleware();
 		
 	});
 
 	Route::prefix('price-lists')->group(function() {
-		Route::get('/{price_list}', 'App\Http\Controllers\API\PriceListsController@show')->name('price.lists.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\PriceListsController@store')->name('price.lists.create')->middleware();
 		Route::put('/{price_list}', 'App\Http\Controllers\API\PriceListsController@update')->name('price.lists.update')->middleware();
 		Route::delete('/{price_list}', 'App\Http\Controllers\API\PriceListsController@delete')->name('price.lists.delete')->middleware();
@@ -90,10 +86,18 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 	Route::prefix('inventories')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\InventoriesController@index')->name('inventory.index')->middleware();
 		Route::get('/{ticket_id}/{type}', 'App\Http\Controllers\API\InventoriesController@details')->name('inventory.detail')->middleware();
+		Route::get('/download-pdf-zip', 'App\Http\Controllers\API\InventoriesController@downloadPdfZip')->name('inventory.detail')->middleware();
 		Route::get('/stock-balance', 'App\Http\Controllers\API\InventoriesController@stockBalance')->name('inventory.stock.balance')->middleware();
+		Route::put('/{stock}/change-status', 'App\Http\Controllers\API\InventoriesController@changeStatus')->name('inventory.change.status')->middleware();
 		Route::post('/correction-balance', 'App\Http\Controllers\API\InventoriesController@stockCorrection')->name('inventory.correction.balance')->middleware();
 		Route::post('/bulk-upload', 'App\Http\Controllers\API\InventoriesController@bulkUpload')->name('inventory.bulk.upload')->middleware();
+		Route::post('/bulk-upload-zip', 'App\Http\Controllers\API\InventoriesController@bulkUploadZip')->name('inventory.bulk.upload.zip')->middleware();
 		Route::post('/reservation/{reservation}/reservation-subitems/{reservationSubItem}', 'App\Http\Controllers\API\InventoriesController@downloadTickets')->name('inventory.download.reservation')->middleware();
+		Route::post('/download-multiple-tickets', 'App\Http\Controllers\API\InventoriesController@downloadMultipleTickets')->name('download.multiple.tickets');
+		Route::delete('/delete-multiple-tickets-detail', 'App\Http\Controllers\API\InventoriesController@deleteMultipleTicketStockDetail')->name('delete.multiple.tickets.detail');
+	
+		Route::delete('/{ticket_id}/destroy-multiple-uploaded', 'App\Http\Controllers\API\InventoriesController@destroyMultipleUploaded')->name('inventory.destroy.multiple.uploaded')->middleware();
+
 	});
 
 	Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
@@ -110,8 +114,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/', 'App\Http\Controllers\API\TemplatesController@index')->name('templates.index')->middleware();
 		Route::get('/{template}', 'App\Http\Controllers\API\TemplatesController@show')->name('templates.show')->middleware();
 		Route::post('/', 'App\Http\Controllers\API\TemplatesController@store')->name('templates.create')->middleware();
+		Route::post('/images', 'App\Http\Controllers\API\TemplatesController@createTemplateImage')->name('templates.image.create')->middleware();
 		Route::put('/{template}', 'App\Http\Controllers\API\TemplatesController@update')->name('templates.update')->middleware();
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
+		Route::get('/{template}/image', 'App\Http\Controllers\API\TemplatesController@showTemplateImage')->name('templates.image.show')->middleware();
+		Route::put('/{template}/image', 'App\Http\Controllers\API\TemplatesController@updateImage')->name('templates.image.update')->middleware();
 	});
 
 	Route::prefix('header-gallery')->group(function() {
@@ -142,23 +149,60 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::get('/', 'App\Http\Controllers\API\BookingController@index')->name('booking.index')->middleware();
 	});
 
+	Route::prefix('configurations')->group(function() {
+		Route::get('/payment-type', 'App\Http\Controllers\API\ConfigurationController@getPaymentConfiguration')->name('configuration.payment.get')->middleware();
+		Route::put('/payment-type', 'App\Http\Controllers\API\ConfigurationController@updatePaymentConfiguration')->name('configuration.payment.update')->middleware();
+	});
+
 });
 
 //Tamice users
-Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->name('seats.index')->middleware();
-Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
-Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
-Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
+Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
+Route::put('booking/{cartId}', 'App\Http\Controllers\API\BookingController@update')->name('booking.update')->middleware();
+Route::get('categories', 'App\Http\Controllers\API\CategoriesController@index')->name('category.index')->middleware();
 Route::get('categories/{category}', 'App\Http\Controllers\API\CategoriesController@show')->name('category.show')->middleware();
+Route::prefix('categories')->group(function() {
+	Route::get('/subcategories', 'App\Http\Controllers\API\CategoriesController@getSubcategories')->name('subcategory.show')->middleware();
+	Route::post('/subcategories-multiple', 'App\Http\Controllers\API\CategoriesController@getSubcategoriesMultiple')->name('subcategory.show.multiple')->middleware();
+});
+Route::get('cities', 'App\Http\Controllers\API\CitiesController@index')->name('cities.index')->middleware();
+Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
 Route::get('price-lists', 'App\Http\Controllers\API\PriceListsController@getByCategory')->name('price.lists.get.by.category')->middleware();
-Route::get('price-lists/product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.lists.product')->middleware();
+Route::get('price-lists-selected', 'App\Http\Controllers\API\PriceListsController@index')->name('price.lists.selected')->middleware();
+Route::post('price-lists-selected-multiple', 'App\Http\Controllers\API\PriceListsController@multiple')->name('price.lists.selected.multiple')->middleware();
+Route::prefix('price-lists')->group(function() {
+	Route::get('/{price_list}', 'App\Http\Controllers\API\PriceListsController@show')->name('price.lists.show')->middleware();
+});
+Route::get('product-seats', 'App\Http\Controllers\API\SeatsController@index')->name('seats.index')->middleware();
+Route::get('product', 'App\Http\Controllers\API\PriceListsController@getBySubcategory')->name('price.get.by.subcategory')->middleware();
+Route::get('reservations', 'App\Http\Controllers\API\ReservationsController@index')->name('reservation.index')->middleware();	
+Route::post('reservations-multiple', 'App\Http\Controllers\API\ReservationsController@multiple')->name('reservation.multiple.show')->middleware();
+Route::prefix('reservations')->group(function() {
+	Route::get('/{reservation}', 'App\Http\Controllers\API\ReservationsController@show')->name('reservation.show')->middleware();
+	Route::post('/{reservation}/reservation-subitems/{reservationSubItem}/email', 'App\Http\Controllers\API\UsersDashboard@emailDownloadTicket')->name('reservations.ticket.email')->middleware();
+});
 Route::post('reservations/user-create', 'App\Http\Controllers\API\ReservationsController@createByUser')->name('reservations.create.by.user')->middleware();
+Route::put('reservations/user-create/{reservation}', 'App\Http\Controllers\API\ReservationsController@updateByUser')->name('reservations.update.by.user')->middleware();
+Route::get('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptions')->name('schedule.options.index')->middleware();
+Route::post('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptionsPost')->name('schedule.options.index.post')->middleware();
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
+
 Route::get('order-lookup', 'App\Http\Controllers\API\BookingController@orderLookup')->name('order.lookup')->middleware();
 Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingController@dateChange')->name('booking.date.change')->middleware();
 
 Route::post('select-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@selectSeat')->name('select.seat')->middleware();
 Route::post('buy-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@buySeat')->name('buy.seat')->middleware();
+
+Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
+Route::post('tickets-multiple', 'App\Http\Controllers\API\TicketsController@multiple')->name('tickets.multiple')->middleware();
+Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
+Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
+Route::get('/new-order', 'App\Http\Controllers\API\NewOrderController@index')->name('new.order')->middleware();
+
+Route::get('/test-pdf', function(){
+	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
+	return Response::download($file);
+});

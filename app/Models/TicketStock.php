@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Ticket;
 use App\Models\StockUsed;
+use App\Models\TicketStockPdf;
 
 class TicketStock extends Model
 {
@@ -23,12 +24,14 @@ class TicketStock extends Model
     const TYPE = [
         'QR' => 'QR',
         'BAR' => 'Bar',
-        'NA' => 'N/A',
+        'TEXT' => 'Text',
+        'ZIP' => 'Zip',
     ];
 
     const STATUS = [
         'USED' => 'Used',
         'VALID' => 'Valid',
+        'EXPIRED' => 'Expired'
     ];
 
     protected $fillable = [
@@ -37,7 +40,7 @@ class TicketStock extends Model
         'expiration_date',
         'status',
         'range_age_type',
-        'ticket_id'
+        'ticket_id',
     ];
     
     public function ticket()
@@ -48,5 +51,10 @@ class TicketStock extends Model
     public function stocksUsed()
     {
         return $this->hasMany(StockUsed::class);
+    }
+
+    public function pdf()
+    {
+        return $this->hasOne(TicketStockPdf::class);
     }
 }

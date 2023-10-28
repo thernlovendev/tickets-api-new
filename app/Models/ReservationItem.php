@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Reservation;
 use App\Models\ReservationSubItem;
 use App\Models\Ticket;
+use App\Models\PriceList;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -44,6 +45,21 @@ class ReservationItem extends Model
     public function reservationSubItems()
     {
         return $this->hasMany(ReservationSubItem::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class, 'subcategory_id');
+    }
+
+    public function priceList()
+    {
+        return $this->belongsTo(PriceList::class, 'price_list_id');
     }
 
 }

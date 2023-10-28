@@ -7,6 +7,9 @@
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>{{__('Forgot Password Mail')}}</title>
+    <style>
+    body { font-family: 'Poppins', sans-serif; }
+    </style>
 </head>
 
 @if($template->content == 'default')
@@ -42,7 +45,7 @@
                 padding: 0 3em 0 3em">
             <p style="margin: 0;
                 box-sizing: border-box;
-                color: #9A9A9A;
+                color: #5D5D5F;
                 font-family: sans-serif;
                 font-size: 0.9em;
                 line-height: 1.5"> {{__('Hi!')}} {{$fullname}}, <br>
@@ -61,7 +64,7 @@
                         margin: 2em 0 2em 0;" href="{{route('reset.password.get', $token)}}">{{__('Click here to reset your password')}}</a>
                 <p style="margin: 0;
                         box-sizing: border-box;
-                        color: #9A9A9A;
+                        color: #5D5D5F;
                         font-family: sans-serif;
                         font-size: 0.9em;
                         line-height: 1.5;

@@ -13,9 +13,12 @@ use App\Services\Reservations\ServiceCrud;
 use App\Services\Reservations\CreateByUser\ServiceCrud as ReservationByUserCrud;
 use App\Models\Reservation;
 use App\Models\ReservationSubItem;
+use App\Models\OptionSchedule;
 use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
+use App\Exceptions\StripeTokenFailException;
+
 use DB;
 
 class ReservationsController extends Controller
@@ -23,7 +26,7 @@ class ReservationsController extends Controller
 
     public function index(Request $request)
     {
-       $reservation = Reservation::with(['vendorComissions']);
+       $reservation = Reservation::with(['reservationItems.reservationSubItems.optionsSchedules','vendorComissions']);
        $params = $request->query();
        $elements = ServiceGeneral::filterCustom($params, $reservation);
        $elements = $this->httpIndex($elements, ['id', 'order_number']);
@@ -42,7 +45,7 @@ class ReservationsController extends Controller
         } catch (\Exception $e){
             
             DB::rollback();
-            return Response($e, 422);
+            return Response($e->getMessage(), 422);
         }
     }
 
@@ -61,10 +64,13 @@ class ReservationsController extends Controller
             DB::commit();
             return Response($reservation_updated, 200);
 
+        } catch (StripeTokenFailException $e) {
+            DB::rollback();
+            return $e->render($request);
         } catch (\Exception $e){
             
             DB::rollback();
-            return Response($e->errors(), 422);
+            return Response($e->getMessage(), 422);
         }
 
     }
@@ -99,9 +105,8 @@ class ReservationsController extends Controller
             DB::commit();
             return Response($reservation, 201);
         } catch (\Exception $e){
-            
             DB::rollback();
-            return Response($e, 422);
+            return Response($e->getMessage(), 422);
         }
     }
 
@@ -117,6 +122,27 @@ class ReservationsController extends Controller
             DB::rollback();
             return Response($e, 422);
         }
+    }
+    public function filterScheduleOptions(Request $request) {
+
+        if($request->filled('reservation_sub_item_id')){
+           $response = OptionSchedule::whereIn('reservation_sub_item_id', $request->input('reservation_sub_item_id'))->get();
+        } else {
+            $response = OptionSchedule::get();
+        }
+
+        return $response;
+    }
+
+    public function filterScheduleOptionsPost(Request $request) {
+
+        if($request->filled('reservation_sub_item_id')){
+           $response = OptionSchedule::whereIn('reservation_sub_item_id', $request->input('reservation_sub_item_id'))->get();
+        } else {
+            $response = OptionSchedule::get();
+        }
+
+        return $response;
     }
 
     public function getScheduleOptions(ReservationSubItem $reservation_sub_item) {
@@ -136,4 +162,36 @@ class ReservationsController extends Controller
         }
         
     }
+
+    public function updateByUser(ReservationByUserRequest $request, Reservation $reservation){
+        try{
+            DB::beginTransaction();
+                $data = $request->validated();
+                $reservation_updated = ReservationByUserCrud::update($data, $reservation);
+                
+                DB::commit();
+                return Response($reservation_updated, 200);
+
+            } catch (StripeTokenFailException $e) {
+                DB::rollback();
+                return $e->render($request);
+            } catch (\Exception $e){
+                DB::rollback();
+                return Response($e->getMessage(), 422);
+            }
+
+    }
+
+    public function multiple(Request $request)
+    {
+       $ids_filter = $request->input('ids_filter');
+       $reservation = Reservation::whereIn('id',$ids_filter)->with(['reservationItems.reservationSubItems.optionsSchedules','vendorComissions']);
+       
+       $params = $request->query();
+       $elements = ServiceGeneral::filterCustom($params, $reservation);
+       $elements = $this->httpIndex($elements, ['id', 'order_number']);
+       $response = ServiceGeneral::mapCollection($elements);
+       return Response($response, 200);
+    }
+
 }

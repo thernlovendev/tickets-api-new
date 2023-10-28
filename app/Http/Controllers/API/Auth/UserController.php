@@ -45,13 +45,13 @@ class UserController extends Controller
           return response()->json(['error' => 'could_not_create_token'], 500);
       }
 
-      $user = User::where('email',$credentials['email'])->first();
-      
+      $user = User::with('roles')->where('email',$credentials['email'])->first();
+      $role = $user->roles->first();
       $user->last_login_at = Carbon::now();
       
       $user->save();
 
-      return response()->json(compact('token'));
+      return response()->json(compact('token','role'));
     }
 
     public function getAuthenticatedUser()
@@ -67,6 +67,7 @@ class UserController extends Controller
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
                 return response()->json(['token_absent'], $e->getStatusCode());
         }
+        $user->load('roles');
         return response()->json(compact('user'));
     }
 

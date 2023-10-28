@@ -21,14 +21,13 @@ class ServiceGeneral
         } else {
             $data = $mapCollection;
         }
-
         return $data;
     }
 
     public static function filterCustom($filters, $models){
 
         if(isset($filters['title_en'])){
-            $models->whereHas('ticket', function($query) use($filters) {
+            $models->whereHas('ticket', function($query) use($filters){
                 $query->where('title_en', 'LIKE', '%'.$filters['title_en'].'%');
             });
         }

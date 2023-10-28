@@ -44,7 +44,7 @@ class UserByAdminRequest extends FormRequest
                         'password_confirmation' => ['required','max:55'],
                         'phone' => ['required','max:15'],
                         'role' => ['required','exists:roles,id'],
-                        'company_id' => ['required','exists:companies,id']
+                        'company_id' => ['nullable','exists:companies,id']
                     ];
                 } break;
 
@@ -60,7 +60,7 @@ class UserByAdminRequest extends FormRequest
                     'password_confirmation' => ['nullable','max:55'],
                     'phone' => ['required','max:15'],
                     'role' => ['required','exists:roles,id'],
-                    'company_id' => ['required','exists:companies,id']
+                    'company_id' => ['nullable','exists:companies,id']
                 ];
             } break;
 
