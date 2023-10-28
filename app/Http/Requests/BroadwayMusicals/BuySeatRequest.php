@@ -28,74 +28,22 @@ class BuySeatRequest extends FormRequest
             'product_id' => 'required|integer',
             'quantity' => 'required|integer',
             'show_code' => 'required|string',
-            'event_date_time' => 'required|string',
+            'event_date_time' => 'string',
             'price' => 'required',
-            'booking_last_name' => 'required',
-            'booking_first_name' => 'required',
-            'booking_reference_number' => 'required',
-            'booking_notes' => 'required',
-            'area' => 'required',
-            'low_seat_num' => 'required|integer',
-            'high_seat_num' => 'required|integer',
-            'row' => 'required|string',
-            'section' => 'required|integer',
-            'number_of_tickets' => 'required|integer',
-            'session' => 'required|string',
+            'booking_last_name' => 'required|string',
+            'booking_first_name' => 'string',
+            'booking_reference_number' => 'string',
+            'booking_notes' => 'string',
+            'area' => 'string',
+            'low_seat_num' => 'integer',
+            'high_seat_num' => 'integer',
+            'row' => 'string',
+            'section' => 'integer',
+            'number_of_tickets' => 'integer',
+            'session' => 'string',
             'booking_email_address' => 'required|email',
-            'country_code' => 'required|integer',
-            'area_code' => 'required|integer',
-            'phone_number' => 'required',
+            'country_code' => 'integer',
+            'area_code' => 'integer',
         ];
-    }
-
-    public static function build($data)
-    {
-        $soapXml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">';
-        $soapXml .= '<soapenv:Header>';
-        $soapXml .= '<tem:AuthHeader>';
-        $soapXml .= '<tem:username>'.env('BROADWAY_USERNAME').'</tem:username>';
-        $soapXml .= '<tem:password>'.env('BROADWAY_PASSWORD').'</tem:password>';
-        $soapXml .= '</tem:AuthHeader>';
-        $soapXml .= '</soapenv:Header>';
-        $soapXml .= '<soapenv:Body>';
-        $soapXml .= '<tem:Buy>';
-        $soapXml .= '<tem:ProductId>'.$data['product_id'].'</tem:ProductId>';
-        $soapXml .= '<tem:OneShowCode>'.$data['show_code'].'</tem:OneShowCode>';
-        $soapXml .= '<tem:EventDateTime>'.$data['event_date_time'].'</tem:EventDateTime>';
-        $soapXml .= '<tem:Quantity>'.$data['quantity'].'</tem:Quantity>';
-        $soapXml .= '<tem:Price>'.$data['price'].'</tem:Price>';
-        $soapXml .= '<tem:BookingLastName>'.$data['booking_last_name'].'</tem:BookingLastName>';
-        $soapXml .= '<tem:BookingFirstName>'.$data['booking_first_name'].'</tem:BookingFirstName>';
-        $soapXml .= '<tem:BookingReferenceNumber>'.$data['booking_reference_number'].'</tem:BookingReferenceNumber>';
-        $soapXml .= '<tem:BookingNotes>'.$data['booking_notes'].'</tem:BookingNotes>';
-        $soapXml .= '<tem:seatingVerificationList>';
-        $soapXml .= '<tem:BiSeatingVerification>';
-        $soapXml .= '<tem:NumberTickets>'.$data['number_of_tickets'].'</tem:NumberTickets>';
-        $soapXml .= '<tem:Area>'.$data['area'].'</tem:Area>';
-        $soapXml .= '<tem:LowSeatNum>'.$data['low_seat_num'].'</tem:LowSeatNum>';
-        $soapXml .= '<tem:HighSeatNum>'.$data['high_seat_num'].'</tem:HighSeatNum>';
-        $soapXml .= '<tem:Row>'.$data['row'].'</tem:Row>';
-        $soapXml .= '<tem:Section>'.$data['section'].'</tem:Section>';
-        $soapXml .= '</tem:BiSeatingVerification>';
-        $soapXml .= '</tem:seatingVerificationList>';
-        $soapXml .= '<tem:Session>'.$data['session'].'</tem:Session>';
-        $soapXml .= '<tem:BookingEmailAddress>'.$data['booking_email_address'].'</tem:BookingEmailAddress>';
-        $soapXml .= '<tem:BookingCellPhoneNumber>';
-        $soapXml .= '<tem:CountryCode>'.$data['country_code'].'</tem:CountryCode>';
-        $soapXml .= '<tem:AreaCode>'.$data['area_code'].'</tem:AreaCode>';
-        $soapXml .= '<tem:Number>'.$data['phone_number'].'</tem:Number>';
-        $soapXml .= '<tem:Ext>'.$data['extension'].'</tem:Ext>';
-        $soapXml .= '</tem:BookingCellPhoneNumber>';
-        $soapXml .= '<tem:BookingAddress>'.$data['booking_address'].'</tem:BookingAddress>';
-        $soapXml .= '<tem:BookingCity>'.$data['booking_city'].'</tem:BookingCity>';
-        $soapXml .= '<tem:BookingState>'.$data['booking_state'].'</tem:BookingState>';
-        $soapXml .= '<tem:BookingZipOrPostalCode>'.$data['booking_zip_or_postal_code'].'</tem:BookingZipOrPostalCode>';
-        $soapXml .= '<tem:BookingCountry>'.$data['booking_country'].'</tem:BookingCountry>';
-        $soapXml .= '</tem:Buy>';
-        $soapXml .= '</soapenv:Body>';
-        $soapXml .= '</soapenv:Envelope>';
-
-
-        return $soapXml;
     }
 }
