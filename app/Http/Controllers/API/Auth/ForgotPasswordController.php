@@ -12,7 +12,8 @@ use Illuminate\Support\Str;
 use Validator;
 use App\Models\PasswordReset;
 use App\Models\Template;
-
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Http\Request;
 
 class ForgotPasswordController extends Controller
@@ -49,10 +50,10 @@ class ForgotPasswordController extends Controller
         }
         \Log::debug('forget'.$token);
         
-        // Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template,'email' => $request->input('email')], function($message) use($request, $template,$subject){
-        //     $message->to($request->email);
-        //     $message->subject($subject);
-        // });
+        Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template,'email' => $request->input('email')], function($message) use($request, $template,$subject){
+            $message->to($request->email);
+            $message->subject($subject);
+        });
         
 
             
@@ -92,13 +93,27 @@ class ForgotPasswordController extends Controller
             }
             $user_email =  User::find($user);
             
-            // Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
-            //     $message->to($user_email->email);
-            //     $message->subject($subject);
-            // });
+            Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
+                $message->to($user_email->email);
+                $message->subject($subject);
+            });
             
             
-          $url = env('APP_URL_WEB_PAGE');
-          return response()->json(['message', 'Your password saved successful']);
+            $credentials = $request->only('email', 'password');
+            try {
+                if (! $token = JWTAuth::attempt($credentials)) {
+                    return response()->json(['error' => 'invalid_credentials'], 400);
+                }
+            } catch (JWTException $e) {
+                return response()->json(['error' => 'could_not_create_token'], 500);
+            }
+
+            $user = User::with('roles')->where('email',$credentials['email'])->first();
+            $role = $user->roles->first();
+            $user->last_login_at = Carbon::now();
+            
+            $user->save();
+            $url = env('APP_URL_WEB_PAGE');
+            return response()->json(['Your password saved successful',compact('token','role')]);
       }
     }
