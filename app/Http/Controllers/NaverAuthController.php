@@ -38,6 +38,7 @@ class NaverAuthController extends Controller
 
             if($userExist){
                 $token = JWTAuth::fromUser($userExist);
+            \Log::debug($token);
                 
                 return redirect($url)->with('token');
             } else {
@@ -53,6 +54,8 @@ class NaverAuthController extends Controller
                 $userNew->assignRole('customer');
 
                 $token = JWTAuth::fromUser($userNew);
+                
+                \Log::debug($token);
 
                 return redirect($url)->with('token');
             }

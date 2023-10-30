@@ -122,7 +122,7 @@ class ServiceCrud
                 
             DB::commit();
 
-            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage',
+            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage'
             );
 
         } catch (\Exception $e){

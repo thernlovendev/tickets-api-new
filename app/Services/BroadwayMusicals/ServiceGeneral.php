@@ -86,16 +86,16 @@ class ServiceGeneral
         $lastname = $data['booking_last_name'];
         $firstname = $data['booking_first_name'];
         $customer_email = $data['booking_email_address'];
-        $seating = new BiSeatingVerification("2", "MEZZO ", "6", "8", "F", "");
+        $seating = new BiSeatingVerification("1", "Rear Mezzanine", "", "", "", "");
         $seating = new ArrayOfBiSeatingVerification(
             [$seating]
         );
         
-        $phone_info = new PhoneInfo('123', '45', '7345765', '23'); //country code, area code, number, extension
+        $phone_info = new PhoneInfo('123', '45', '6789', '23'); //country code, area code, number, extension
 
         try {
             $buy->Buy(new BuyType(
-                $product_id, $show_code, $quantity, $price, $lastname, $firstname, 'some', 'some notes', $seating, '9cb-6decfa6f1e59+553D563889D477E1754F5CE082FD7949', $customer_email, $phone_info, 'testaddress', 'test', 'test', 'teset', 'country', '2023-10-27T20:00:00.0Z'
+                $product_id, $show_code, $quantity, $price, $lastname, $firstname, 'some', 'some notes', $seating, 'ec9-776759847e63+C4879F524C1391B694DD9B3B43E2D430', $customer_email, $phone_info, 'testaddress', 'test', 'test', 'teset', 'country', $date
             ));
             $buy_response = $buy->getResult();
             
