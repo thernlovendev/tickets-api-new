@@ -50,10 +50,10 @@ class ForgotPasswordController extends Controller
         }
         \Log::debug('forget'.$token);
         
-        Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template,'email' => $request->input('email')], function($message) use($request, $template,$subject){
-            $message->to($request->email);
-            $message->subject($subject);
-        });
+        // Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template,'email' => $request->input('email')], function($message) use($request, $template,$subject){
+        //     $message->to($request->email);
+        //     $message->subject($subject);
+        // });
         
 
             
@@ -93,10 +93,10 @@ class ForgotPasswordController extends Controller
             }
             $user_email =  User::find($user);
             
-            Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
-                $message->to($user_email->email);
-                $message->subject($subject);
-            });
+            // Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
+            //     $message->to($user_email->email);
+            //     $message->subject($subject);
+            // });
             
             
             $credentials = $request->only('email', 'password');
