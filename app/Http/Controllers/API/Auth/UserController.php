@@ -98,12 +98,12 @@ class UserController extends Controller
             $subject = $template->subject;
         }
         
-        /*
+        
         Mail::send('email.notificationAfterRegistered', ['fullname' => $user->name, 'template' => $template], function($message) use($request, $template,$subject){
             $message->to($request->email);
             $message->subject($subject);
         });
-        */
+        
         
         return response()->json(compact('user','token'),201);
     }
@@ -159,10 +159,10 @@ class UserController extends Controller
             $subject = $template->subject;
         }
         
-        // Mail::send('email.deleteMyUser', ['fullname' => $myUser->name, 'template' => $template], function($message) use($myUser, $template, $subject){
-        //     $message->to($myUser->email);
-        //     $message->subject($subject);
-        // });
+        Mail::send('email.deleteMyUser', ['fullname' => $myUser->name, 'template' => $template], function($message) use($myUser, $template, $subject){
+            $message->to($myUser->email);
+            $message->subject($subject);
+        });
         auth()->logout();
         User::find($myUser->id)->forceDelete();
         
@@ -216,12 +216,11 @@ class UserController extends Controller
             } else {
                 $subject = $template->subject;
             }
-            /*
+            
             Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user->name, 'template' => $template], function($message) use($user, $template, $subject){
                 $message->to($user->email);
                 $message->subject($subject);
             });
-            */
         }
 
         
