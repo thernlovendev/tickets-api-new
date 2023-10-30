@@ -32,27 +32,4 @@ class SelectSeatRequest extends FormRequest
             'event_date_time' => 'required|string',
         ];
     }
-
-    public static function build($data)
-    {
-        $soapXml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">';
-        $soapXml .= '<soapenv:Header>';
-        $soapXml .= '<tem:AuthHeader>';
-        $soapXml .= '<tem:username>'.env('BROADWAY_USERNAME').'</tem:username>';
-        $soapXml .= '<tem:password>'.env('BROADWAY_PASSWORD').'</tem:password>';
-        $soapXml .= '</tem:AuthHeader>';
-        $soapXml .= '</soapenv:Header>';
-        $soapXml .= '<soapenv:Body>';
-        $soapXml .= '<tem:Select>';
-        $soapXml .= '<tem:SaleTypesCode>'.$data['sales_type'].'</tem:SaleTypesCode>';
-        $soapXml .= '<tem:ProductId>'.$data['product_id'].'</tem:ProductId>';
-        $soapXml .= '<tem:OneShowCode>'.$data['show_code'].'</tem:OneShowCode>';
-        $soapXml .= '<tem:EventDateTime>'.$data['event_date_time'].'</tem:EventDateTime>';
-        $soapXml .= '<tem:Quantity>'.$data['quantity'].'</tem:Quantity>';
-        $soapXml .= '</tem:Select>';
-        $soapXml .= '</soapenv:Body>';
-        $soapXml .= '</soapenv:Envelope>';
-
-        return $soapXml;
-    }
 }

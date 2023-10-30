@@ -218,7 +218,7 @@ class ServiceCrud
                 }
 
                 
-
+            /*
                 Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
                     $message->to($reservation->email);
                     $message->subject($subject);
@@ -255,7 +255,7 @@ class ServiceCrud
 
                     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 });
-
+                */
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
 
@@ -399,7 +399,7 @@ class ServiceCrud
                     $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_en." ".$template->subject;
                 }
 
-                
+                /*
 
                 Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation_old, $template, $subject, $data){
                     $message->to($reservation_old->email);
@@ -433,7 +433,7 @@ class ServiceCrud
 
                     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 });
-        
+        */
 
             }
             

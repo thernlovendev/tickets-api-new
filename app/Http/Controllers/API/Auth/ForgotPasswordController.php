@@ -47,10 +47,14 @@ class ForgotPasswordController extends Controller
         } else {
             $subject = $template->subject;
         }
+        \Log::debug('forget'.$token);
+        /*
         Mail::send('email.forgetPasswordResetRequestByUser', ['token' => $token, 'fullname' => $user->name, 'url' => $url, 'template' => $template,'email' => $request->input('email')], function($message) use($request, $template,$subject){
             $message->to($request->email);
             $message->subject($subject);
         });
+        
+        */
             
             return response()->json(['message', 'We have e-mailed your password reset link!']);
         }
@@ -87,12 +91,13 @@ class ForgotPasswordController extends Controller
                 $subject = $template->subject;
             }
             $user_email =  User::find($user);
-            
+            /*
             Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
                 $message->to($user_email->email);
                 $message->subject($subject);
             });
-
+            
+            */
           $url = env('APP_URL_WEB_PAGE');
           return redirect($url)->with('message', 'Your password has been changed!');
       }

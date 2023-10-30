@@ -17,13 +17,11 @@ class BroadwayMusicalsController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function selectSeat(Request $request, ServiceGeneral $broadwayService)
+    public function selectSeat(SelectSeatRequest $request, ServiceGeneral $broadwayService)
     {
         try {
             $jsonData = $request->json()->all();
-            // build the xml
-            $xml = SelectSeatRequest::build($jsonData);
-            $response = $broadwayService->selectSeat(['xml' => $xml]);
+            $response = $broadwayService->selectSeat($jsonData);
             return response()->json(['data' => $response], 200);
         } catch(\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -37,13 +35,12 @@ class BroadwayMusicalsController extends Controller
      * @param  mixed $broadwayService
      * @return void
      */
-    public function buySeat(Request $request, ServiceGeneral $broadwayService)
+    public function buySeat(BuySeatRequest $request, ServiceGeneral $broadwayService)
     {
         try {
             $jsonData = $request->json()->all();
-            // build the xml
-            $xml = BuySeatRequest::build($jsonData);
-            $response = $broadwayService->buySeat(['xml' => $xml]);
+            $response = $broadwayService->buySeat($jsonData);
+            return $response;
             return response()->json(['data' => $response], 200);
         } catch(\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
