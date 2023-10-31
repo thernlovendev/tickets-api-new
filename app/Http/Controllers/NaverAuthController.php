@@ -10,6 +10,8 @@ use Auth;
 use Exception;
 use JWTAuth;
 use App\Models\User;
+use Mail;
+use App\Models\Template;
 
 class NaverAuthController extends Controller
 {
@@ -38,7 +40,6 @@ class NaverAuthController extends Controller
 
             if($userExist){
                 $token = JWTAuth::fromUser($userExist);
-            \Log::debug($token);
                 
                 return redirect($url)->with('token');
             } else {
@@ -55,8 +56,18 @@ class NaverAuthController extends Controller
 
                 $token = JWTAuth::fromUser($userNew);
                 
-                \Log::debug($token);
+                $template = Template::where('title','After Signed Up')->first();
 
+                if($template->subject == 'default'){
+                    $subject = 'Tamice Sign Up ';
+                } else {
+                    $subject = $template->subject;
+                }
+                Mail::send('email.notificationAfterRegistered', ['fullname' => $userNew->name, 'template' => $template], function($message) use($userNew, $template,$subject){
+                    $message->to($userNew->email);
+                    $message->subject($subject);
+                });
+                
                 return redirect($url)->with('token');
             }
 

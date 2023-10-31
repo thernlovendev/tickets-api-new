@@ -10,6 +10,8 @@ use Auth;
 use Exception;
 use JWTAuth;
 use App\Models\User;
+use Mail;
+use App\Models\Template;
 
 class GoogleAuthController extends Controller
 {
@@ -53,6 +55,20 @@ class GoogleAuthController extends Controller
                 $userNew->assignRole('customer');
                 
                 $token = JWTAuth::fromUser($userNew);
+
+                $template = Template::where('title','After Signed Up')->first();
+
+                if($template->subject == 'default'){
+                    $subject = 'Tamice Sign Up ';
+                } else {
+                    $subject = $template->subject;
+                }
+                
+                
+                Mail::send('email.notificationAfterRegistered', ['fullname' => $userNew->name, 'template' => $template], function($message) use($userNew, $template,$subject){
+                    $message->to($userNew->email);
+                    $message->subject($subject);
+                });
 
                 return redirect($url)->with('token');
             }
