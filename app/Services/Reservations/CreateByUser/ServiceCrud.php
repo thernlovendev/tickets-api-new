@@ -31,7 +31,7 @@ class ServiceCrud
 	public static function create($data)
 	{
             do {
-                $order_number =  mt_rand(1000000, 9999999);
+                $order_number =  mt_rand(100000000, 999999999);
                 settype($order_number, 'string');
             } while (Reservation::where("order_number", "=", $order_number)->exists());
             

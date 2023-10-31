@@ -34,7 +34,7 @@ class ServiceCrud
             //     $data['token_id'] = $token_credit_card['id'];
             // }
             do {
-                $order_number =  mt_rand(1000000, 9999999);
+                $order_number =  mt_rand(100000000, 999999999);
                 settype($order_number, 'string');
                 // $code = $prefix.$order_number;
             } while (Reservation::where("order_number", "=", $order_number)->exists());
