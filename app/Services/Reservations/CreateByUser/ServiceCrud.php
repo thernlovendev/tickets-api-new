@@ -167,6 +167,13 @@ class ServiceCrud
                                 break;
                             
                             case Ticket::TYPE['MUSICAL_SHOW']:
+
+                                do {
+                                    $new_number =  mt_rand(10000000, 99999999);
+                                    settype($new_number, 'string');
+                                } while (Reservation::where("order_number", "=", '3'.$new_number)->exists());
+
+                                $reservation->update(['order_number'=> '3'.$new_number]);
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 break;
                            }

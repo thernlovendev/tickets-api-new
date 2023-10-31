@@ -87,6 +87,20 @@ class ServiceCrud
                             case Ticket::TYPE['HARD_COPY']:
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 break;
+                            case Ticket::TYPE['SIM_CARD']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+                            
+                            case Ticket::TYPE['MUSICAL_SHOW']:
+
+                                do {
+                                    $new_number =  mt_rand(10000000, 99999999);
+                                    settype($new_number, 'string');
+                                } while (Reservation::where("order_number", "=", '3'.$new_number)->exists());
+
+                                $reservation->update(['order_number'=> '3'.$new_number]);
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                break;
                             
                            }
 
