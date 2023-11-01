@@ -130,7 +130,7 @@ class TicketRequest extends FormRequest
                         'gallery_images.*.priority_type' => ['required',Rule::in($type_images)],
                         'tickets_categories' => ['required'],
                         'tickets_categories.*.category_id' => ['required','exists:categories,id'],
-                        'tickets_subcategories' => ['required'],
+                        'tickets_subcategories' => ['nullable'],
                         'tickets_subcategories.*.subcategory_id' => ['required','exists:subcategories,id'],
                         'single_price' =>['nullable','boolean'],
                         'tickets_prices' => ['nullable','required_if:single_price,true'],
