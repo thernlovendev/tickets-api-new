@@ -90,7 +90,7 @@ class ForgotPasswordController extends Controller
             } else {
                 $subject = $template->subject;
             }
-            $user_email =  User::find($user);
+            $user_email =  User::where('email', $request->email)->first();
             
             Mail::send('email.notificationAfterPasswordReset', ['fullname' => $user_email->name, 'template' => $template], function($message) use($user_email, $template, $subject){
                 $message->to($user_email->email);
