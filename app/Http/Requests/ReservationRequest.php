@@ -27,6 +27,12 @@ class ReservationRequest extends FormRequest
     {
         $type = Reservation::PAYMENT_TYPE;
         $type_price_item = ReservationItem::TYPE_PRICE;
+
+        if(count($this->vendor_comissions) == 1 && $this->vendor_comissions[0]['type'] == null && $this->vendor_comissions[0]['user_id'] == 0){
+            $ignore_vendor = false;
+        } else {
+            $ignore_vendor = true;
+        }
         switch($this->method()) {
             case 'GET':
                 {
@@ -93,11 +99,11 @@ class ReservationRequest extends FormRequest
                     'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                     'items.*.sub_items.*.refund_status' => ['nullable'],
                     'items.*.sub_items.*.refund_sent_date' => ['nullable'],
-                    'vendor_comissions' => 'array|nullable',
-                    'vendor_comissions.*.id' => 'nullable',
-                    'vendor_comissions.*.user_id' => 'required',
-                    'vendor_comissions.*.type' => ['required', Rule::in('AP', 'AR')],
-                    'vendor_comissions.*.comission_amount' => 'required|numeric',
+                    'vendor_comissions' => $ignore_vendor ? ['array','nullable'] : ['exclude'],
+                    'vendor_comissions.*.id' => $ignore_vendor ? ['nullable'] : ['exclude'],
+                    'vendor_comissions.*.user_id' => $ignore_vendor ? ['required','exists:users,id'] : ['exclude'],
+                    'vendor_comissions.*.type' => $ignore_vendor ? ['required', Rule::in('AP', 'AR')] : ['exclude'],
+                    'vendor_comissions.*.comission_amount' => $ignore_vendor ? ['required','numeric'] : ['exclude'],
                     'payment_type' => ['nullable',Rule::in($type)],
                     'stripe_token' => ['required_if:payment_type,Credit Card'],
                     'credit' => ['required_if:payment_type,Cash']

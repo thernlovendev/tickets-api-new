@@ -269,7 +269,9 @@ class ServiceCrud
 
             $total_old = $reservation_old->total;
 
-            ModelCrud::deleteUpdateOrCreate($reservation_old->vendorComissions(), $data['vendor_comissions']);
+            if(isset($data['vendor_comissions'])){
+                ModelCrud::deleteUpdateOrCreate($reservation_old->vendorComissions(), $data['vendor_comissions']);
+            }
 
             foreach ($data['items'] as $item){
                 $item_model = $reservation_old->reservationItems()->where('id', $item['id'])->first();
