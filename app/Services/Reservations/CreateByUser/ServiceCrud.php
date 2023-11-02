@@ -87,7 +87,11 @@ class ServiceCrud
                            
                            switch ($ticket->ticket_type) {
                             case Ticket::TYPE['REGULAR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                if($sub_item['rq_schedule_datetime'] !== null){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                } else {
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                }
                                 break;
 
                             case Ticket::TYPE['BAR_QR']:
@@ -296,7 +300,11 @@ class ServiceCrud
                     if(!isset($sub_item['id'])){
                         switch ($ticket->ticket_type) {
                             case Ticket::TYPE['REGULAR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                if($sub_item['rq_schedule_datetime'] !== null){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                } else {
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                }
                                 break;
     
                             case Ticket::TYPE['BAR_QR']:

@@ -5,6 +5,8 @@ use DB;
 use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
+use App\Models\TicketSchedule;
+use App\Models\TicketStock;
 use App\Models\Subcategory;
 use App\Models\PriceList;
 use App\Models\Reservation;
@@ -18,8 +20,11 @@ use App\Services\Reservations\ServiceCreditCard;
 use App\Utils\ModelCrud;
 use Illuminate\Validation\ValidationException;
 use App\Exceptions\StripeTokenFailException;
+use App\Exceptions\FailException;
 use Mail;
 use Carbon\Carbon;
+use PDF;
+use App\Mail\InvoiceEmail;
 
 class ServiceCrud
 {
@@ -70,16 +75,75 @@ class ServiceCrud
                            
                            switch ($ticket->ticket_type) {
                             case Ticket::TYPE['REGULAR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
-                                break;
-
-                            case Ticket::TYPE['BAR_QR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
-                                break;
-                            case Ticket::TYPE['GUIDE_TOUR']:
                                 if($sub_item['rq_schedule_datetime'] !== null){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 } else {
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                }
+                                break;
+
+                            case Ticket::TYPE['BAR_QR']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                
+                                $quantity = $reserve_item->quantity;
+                                $range_age = $reserve_item->adult_child_type;
+                                $ticket_id = $ticket->id;
+
+                                $now = Carbon::now()->format('Y-m-d H:i:s');
+
+                                $stocks = TicketStock::where('status',TicketStock::STATUS['VALID'])
+                                        ->where('expiration_date','>', $now)
+                                        ->where('ticket_id', $ticket_id)
+                                        ->where('range_age_type',$range_age)
+                                        ->take($quantity)
+                                        ->get();
+
+                                if(count($stocks) < $quantity){
+                                    $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
+                                    throw new \Exception($message);
+                                }
+                                break;
+                            case Ticket::TYPE['GUIDE_TOUR']:
+                                if($item['sub_items'][$index]['rq_schedule_datetime'] !== null){
+                                    $selectedDateTime = Carbon::parse($item['sub_items'][$index]['rq_schedule_datetime']);
+                                    $ticketId = $item['sub_items'][$index]['ticket_id'];
+
+
+                                    $ticketSchedule = TicketSchedule::where('ticket_id', $ticketId)
+                                                                    ->where('date_start', '<=', $selectedDateTime->format('Y-m-d'))
+                                                                    ->where('date_end', '>=', $selectedDateTime->format('Y-m-d'))
+                                                                    ->whereJsonContains('week_days', [ucfirst(strtolower($selectedDateTime->englishDayOfWeek))]) // Verifica si el día de la semana coincide
+                                                                    ->where('time', $selectedDateTime->format('H:i:s'))
+                                                                    ->first();
+
+                                    if ($ticketSchedule) {
+                                        $matches = ReservationSubItem::where('rq_schedule_datetime', $selectedDateTime->format('Y-m-d H:i'))->where('ticket_id',$ticketId)->get();
+                                        $sold_tickets = 0;
+                                        
+                                        foreach ($matches as $match) {
+                                            $sold_tickets += $match->reservationItem->quantity;
+                                        }
+                                        
+                                        $exception_schedule = $ticketSchedule->ticketScheduleExceptions()->whereDate('date', $selectedDateTime->toDateString());
+                                        
+                                        if($exception_schedule->count() == 0){
+                                            $availableSlots = $ticketSchedule->max_people - $sold_tickets;
+                                        } else {
+                                            $exception = $exception_schedule->first();
+                                            $availableSlots = $exception->max_people - $sold_tickets;
+                                        }
+                                        if ($availableSlots >= $item['quantity']) {
+                                            $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                        } else {
+                                            $message = 'Your purchase exceeds the number of available seats, you can only request a maximum '.$availableSlots.' of the ticket '.$ticket->title_en;
+                                            throw new \Exception($message);
+                                        }
+                                    } else {
+                                        $message = 'There is no schedule assigned to the date and time entered, please check again';
+                                        throw new \Exception($message);
+                                    }
+                                    
+                                }else {
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
                                 }
                                 
@@ -150,15 +214,49 @@ class ServiceCrud
                 $template = Template::where('title','After Payment Completed')->first();
         
                 if($template->subject == 'default'){
-                    $subject = "Payment Completed";
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
                 } else {
-                    $subject = $template->subject;
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
                 }
+
                 
-                // Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject){
-                //     $message->to($reservation->email);
-                //     $message->subject($subject);
-                // });
+                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
+                    $message->to($reservation->email);
+                    $message->subject($subject);
+                    $fullname = $reservation->customer_name_en;
+                    $orderNumber = $reservation->order_number;
+                    $orderDate = $reservation->created_at->format('Y-m-d g:i A');
+                    $discount = $reservation->discount_amount;
+                    $amount = $data['total'];
+                    $iconDashboardSquare = public_path('images/dashboard-square.svg');
+                    $iconBookOpen = public_path('images/book-open.svg');
+                    $iconDollarCircle = public_path('images/dollar-circle.svg');
+                    $iconMessage = public_path('images/message.svg');
+                    $iconLocation = public_path('images/location.svg');
+                    $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+
+                    $cash_type =false; 
+                    $credit_type =false; 
+
+                    if($data['payment_type'] == Reservation::PAYMENT_TYPE['CASH']){
+                        $bill_data = $reservation->reservationCashPayments()->get()->last();
+                        $cash_type =true; 
+                    } else {
+                        $bill_data = $reservation->reservationCreditCardPayments()->get()->last();
+                        $credit_type =true; 
+                    }
+
+                    if($data['created_by'] == 'Customer'){
+                        $auth = false;
+                    } else {
+                        $auth = true;
+                    }
+
+                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+
+                    $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
+                });
+
             
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
@@ -191,7 +289,11 @@ class ServiceCrud
                     if(!isset($sub_item['id'])){
                         switch ($ticket->ticket_type) {
                             case Ticket::TYPE['REGULAR']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                if($sub_item['rq_schedule_datetime'] !== null){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                } else {
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                }
                                 break;
     
                             case Ticket::TYPE['BAR_QR']:
@@ -218,7 +320,42 @@ class ServiceCrud
                                 break;
                         }
 
-                    } 
+                    } else {
+                        switch ($ticket->ticket_type) {
+                            case Ticket::TYPE['REGULAR']:
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['rq_schedule_datetime'] == null && $old_sub_item['rq_schedule_datetime'] !== $sub_item['rq_schedule_datetime']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                } 
+                                break;
+    
+                            case Ticket::TYPE['BAR_QR']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                break;
+                            case Ticket::TYPE['GUIDE_TOUR']:
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['rq_schedule_datetime'] !== $sub_item['rq_schedule_datetime']){
+                                    if($sub_item['rq_schedule_datetime'] !== null){
+                                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                    } else {
+                                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                    }
+                                }
+                                
+                                break;
+                            case Ticket::TYPE['HARD_COPY']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+
+                            case Ticket::TYPE['SIM_CARD']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                break;
+                            
+                            case Ticket::TYPE['MUSICAL_SHOW']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                break;
+                        }
+                    }
                     
                     $item['sub_items'][$index]['addition'] = $ticket->additional_price_amount;
 
