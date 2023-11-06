@@ -242,7 +242,7 @@ class ServiceCrud
                     $iconDollarCircle = public_path('images/dollar-circle.svg');
                     $iconMessage = public_path('images/message.svg');
                     $iconLocation = public_path('images/location.svg');
-                    $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+                    $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en,ticket_type', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
 
                     $cash_type =false; 
                     $credit_type =false; 
@@ -426,7 +426,7 @@ class ServiceCrud
                     $iconDollarCircle = public_path('images/dollar-circle.svg');
                     $iconMessage = public_path('images/message.svg');
                     $iconLocation = public_path('images/location.svg');
-                    $reservationItems = $reservation_old->reservationItems()->with('reservationSubItems.ticket:id,title_en', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+                    $reservationItems = $reservation_old->reservationItems()->with('reservationSubItems.ticket:id,title_en,ticket_type', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
 
                     $cash_type =false; 
                     $credit_type =false; 

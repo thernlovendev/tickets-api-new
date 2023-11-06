@@ -137,7 +137,11 @@
                     <br>
                     @foreach($item->reservationSubItems as $subitem)
                         <div style="margin-left:1rem">
-                            <span style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_en}}</span>
+                            <span style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_en}} </span>
+                            @if($subitem->ticket->ticket_type == "Musicals & Shows")
+                            <span style="font-weight:bold;color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] </span>
+                            
+                            @endif
                         </div>
                     @endforeach
                 <br>
