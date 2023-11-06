@@ -76,6 +76,7 @@ class UserController extends Controller
     public function register(UserRequest $request)
     {
         $response = $request->validated();
+
         $user = User::create([
             'name' => $response['firstname'].' '.$response['lastname'],
             'firstname' => $response['firstname'],
@@ -84,7 +85,10 @@ class UserController extends Controller
             'password' => Hash::make($response['password']),
             'phone' => $response['phone'],
             'active' => true,
+            'company_id' => 1
         ]);
+
+
 
         // event(new Registered($user));
         
@@ -190,7 +194,7 @@ class UserController extends Controller
             ]);
         }
         if($validator->fails() ){
-            return $validator->errors();
+            return Response(['errors' => $validator->errors()], 422);
         }
         $user = User::create([
             'name' => $response['fullname'],
