@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Google_Client;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Socialite;
+use Auth;
+use Exception;
+use JWTAuth;
+use App\Models\User;
+use Mail;
+use App\Models\Template;
 
 class GoogleAuthReactController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use AuthenticatesUsers;
+
     public function handleGoogleAuth(Request $request)
     {
         $token = $request->input('token'); 
