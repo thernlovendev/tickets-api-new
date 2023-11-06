@@ -18,33 +18,41 @@ class PriceListsController extends Controller
     {
         $params = $request->query();
 
-        $price_lists = PriceList::where('category_id', $params['category_id'])
+        if(!empty($params)){
+            $price_lists = PriceList::where('category_id', $params['category_id'])
             ->get();
-        $price_lists_group = $price_lists->groupBy('subcategory_id')->map(function($item){
-            return [
-                'subcategory_id' => $item->first()->subcategory_id,
-                'prices' => $item
-            ];
-        });
-
-        $subcategories_model = Category::find($params['category_id'])->subcategories()->pluck('id');
-        $subcategories_empty = $subcategories_model->diff($price_lists->pluck('subcategory_id'));
+            if($price_lists->count() > 0){
+                $price_lists_group = $price_lists->groupBy('subcategory_id')->map(function($item){
+                    return [
+                        'subcategory_id' => $item->first()->subcategory_id,
+                        'prices' => $item
+                    ];
+                });
         
-        $merge = [];
-        foreach ($subcategories_empty as $key => $value) {
-            $merge[$value] = [
-                'subcategory_id' => $value,
-                'prices' => []
-            ];
+                $subcategories_model = Category::find($params['category_id'])->subcategories()->pluck('id');
+                $subcategories_empty = $subcategories_model->diff($price_lists->pluck('subcategory_id'));
+                
+                $merge = [];
+                foreach ($subcategories_empty as $key => $value) {
+                    $merge[$value] = [
+                        'subcategory_id' => $value,
+                        'prices' => []
+                    ];
+                }
+        
+                $price_lists_group = collect($price_lists_group)->merge($merge);
+        
+                $data = [
+                    'category_id' => $params['category_id'],
+                    'subcategories' => $price_lists_group
+                ];
+                return Response($data, 200);
+            } else {
+                return [];
+            }
+        } else {
+            return Response(['error'=>'Add a category_id param'], 422);
         }
-
-        $price_lists_group = collect($price_lists_group)->merge($merge);
-
-        $data = [
-            'category_id' => $params['category_id'],
-            'subcategories' => $price_lists_group
-        ];
-        return Response($data, 200);
     }
 
     public function getBySubcategory(Request $request)
