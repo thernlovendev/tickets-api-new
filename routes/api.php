@@ -18,7 +18,7 @@ Route::post('login', 'App\Http\Controllers\API\Auth\UserController@authenticate'
 Route::post('register', 'App\Http\Controllers\API\Auth\UserController@register')->name('register');
 Route::post('forgot-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@forgotPassword')->name('forgot.password'); 
 Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password'); 
-
+Route::post('google-auth', 'App\Http\Controllers\GoogleAuthReactController@handleGoogleAuth')->name('google.auth.react');
 
 Route::group(['middleware' => ['jwt.verify']], function() {    
 	Route::get('refresh-token','App\Http\Controllers\API\Auth\UserController@refresh')->name('refresh.token');

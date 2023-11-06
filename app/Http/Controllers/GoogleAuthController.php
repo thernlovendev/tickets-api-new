@@ -39,8 +39,9 @@ class GoogleAuthController extends Controller
             
             if($userExist){
                 $token = JWTAuth::fromUser($userExist);
-
-                return redirect($url)->with('token');
+                $role = $userExist->roles->first();
+                
+                return response()->json(['token' => $token, 'role' => $role]);
             } else {
                 $userNew = User::create([
                     'name' => $user->name,
@@ -70,12 +71,14 @@ class GoogleAuthController extends Controller
                     $message->subject($subject);
                 });
 
-                return redirect($url)->with('token');
+                $role = $userNew->roles->first();
+
+                return response()->json(['token' => $token, 'role' => $role]);
             }
 
         } catch (Exception $e) {
             \Log::debug($e);
-            return redirect('google-login');
+            return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
     }
 }
