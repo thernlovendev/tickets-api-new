@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Auth;
@@ -181,6 +182,16 @@ class UserController extends Controller
     public function create(UserByAdminRequest $request)
     {
         $response = $request->validated();
+        $email_new = User::where('email', $response['email'])->count();
+
+        if($response['company_id'] == null && $email_new > 0){
+            $validator = Validator::make($response,[
+                'email' => ['unique:users,email']
+            ]);
+        }
+        if($validator->fails() ){
+            return $validator->errors();
+        }
         $user = User::create([
             'name' => $response['fullname'],
             'firstname' => $response['firstname'],
