@@ -30,11 +30,11 @@ class ServiceGeneral
                 $reservation = Reservation::find($stock->reservation_id);
                 $sub_item = ReservationSubItem::find($stock->reservation_sub_item_id);
 
-                $item_number = $sub_item->reservation_item_id;
+                $item_number = $sub_item ? $sub_item->reservation_item_id : null;
                 $customer_name = $reservation->customer_name_en;
                 $order_id = $reservation->order_number;
                 $reservation_id = $reservation->id;
-                $sub_item_id = $sub_item->id;
+                $sub_item_id = $sub_item ? $sub_item->id : null;
 
 
             }
