@@ -13,6 +13,7 @@ use App\Models\PriceList;
 use App\Models\Reservation;
 use App\Models\ReservationItem;
 use App\Models\ReservationSubItem;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
@@ -236,13 +237,16 @@ class ServiceCrud
                     $orderNumber = $reservation->order_number;
                     $orderDate = $reservation->created_at->format('Y-m-d g:i A');
                     $discount = $reservation->discount_amount;
+                    $email_customer = $reservation->email;
+                    $user_signed = User::where('email',$reservation->email)->first();
+                    $name_customer =$user_signed ? $user_signed->firstname.' '.$user_signed->lastname : $reservation->customer_name_kr;
                     $amount = $data['total'];
                     $iconDashboardSquare = public_path('images/dashboard-square.svg');
                     $iconBookOpen = public_path('images/book-open.svg');
                     $iconDollarCircle = public_path('images/dollar-circle.svg');
                     $iconMessage = public_path('images/message.svg');
                     $iconLocation = public_path('images/location.svg');
-                    $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_en,ticket_type', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+                    $reservationItems = $reservation->reservationItems()->with('reservationSubItems.ticket:id,title_kr,ticket_type', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
 
                     $cash_type =false; 
                     $credit_type =false; 
@@ -261,7 +265,7 @@ class ServiceCrud
                         $auth = true;
                     }
 
-                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
 
                     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 });
@@ -418,6 +422,7 @@ class ServiceCrud
                     $message->subject($subject);
                     $fullname = $reservation_old->customer_name_en;
                     $orderNumber = $reservation_old->order_number;
+                    $email_customer = $reservation_old->email;
                     $orderDate = $reservation_old->created_at->format('Y-m-d g:i A');
                     $discount = $reservation_old->discount_amount;
                     $amount = $data['total'];
@@ -426,8 +431,10 @@ class ServiceCrud
                     $iconDollarCircle = public_path('images/dollar-circle.svg');
                     $iconMessage = public_path('images/message.svg');
                     $iconLocation = public_path('images/location.svg');
-                    $reservationItems = $reservation_old->reservationItems()->with('reservationSubItems.ticket:id,title_en,ticket_type', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
-
+                    $reservationItems = $reservation_old->reservationItems()->with('reservationSubItems.ticket:id,title_kr,ticket_type', 'subcategory:id,name', 'category:id,name','priceList:id,product_type')->get();
+                    
+                    $user_signed = User::where('email',$reservation_old->email)->first();
+                    $name_customer =$user_signed ? $user_signed->firstname.' '.$user_signed->lastname : $reservation_old->customer_name_kr;
                     $cash_type =false; 
                     $credit_type =false; 
 
@@ -441,7 +448,7 @@ class ServiceCrud
 
                     $auth = false;
 
-                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
 
                     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 });

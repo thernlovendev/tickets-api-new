@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>{{__('Payment Successfully')}}</title>
     <style>
-    body { font-family: 'Poppins', sans-serif; }
+    body { font-family: 'Poppins', sans-serif;}
     .invoice-text {
         position: absolute;
         top: 16px; /* Ajusta la posición vertical según tus necesidades */
@@ -65,6 +66,12 @@
                 font-size: 0.9em;
                 line-height: 1.5">
 
+                <div>
+                    <span style="font-weight: bold;">Name: </span> <span style="color:#5D5D5F">{{$name_customer}}</span>
+                </div>
+                <div>
+                    <span style="font-weight: bold;">Email: </span> <span style="color:#5D5D5F">{{$email_customer}}</span>
+                </div>
                 <div>
                     <span style="font-weight: bold;">Order Number: </span> <span style="color:#5D5D5F">{{$orderNumber}}</span>
                 </div>
@@ -137,11 +144,11 @@
                     <br>
                     @foreach($item->reservationSubItems as $subitem)
                         <div style="margin-left:1rem">
-                            <span style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_en}} </span>
+                            <span style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_kr}} </span>
                             @if($subitem->ticket->ticket_type == "Musicals & Shows")
-                            <span style="font-weight:bold;color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] </span>
+                            <span style="color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] </span>
                             @elseif($subitem->ticket->ticket_type == "Guide Tour")
-                            <span style="font-weight:bold;color: #5D5D5F">- [Scheduled date: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('d/m/Y h:i A') }}] </span>
+                            <span style="color: #5D5D5F">- [Scheduled date: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('d/m/Y h:i A') }}] </span>
                             @endif
                         </div>
                     @endforeach
