@@ -53,4 +53,9 @@ class Template extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function headerGallery()
+    {
+        return $this->belongsTo(HeaderGallery::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Template;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,5 +37,10 @@ class HeaderGallery extends Model
     public function mainImage()
     {
         return $this->morphOne(Image::class, 'imageable')->where('priority_type', 'main_image');
+    }
+
+    public function templates()
+    {
+        return $this->hasMany(ReservationSubItem::class);
     }
 }

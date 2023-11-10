@@ -96,4 +96,29 @@ class TemplatesController extends Controller
 
         return Response($response, 200);
     }
+
+    public function reciveWebPage(Template $template){
+        
+        if($template->type == Template::TYPE['WEB_PAGE']){
+            
+            $header = $template->headerGallery;
+            $content = $template->content;
+            $header_main_image = $header->mainImage->first();
+            $header_gallery_images = $header->galleryImages()->get();
+            $first_phrase_header = $header->first_phrase;
+            $second_phrase_header = $header->second_phrase;
+
+
+            return [
+                'header_main_image' => $header_main_image,
+                'header_gallery_images' => $header_gallery_images,
+                'first_phrase_header' => $first_phrase_header,
+                'second_phrase_header' => $second_phrase_header,
+                'content_page' => $template->content
+            ];
+
+        } else {
+            return Response(['errors' => 'The ID template is Not Web Page'],422);
+        }
+    }
 }

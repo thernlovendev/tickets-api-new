@@ -119,6 +119,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
 		Route::get('/{template}/image', 'App\Http\Controllers\API\TemplatesController@showTemplateImage')->name('templates.image.show')->middleware();
 		Route::put('/{template}/image', 'App\Http\Controllers\API\TemplatesController@updateImage')->name('templates.image.update')->middleware();
+		Route::get('/{template}/webpage', 'App\Http\Controllers\API\TemplatesController@reciveWebPage')->name('templates.web.page')->middleware();
 	});
 
 	Route::prefix('header-gallery')->group(function() {
