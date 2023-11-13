@@ -119,7 +119,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::delete('/{template}', 'App\Http\Controllers\API\TemplatesController@delete')->name('templates.delete')->middleware();
 		Route::get('/{template}/image', 'App\Http\Controllers\API\TemplatesController@showTemplateImage')->name('templates.image.show')->middleware();
 		Route::put('/{template}/image', 'App\Http\Controllers\API\TemplatesController@updateImage')->name('templates.image.update')->middleware();
-		Route::get('/{template}/webpage', 'App\Http\Controllers\API\TemplatesController@reciveWebPage')->name('templates.web.page')->middleware();
 	});
 
 	Route::prefix('header-gallery')->group(function() {
@@ -202,6 +201,9 @@ Route::post('tickets-multiple', 'App\Http\Controllers\API\TicketsController@mult
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
 Route::get('/new-order', 'App\Http\Controllers\API\NewOrderController@index')->name('new.order')->middleware();
+Route::prefix('templates')->group(function() {
+	Route::get('/{template}/webpage', 'App\Http\Controllers\API\TemplatesController@reciveWebPage')->name('templates.web.page')->middleware();
+});
 
 Route::get('/test-pdf', function(){
 	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
