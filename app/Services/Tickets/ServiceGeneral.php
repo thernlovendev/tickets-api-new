@@ -81,6 +81,10 @@ class ServiceGeneral
             $models->whereIn('id', $filters['ids_filter']);
         }
 
+        if(isset($filters['ticket_type'])){
+            $models->where('ticket_type','LIKE', '%'.$filters['ticket_type'].'%');
+        }
+
         return $models;
     }
 
