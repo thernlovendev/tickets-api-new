@@ -372,7 +372,7 @@ class InventoriesController extends Controller
                 return [
                     'ticket_id' => $item->ticket_id,
                     'title_en' => $item->title_en,
-                    'range_age_type' => $item->range_age_type,
+                    'range_age_type' => $item->adult_child_type,
                     'balance_general' => $item->balance_general,
                     'dates' => $dates
                 ]; 
