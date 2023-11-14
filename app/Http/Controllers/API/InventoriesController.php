@@ -338,8 +338,7 @@ class InventoriesController extends Controller
         ->select(
             'ticket_id',
             'title_en',
-            'adult_child_type',
-            DB::raw('SUM(reservation_items.quantity) * COUNT(*) as balance_general'),
+            'adult_child_type'
         )
         ->groupBy('title_en','adult_child_type','ticket_id')->get()
         ->map(function($item) use($calendar){
@@ -373,7 +372,7 @@ class InventoriesController extends Controller
                     'ticket_id' => $item->ticket_id,
                     'title_en' => $item->title_en,
                     'range_age_type' => $item->adult_child_type,
-                    'balance_general' => $item->balance_general,
+                    'balance_general' => collect($dates)->sum('out'),
                     'dates' => $dates
                 ]; 
             });
