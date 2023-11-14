@@ -329,7 +329,58 @@ class InventoriesController extends Controller
             } else return true;
         })->values();
 
-        return $tickets;
+
+        $reservation_sub_items = ReservationSubItem::join('tickets', 'reservation_sub_items.ticket_id', '=', 'tickets.id')->join('reservation_items', 'reservation_sub_items.reservation_item_id', '=', 'reservation_items.id')->where('ticket_type', '!=',Ticket::TYPE['BAR_QR'])->where(function ($query) use ($start_date, $end_date) {
+            $query->orWhereHas('optionsSchedules', function ($subquery) use ($start_date, $end_date){
+                $subquery->whereBetween('created_at', [$start_date, $end_date]);
+            })->orWhereBetween('reservation_sub_items.ticket_sent_date',[$start_date, $end_date]);
+        })
+        ->select(
+            'ticket_id',
+            'title_en',
+            'adult_child_type',
+            DB::raw('SUM(reservation_items.quantity) * COUNT(*) as balance_general'),
+        )
+        ->groupBy('adult_child_type','ticket_id')->get()
+        ->map(function($item) use($calendar){
+    
+                $dates = [];
+                foreach($calendar as $day){
+
+                    $count_day =  ReservationSubItem::where('ticket_id',$item->ticket_id)->join('tickets', 'reservation_sub_items.ticket_id', '=', 'tickets.id')->join('reservation_items', 'reservation_sub_items.reservation_item_id', '=', 'reservation_items.id')->where('adult_child_type',$item->adult_child_type)->where('ticket_type', '!=',Ticket::TYPE['BAR_QR'])->where(function ($query) use ($day) {
+                        $query->orWhereHas('optionsSchedules', function ($subquery) use ($day){
+                            $subquery->whereDate('created_at', $day);
+                        })->orWhereDate('reservation_sub_items.ticket_sent_date',$day);
+                    })->select(
+                        'ticket_id',
+                        'title_en',
+                        'adult_child_type',
+                        DB::raw('SUM(reservation_items.quantity) * COUNT(*) as stock_day'),
+                    )->groupBy('ticket_id', 'title_en', 'adult_child_type')
+                    ->get();
+                
+                    $stock_day_total = $count_day->sum('stock_day');;
+
+                    
+                    $dates[] = [
+                        'date' => $day,
+                        'in' => null,
+                        'out' => $stock_day_total
+                    ];
+                }
+    
+                return [
+                    'ticket_id' => $item->ticket_id,
+                    'title_en' => $item->title_en,
+                    'range_age_type' => $item->range_age_type,
+                    'balance_general' => $item->balance_general,
+                    'dates' => $dates
+                ]; 
+            });
+
+            $result = $reservation_sub_items->merge($tickets);
+
+        return $result->sortBy('ticket_id')->values();
     }
 
     public function changeStatus(ChangeStatusRequest $request,TicketStock $stock){
