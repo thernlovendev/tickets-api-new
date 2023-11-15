@@ -13,6 +13,8 @@ class ServiceCrud
 		try {
             DB::beginTransaction();
 
+            $created_by = Auth::user();
+
             $template = Template::create(
                 [
                     'title' => $data['title'],
@@ -20,7 +22,7 @@ class ServiceCrud
                     'header_gallery_id' => $data['header_gallery_id'],
                     'content' => $data['content'],
                     'status' => $data['status'],
-                    'created_by' => $data['created_by'],
+                    'created_by' => $created_by->name.' - user_id: '.$created_by->id,
                 ]);
 
             DB::commit();
