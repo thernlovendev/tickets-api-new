@@ -65,10 +65,9 @@ class TemplateRequest extends FormRequest
                     return [
                         'title' => ['required',Rule::unique('templates')->ignore($template->id)],
                         'type' => ['required'],
-                        'header_gallery_id' => ['required', 'exists:header_galleries,id'],
+                        'header_gallery_id' => ['nullable', 'exists:header_galleries,id'],
                         'content' => ['required'],
                         'status' => ['required', Rule::in($status)],
-                        'created_by' => ['required'],
                     ];
                 }
             } break;
