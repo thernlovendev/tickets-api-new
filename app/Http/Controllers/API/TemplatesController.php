@@ -103,7 +103,7 @@ class TemplatesController extends Controller
             
             $header = $template->headerGallery;
             $content = $template->content;
-            $header_main_image = $header->mainImage->first();
+            $header_main_image = $header->mainImage;
             $header_gallery_images = $header->galleryImages()->get();
             $first_phrase_header = $header->first_phrase;
             $second_phrase_header = $header->second_phrase;
