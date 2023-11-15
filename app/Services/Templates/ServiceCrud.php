@@ -22,7 +22,8 @@ class ServiceCrud
                     'header_gallery_id' => $data['header_gallery_id'],
                     'content' => $data['content'],
                     'status' => $data['status'],
-                    'created_by' => $created_by->name.' - user_id: '.$created_by->id,
+                    'created_by' => $created_by->name,
+                    'user_id' => $created_by->id,
                 ]);
 
             DB::commit();

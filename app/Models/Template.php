@@ -19,6 +19,7 @@ class Template extends Model
         'content',
         'status',
         'created_by',
+        'user_id',
         'subject'
     ];
 
@@ -57,5 +58,10 @@ class Template extends Model
     public function headerGallery()
     {
         return $this->belongsTo(HeaderGallery::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
