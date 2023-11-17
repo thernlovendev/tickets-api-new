@@ -65,15 +65,19 @@ class ServiceCrud
 
             TicketContent::create(['ticket_id' => $ticket->id,'content' => $data['ticket_content']['content']]); 
 
-            foreach($data['tickets_categories'] as $category){
-                $ticket->categories()->attach($category['category_id']);
+            if(isset($data['tickets_categories']) && !empty($data['tickets_categories'])){
+                foreach($data['tickets_categories'] as $category){
+                    $ticket->categories()->attach($category['category_id']);
+                }
+            }
+            
+            if(isset($data['tickets_subcategories']) && !empty($data['tickets_subcategories'])){
+                foreach($data['tickets_subcategories'] as $subcategory){
+                    $ticket->subcategories()->attach($subcategory['subcategory_id']);
+                }
             }
 
-            foreach($data['tickets_subcategories'] as $subcategory){
-                $ticket->subcategories()->attach($subcategory['subcategory_id']);
-            }
-
-            if(isset($data['tickets_prices'])){
+            if(isset($data['tickets_prices']) && !empty($data['tickets_prices'])){
                 foreach ($data['tickets_prices'] as $price) {
                     $item = TicketPrice::create(['ticket_id'=> $ticket['id'],'type' => $price['type'], 'age_limit' => $price['age_limit'], 'window_price' => $price['window_price'], 'sale_price' => $price['sale_price']]); 
                     
@@ -109,16 +113,19 @@ class ServiceCrud
                     
                 }
             }
-            foreach($data['wide_images'] as $image){
-                ImageService::attach($image, $ticket);
+            if(isset($data['wide_images']) && !empty($data['wide_images'])){
+                foreach($data['wide_images'] as $image){
+                    ImageService::attach($image, $ticket);
+                }
             }
-
-            foreach($data['gallery_images'] as $image){
-                ImageService::attach($image, $ticket);
+            if(isset($data['gallery_images']) && !empty($data['gallery_images'])){
+                foreach($data['gallery_images'] as $image){
+                    ImageService::attach($image, $ticket);
+                }
             }
-
-            ImageService::attach($data['card_image'], $ticket);
-            
+            if(isset($data['card_image']) && !empty($data['card_image'])){
+                ImageService::attach($data['card_image'], $ticket);
+            }            
                 
             DB::commit();
 
