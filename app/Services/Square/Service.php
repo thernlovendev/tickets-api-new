@@ -34,7 +34,7 @@ class Service
         ])->post(self::URL.'payments', [
             'source_id' => $data['source'],
             'amount_money' => [
-                'amount' => $data['amount'],
+                'amount' => round($data['amount']),
                 'currency' => $data['currency'],
             ],
             'note' => $data['description'],
