@@ -162,7 +162,7 @@
         </div>
     </div>
     <div class="invoice-text">
-        <h2>INVOICE</h2>
+        <h2>RECEIPT</h2>
     </div>
     
 </body>
