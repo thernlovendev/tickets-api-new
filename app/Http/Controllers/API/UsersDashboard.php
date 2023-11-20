@@ -111,7 +111,10 @@ class UsersDashboard extends Controller
                         ->get();
 
                 if(count($stocks) < $quantity){
-                    return Response('There was a problem in the inventory. Please contact the Admin for the error for code: 4848',422);
+                    return Response('티켓 준비중입니다!
+                    <br>
+                    <a href=”
+                    카카오톡채널  style=“color:#009eef; text-decoration: underline;“target=“blank”>타미스 카카오톡 채널</a> 또는 이메일 (service@tamice.com), 전화 (646-684-4848) 로 문의해 주세요.',422);
                 } else {
 
                         $oMerger = PDFMerger::init();

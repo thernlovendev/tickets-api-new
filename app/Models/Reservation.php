@@ -35,6 +35,12 @@ class Reservation extends Model
         'TBD' => 'TBD'
     ];
 
+    const TICKET_REFUNDED_STATUS = [
+        'REFUNDED' => 'Refunded',
+        'IN_PROGRESS' => 'In Progress'
+    ];
+
+
     protected $fillable = [
         'departure_date',
         'order_date',

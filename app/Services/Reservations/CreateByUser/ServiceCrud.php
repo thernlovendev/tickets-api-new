@@ -112,10 +112,10 @@ class ServiceCrud
                                         ->take($quantity)
                                         ->get();
 
-                                if(count($stocks) < $quantity){
-                                    $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
-                                    throw new \Exception($message);
-                                }
+                                // if(count($stocks) < $quantity){
+                                //     $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
+                                //     throw new \Exception($message);
+                                // }
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
                                 
@@ -330,10 +330,10 @@ class ServiceCrud
                                         ->take($quantity)
                                         ->get();
 
-                                if(count($stocks) < $quantity){
-                                    $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
-                                    throw new \Exception($message);
-                                }
+                                // if(count($stocks) < $quantity){
+                                //     $message = 'The inventory of ticket "'.$ticket->title_en.'", of type "'.$range_age.'", has been exceeded, the available quantity is '.count($stocks);
+                                //     throw new \Exception($message);
+                                // }
                                 
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:

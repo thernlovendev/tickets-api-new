@@ -45,6 +45,7 @@ class ReservationByUserRequest extends FormRequest
         $user = auth()->user();
         $isAdmin = $user && $user->roles->first()->name === 'admin' || $user && $user->roles->first()->name === 'super admin';
         $type = Reservation::PAYMENT_TYPE;
+        $refund_status = Reservation::TICKET_REFUNDED_STATUS;
         $type_price_item = ReservationItem::TYPE_PRICE;
         switch($this->method()) {
             case 'GET':
@@ -95,11 +96,14 @@ class ReservationByUserRequest extends FormRequest
                         'items.*.child_age' => 'nullable',
                         'items.*.price' => 'required|numeric',
                         'items.*.quantity' => 'integer',
+                        'items.*.refund_status' => ['nullable',Rule::in($refund_status)],
+                        'items.*.refund_sent_date' =>  ['nullable','date'], 
                         'items.*.sub_items' => 'array',
                         'items.*.sub_items.*.rq_schedule_datetime' => 'nullable|date',
                         'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                         'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
-                        'items.*.sub_items.*.refund_status' => 'nullable',
+                        'items.*.sub_items.*.refund_status' => ['nullable',Rule::in($refund_status)],
+                        'items.*.sub_items.*.refund_sent_date' => ['nullable','date'],
                         'items.*.sub_items.*.seating_info' => ['nullable'],
                         'payment_type' => ($isAdmin) ? ['nullable', Rule::in($type)] : ['exclude'],
                         'credit' => ($isAdmin) ? ['nullable'] : ['exclude'], 

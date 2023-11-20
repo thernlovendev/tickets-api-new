@@ -26,6 +26,7 @@ class ReservationRequest extends FormRequest
     public function rules()
     {
         $type = Reservation::PAYMENT_TYPE;
+        $refund_status = Reservation::TICKET_REFUNDED_STATUS;
         $type_price_item = ReservationItem::TYPE_PRICE;
 
         if(count($this->vendor_comissions) == 1 && $this->vendor_comissions[0]['type'] == null && $this->vendor_comissions[0]['user_id'] == 0){
@@ -90,8 +91,8 @@ class ReservationRequest extends FormRequest
                     'items.*.child_age' => 'nullable',
                     'items.*.price' => 'required|numeric',
                     'items.*.quantity' => 'integer',
-                    'items.*.refund_status'=> 'nullable',
-                    'items.*.refund_sent_date'=> 'nullable|date',
+                    'items.*.refund_status' => ['nullable',Rule::in($refund_status)],
+                    'items.*.refund_sent_date' =>  ['nullable','date'], 
                     'items.*.ticket_sent_status' => 'nullable',
                     'items.*.sub_items' => 'array',
                     'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
