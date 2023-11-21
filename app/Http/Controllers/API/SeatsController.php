@@ -14,7 +14,7 @@ class SeatsController extends Controller
         $tickets = ProductSeat::with([]);
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom($params, $tickets);
-        $elements = $this->httpIndex($elements, ['product_id', 'product_code']);
+        $elements = $this->httpIndex($elements, []);
         $response = ServiceGeneral::mapCollection($elements);
         return Response($response, 200);
     }

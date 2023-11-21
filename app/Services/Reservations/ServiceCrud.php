@@ -358,15 +358,19 @@ class ServiceCrud
                                 
                                 break;
                             case Ticket::TYPE['HARD_COPY']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
-                                $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
-                                
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                    $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                }
                                 break;
 
                             case Ticket::TYPE['SIM_CARD']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
-                                $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
-                                
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                    $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                }
                                 break;
                             
                             case Ticket::TYPE['MUSICAL_SHOW']:

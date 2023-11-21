@@ -37,7 +37,8 @@ class Reservation extends Model
 
     const TICKET_REFUNDED_STATUS = [
         'REFUNDED' => 'Refunded',
-        'IN_PROGRESS' => 'In Progress'
+        'IN_PROGRESS' => 'In Progress',
+        'PICKED_UP' => 'Picked Up'
     ];
 
 

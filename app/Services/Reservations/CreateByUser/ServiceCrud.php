@@ -358,7 +358,53 @@ class ServiceCrud
                             
                         }
 
-                    } 
+                    }  else {
+                        switch ($ticket->ticket_type) {
+                            case Ticket::TYPE['REGULAR']:
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['rq_schedule_datetime'] == null && $old_sub_item['rq_schedule_datetime'] !== $sub_item['rq_schedule_datetime']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                    $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                } 
+                                break;
+    
+                            case Ticket::TYPE['BAR_QR']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TO_DO'];
+                                break;
+                            case Ticket::TYPE['GUIDE_TOUR']:
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['rq_schedule_datetime'] !== $sub_item['rq_schedule_datetime']){
+                                    if($sub_item['rq_schedule_datetime'] !== null){
+                                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                        $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                    } else {
+                                        $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                    }
+                                }
+                                
+                                break;
+                            case Ticket::TYPE['HARD_COPY']:
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['refund_status'] !== $sub_item['sub_items'][$index]['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                    $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                }
+                                break;
+
+                            case Ticket::TYPE['SIM_CARD']:
+                                $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['refund_status'] !== $sub_item['sub_items'][$index]['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                    $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                }
+                                break;
+                            
+                            case Ticket::TYPE['MUSICAL_SHOW']:
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
+                                $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                break;
+                        }
+                    }
 
                     if ($ticket->additional_price_type == 'Premium'){
                     $item['sub_items'][$index]['addition'] = $ticket->premium_amount;
