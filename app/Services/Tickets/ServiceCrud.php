@@ -123,7 +123,7 @@ class ServiceCrud
                     ImageService::attach($image, $ticket);
                 }
             }
-            if(isset($data['card_image']) && !empty($data['card_image'])){
+            if(isset($data['card_image']) && !empty($data['card_image']) && isset($data['card_image']['id'])){
                 ImageService::attach($data['card_image'], $ticket);
             }            
                 
