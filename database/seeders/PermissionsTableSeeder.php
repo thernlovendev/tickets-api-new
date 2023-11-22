@@ -21,15 +21,12 @@ class PermissionsTableSeeder extends Seeder
         $vendorRole = Role::updateOrCreate(['name' => 'vendor'],['name' => 'vendor']);
         $customerRole = Role::updateOrCreate(['name' => 'customer'],['name' => 'customer']);
         
-        $createPermission = Permission::updateOrCreate(['name' => 'create'],['name' => 'create']);
-        $readPermission = Permission::updateOrCreate(['name' => 'read'],['name' => 'read']);
-        $editPermission = Permission::updateOrCreate(['name' => 'edit'],['name' => 'edit']);
-        $deletePermission = Permission::updateOrCreate(['name' => 'delete'],['name' => 'delete']);
+        $createPermission = Permission::updateOrCreate(['name' => 'create.users'],['name' => 'create.users']);
+        $readPermission = Permission::updateOrCreate(['name' => 'read.users'],['name' => 'read.users']);
+        $editPermission = Permission::updateOrCreate(['name' => 'edit.users'],['name' => 'edit.users']);
+        $deletePermission = Permission::updateOrCreate(['name' => 'delete.users'],['name' => 'delete.users']);
         
         $superAdminRole->givePermissionTo([$createPermission, $editPermission, $readPermission, $deletePermission]);
         $adminRole->givePermissionTo([$createPermission, $editPermission, $readPermission]);
-        $repRole->givePermissionTo([$readPermission]);
-        $vendorRole->givePermissionTo([$readPermission]);
-        $customerRole->givePermissionTo($readPermission);
     }
 }

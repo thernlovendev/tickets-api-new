@@ -21,6 +21,7 @@ Route::post('reset-password', 'App\Http\Controllers\API\Auth\ForgotPasswordContr
 Route::post('google-auth', 'App\Http\Controllers\GoogleAuthReactController@handleGoogleAuth')->name('google.auth.react');
 
 Route::group(['middleware' => ['jwt.verify']], function() {    
+	Route::get('auth-permissions','App\Http\Controllers\API\PermissionsController@userPermission')->name('user.permissions');
 	Route::get('refresh-token','App\Http\Controllers\API\Auth\UserController@refresh')->name('refresh.token');
 
 	Route::get('email/verify/{id}/{hash}', 'App\Http\Controllers\API\Auth\ApiVerificationController@verify')->name('verification.verify');
@@ -102,12 +103,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 	Route::get('/roles', 'App\Http\Controllers\API\RolesController@index')->name('roles.index')->middleware();
 	Route::prefix('users')->group(function() {
-		Route::get('/', 'App\Http\Controllers\API\Auth\UserController@index')->name('users.index')->middleware();
-		Route::get('/{user}', 'App\Http\Controllers\API\Auth\UserController@show')->name('users.show')->middleware();
-		Route::post('/', 'App\Http\Controllers\API\Auth\UserController@create')->name('users.create')->middleware();
-		Route::put('/{user}', 'App\Http\Controllers\API\Auth\UserController@edit')->name('users.edit')->middleware();
-		Route::put('/{user}/change-status', 'App\Http\Controllers\API\Auth\UserController@changeStatus')->name('users.change.status')->middleware();
-		Route::delete('/{user}', 'App\Http\Controllers\API\Auth\UserController@deleteUser')->name('users.delete')->middleware();
+		Route::get('/', 'App\Http\Controllers\API\Auth\UserController@index')->name('users.index')->middleware('permission:read.users');
+		Route::get('/{user}', 'App\Http\Controllers\API\Auth\UserController@show')->name('users.show')->middleware('permission:read.users');
+		Route::post('/', 'App\Http\Controllers\API\Auth\UserController@create')->name('users.create')->middleware('permission:create.users');
+		Route::put('/{user}', 'App\Http\Controllers\API\Auth\UserController@edit')->name('users.edit')->middleware('permission:edit.users');
+		Route::put('/{user}/change-status', 'App\Http\Controllers\API\Auth\UserController@changeStatus')->name('users.change.status')->middleware('permission:edit.users');
+		Route::delete('/{user}', 'App\Http\Controllers\API\Auth\UserController@deleteUser')->name('users.delete')->middleware('permission:delete.users');
 	});
 
 	Route::prefix('templates')->group(function() {
