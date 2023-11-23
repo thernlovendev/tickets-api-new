@@ -21,9 +21,11 @@ class ServiceCrud
                     'is_show' => $data['is_show'],
                 ]);
 
-            foreach($data['galleries'] as $image){
-                ImageService::attach($image, $header_image);
-            }
+                if(isset($data['galleries']) && !empty($data['galleries'])){
+                    foreach($data['galleries'] as $image){
+                        ImageService::attach($image, $header_image);
+                    }
+                }
 
             ImageService::attach($data['main_image'], $header_image);
 
