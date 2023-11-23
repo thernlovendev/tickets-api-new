@@ -17,7 +17,12 @@ class Subcategory extends Model
 
     protected $fillable = [
         'category_id',
-        'name'
+        'name',
+        'allow_premium_prices'
+    ];
+
+    protected $casts = [
+        'allow_premium_prices' => 'boolean'
     ];
 
     public function category()

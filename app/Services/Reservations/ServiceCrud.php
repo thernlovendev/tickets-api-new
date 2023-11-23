@@ -173,7 +173,15 @@ class ServiceCrud
                             
                            }
 
-                           $item['sub_items'][$index]['addition'] = $ticket->additional_price_amount;
+                           if($item['price_list_id']){
+                                if ($ticket->additional_price_type == 'Premium'){
+                                $item['sub_items'][$index]['addition'] = $ticket->premium_amount;
+        
+                                } else if ($ticket->additional_price_type == 'Premium S'){
+                                $item['sub_items'][$index]['addition'] = $ticket->premium_s_amount;
+                                
+                                }
+                            }
                         }
 
                         

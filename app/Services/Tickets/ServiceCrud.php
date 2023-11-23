@@ -41,6 +41,17 @@ class ServiceCrud
 
             $order = $last_ticket_order ? $last_ticket_order->order + 1 : 1;
 
+            if(isset($data['tickets_subcategories']) && !empty($data['tickets_subcategories'])){
+                $subcategories_count = Subcategory::whereIn('id', $data['tickets_subcategories'])->get();
+                $hasPremiumPrices = collect($subcategories_count)->contains('allow_premium_prices', true);
+
+                if ($hasPremiumPrices) {
+                    $isBigApplePass = true;
+                } else {
+                    $isBigApplePass = false;
+                }
+            }
+
             $ticket = Ticket::create(
                 [
                     'company_id' => $data['company_id'],
@@ -54,10 +65,10 @@ class ServiceCrud
                     'out_of_stock_alert_child' => $data['out_of_stock_alert_child'],
                     'currency' => $data['currency'],
                     'product_code' => $code,
-                    'additional_price_type' => $data['additional_price_type'],
-                    'additional_price_amount' => $data['additional_price_amount'],
-                    'premium_amount' => $data['premium_amount'],
-                    'premium_s_amount' => $data['premium_s_amount'],
+                    'additional_price_type' => $isBigApplePass ? $data['additional_price_type'] : Ticket::ADDITIONAL_PRICE_TYPE['NONE'],
+                    'additional_price_amount' => $isBigApplePass ? $data['additional_price_amount'] : 0,
+                    'premium_amount' => $isBigApplePass ? $data['premium_amount'] : 0,
+                    'premium_s_amount' => $isBigApplePass ? $data['premium_s_amount'] : 0,
                     'show_in_schedule_page' => $data['show_in_schedule_page'],
                     'announcement' =>$data['announcement'],
                     'order' => $order
