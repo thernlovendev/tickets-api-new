@@ -38,7 +38,7 @@ class HeaderGalleryRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'title' => ['required'],
+                        'title' => ['required','unique:header_galleries,title'],
                         'first_phrase' => ['required'],
                         'second_phrase' => ['required'],
                         'is_show' => ['required','integer'],
