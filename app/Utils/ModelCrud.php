@@ -3,6 +3,7 @@
 namespace App\Utils;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Model;
+
 class ModelCrud
 {
     static function deleteUpdateOrCreate(Relation $relation, array $items)
@@ -27,4 +28,5 @@ class ModelCrud
 
         return true;
     }
+
 }

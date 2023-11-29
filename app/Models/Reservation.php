@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\VendorComission;
 use App\Models\ReservationItem;
 use App\Models\ReservationSubItem;
+use App\Models\ReservationMemo;
 use App\Models\ReservationCashPayment;
 use App\Models\ReservationCreditCardPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -84,6 +85,11 @@ class Reservation extends Model
     public function stocksUsed()
     {
         return $this->hasMany(StockUsed::class);
+    }
+
+    public function memos()
+    {
+        return $this->hasMany(ReservationMemo::class);
     }
 
 }

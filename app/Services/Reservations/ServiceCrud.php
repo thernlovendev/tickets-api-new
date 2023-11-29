@@ -25,6 +25,7 @@ use Mail;
 use Carbon\Carbon;
 use PDF;
 use App\Mail\InvoiceEmail;
+use App\Services\Reservations\ServiceMemo;
 
 class ServiceCrud
 {
@@ -288,13 +289,21 @@ class ServiceCrud
 
             foreach ($data['items'] as $item){
                 $item_model = $reservation_old->reservationItems()->where('id', $item['id'])->first();
-                $item['total'] = 0;
+                // $item['total'] = 0;
                 $item['addition'] = 0;
                 
                 if($item_model){
-                    $item_model->update($item);
+
+                    $item_model->fill($item);
+                    if($item_model->isDirty()){
+                        ServiceMemo::create($item_model, 'update', $reservation_old, 'Item');
+                    }
+                    $item_model->save();
+
                 } else {
                     $item_model = $reservation_old->reservationItems()->create($item);
+                    ServiceMemo::create($item_model, 'create', $reservation_old, 'Item');
+
                 }
                 //Set the additional from the ticket and the status
                 
@@ -370,6 +379,9 @@ class ServiceCrud
                                 if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                     $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
+                                    $item['sub_items'][$index]['refund_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
                                 }
                                 break;
 
@@ -378,6 +390,9 @@ class ServiceCrud
                                 if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                     $item['sub_items'][$index]['ticket_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                                } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
+                                    $item['sub_items'][$index]['refund_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
                                 }
                                 break;
                             
@@ -400,7 +415,7 @@ class ServiceCrud
 
                 $item_model->update(['addition' => $addition, 'total' => $total]);
                 
-                ModelCrud::deleteUpdateOrCreate($item_model->reservationSubItems(), $item['sub_items']);
+                ServiceMemo::deleteUpdateOrCreateMemo($item_model->reservationSubItems(), $item['sub_items'], $reservation_old);
             }
 
             $reservation_old->subtotal = $reservation_old->reservationItems()->sum('total');

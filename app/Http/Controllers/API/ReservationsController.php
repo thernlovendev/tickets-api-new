@@ -18,7 +18,8 @@ use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
 use App\Exceptions\StripeTokenFailException;
-
+use App\Models\ReservationMemo;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
 class ReservationsController extends Controller
@@ -51,7 +52,7 @@ class ReservationsController extends Controller
 
     public function show(Reservation $reservation)
     {
-        $response = $reservation->load(['reservationItems.reservationSubItems', 'vendorComissions']);
+        $response = $reservation->load(['reservationItems.reservationSubItems', 'vendorComissions','memos.user:id,name']);
         return Response($response, 200);
     }
 
