@@ -48,7 +48,8 @@ class ServiceGeneral
         }
         
         if(isset($filters['title_en'])){
-            $models->where('title_en','LIKE', '%'.$filters['title_en'].'%');
+            $models->where('title_en','LIKE', '%'.$filters['title_en'].'%')
+                   ->orWhere('title_kr','LIKE', '%'.$filters['title_en'].'%');
         }
 
         if(isset($filters['product_code'])){
