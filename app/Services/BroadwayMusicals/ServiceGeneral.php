@@ -86,16 +86,27 @@ class ServiceGeneral
         $lastname = $data['booking_last_name'];
         $firstname = $data['booking_first_name'];
         $customer_email = $data['booking_email_address'];
-        $seating = new BiSeatingVerification("1", "Rear Mezzanine", "", "", "", "");
-        $seating = new ArrayOfBiSeatingVerification(
-            [$seating]
+        $session_id = $data["session_id"];
+
+        // seating info
+        $seating_info_area = $data['area'];
+        $seating_info_lowseatnum = $data['low_seat_num'];
+        $seating_info_highseatnum = $data['high_seat_num'];
+        $seating_info_row = $data['row'];
+        // $seating_info_section = $data['section'];
+        $seating_obj = new BiSeatingVerification(
+            $quantity, $seating_info_area, $seating_info_lowseatnum,
+            $seating_info_highseatnum, $seating_info_row, ""
+        );
+        $seating_info = new ArrayOfBiSeatingVerification(
+            [$seating_obj]
         );
         
-        $phone_info = new PhoneInfo('123', '45', '6789', '23'); //country code, area code, number, extension
+        $phone_info = new PhoneInfo('123', '45', '6789', '90'); //country code, area code, number, extension
 
         try {
             $buy->Buy(new BuyType(
-                $product_id, $show_code, $quantity, $price, $lastname, $firstname, 'some', 'some notes', $seating, 'ec9-776759847e63+C4879F524C1391B694DD9B3B43E2D430', $customer_email, $phone_info, 'testaddress', 'test', 'test', 'teset', 'country', $date
+                $product_id, $show_code, $quantity, $price, $lastname, $firstname, '', '', $seating_info, $session_id, $customer_email, $phone_info, 'dummyAddr', 'dummy', 'dummy', 'dummy', 'country', $date
             ));
             $buy_response = $buy->getResult();
             
