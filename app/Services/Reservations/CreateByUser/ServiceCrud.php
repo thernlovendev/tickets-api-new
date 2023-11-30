@@ -404,7 +404,9 @@ class ServiceCrud
                                 } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
                                     $item['sub_items'][$index]['refund_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
-                                } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == (Reservation::TICKET_REFUNDED_STATUS['IN_PROGRESS'] || null)){
+                                } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == null){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                }else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['IN_PROGRESS']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
                                 }
                                 break;
@@ -417,7 +419,9 @@ class ServiceCrud
                                 } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
                                     $item['sub_items'][$index]['refund_sent_date'] = Carbon::now()->format('Y-m-d H:i:s');
-                                } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == (Reservation::TICKET_REFUNDED_STATUS['IN_PROGRESS'] || null)){
+                                } else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == null){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
+                                }else if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['IN_PROGRESS']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['OFFICE_PICKUP'];
                                 }
                                 break;
