@@ -21,6 +21,7 @@ use App\Exceptions\StripeTokenFailException;
 use App\Models\ReservationMemo;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use App\Utils\ModelCrud;
 
 class ReservationsController extends Controller
 {
@@ -164,6 +165,13 @@ class ReservationsController extends Controller
             return Response(['message'=> 'Schedule preferences have already been added'],422);
         }
         
+    }
+
+    public function updateScheduleOptions(ReservationSubItem $reservation_sub_item, OptionScheduleRequest $request){
+        $data = $request->validated();
+        
+        ModelCrud::deleteUpdateOrCreate($reservation_sub_item->optionsSchedules(), $data['schedules']);
+        return Response($reservation_sub_item->optionsSchedules()->orderBy('order')->get(), 200);
     }
 
     public function updateByUser(ReservationByUserRequest $request, Reservation $reservation){
