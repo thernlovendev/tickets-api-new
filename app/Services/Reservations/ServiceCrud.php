@@ -368,7 +368,7 @@ class ServiceCrud
     
                             case Ticket::TYPE['BAR_QR']:
                                 $old_sub_item = ReservationSubItem::find($sub_item['id']);
-                                if($old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                if($old_sub_item['refund_status'] !== ReservationSubItem::SEND_STATUS['SENT'] && $old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
                                 }
                                 break;
