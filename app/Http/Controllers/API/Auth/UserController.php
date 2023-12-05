@@ -192,9 +192,9 @@ class UserController extends Controller
             $validator = Validator::make($response,[
                 'email' => ['unique:users,email']
             ]);
-        }
-        if($validator->fails() ){
-            return Response(['errors' => $validator->errors()], 422);
+            if($validator->fails() ){
+                return Response(['errors' => $validator->errors()], 422);
+            }
         }
         $user = User::create([
             'name' => $response['fullname'],
