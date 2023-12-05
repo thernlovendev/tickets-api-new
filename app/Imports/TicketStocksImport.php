@@ -17,13 +17,18 @@ class TicketStocksImport implements ToCollection
      */
     public function collection(Collection $rows)
     {
-        
-        Validator::make($rows->toArray(), [
+        // Filtra los registros que contienen al menos una celda null
+        $filteredRows = $rows->reject(function ($row) {
+            return in_array(null, $row->toArray(), true);
+        });
+    
+        Validator::make($filteredRows->toArray(), [
             '*.0' => ['required','distinct',Rule::unique('ticket_stocks','code_number')],
         ])->validate();
         
-        foreach ($rows as $row) 
+        foreach ($filteredRows as $row) 
         {
+
             TicketStock::create([
                 'code_number' => $row[0],
                 'type' => $this->data['type'],
