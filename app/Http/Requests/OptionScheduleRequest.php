@@ -39,7 +39,11 @@ class OptionScheduleRequest extends FormRequest
                 } break;
 
             case 'PUT':{
-                return [];
+                return [
+                    'schedules' => ['required'],
+                    'schedules.*.id' => ['required'],
+                    'schedules.*.datetime' => ['required','date'],
+                ];
             } break;
 
             case 'DELETE': break;

@@ -188,6 +188,7 @@ Route::get('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\R
 Route::post('reservation-sub-item/options-schedules', 'App\Http\Controllers\API\ReservationsController@filterScheduleOptionsPost')->name('schedule.options.index.post')->middleware();
 Route::get('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@getScheduleOptions')->name('schedule.options')->middleware();
 Route::post('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@createScheduleOptions')->name('schedule.options.create')->middleware();
+Route::put('reservation-sub-item/{reservation_sub_item}/options-schedules', 'App\Http\Controllers\API\ReservationsController@updateScheduleOptions')->name('schedule.options.update')->middleware();
 Route::post('reservations/create-card', 'App\Http\Controllers\API\ReservationsController@saveCard')->name('reservation.saveCard')->middleware();
 Route::post('reservations/{reservation}/payments', 'App\Http\Controllers\API\ReservationsController@payment')->name('reservation.payment')->middleware();
 

@@ -23,6 +23,7 @@ class ReservationSubItem extends Model
         'TO_DO' => 'To-Do',
         'SENT' => 'Sent',
         'TBD' => 'TBD',
+        'PICKED_UP' => 'Picked Up'
     ];
 
     protected $fillable = [
