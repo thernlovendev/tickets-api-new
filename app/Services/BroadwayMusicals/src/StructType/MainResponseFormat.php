@@ -11,14 +11,15 @@ class MainResponseFormat
         $data = json_encode($data);
         $data = json_decode($data);
 
-        if (!isset($data->NewDataSet->Table))
-        {
+        if ($type="Select" && isset($data->NewDataSet->Outbound)) {
+            return $data->NewDataSet->Outbound;
+        } else {
             return $data->NewDataSet->Table1;
         }
 
         $resultArray = array();
         
-        foreach ($data->NewDataSet->Table as $table)
+        foreach ($tables as $table)
         {
             $temp = [];
             foreach ($table as $key => $value) {
