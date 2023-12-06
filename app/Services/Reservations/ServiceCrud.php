@@ -363,7 +363,7 @@ class ServiceCrud
                                 if($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['TBD'] && $old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
                                 } else if ($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['SENT'] && $sub_item['refund_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'] || $sub_item['refund_status'] = ReservationSubItem::SEND_STATUS['IN_PROGRESS']){
-                                    $message = 'The ticket "'.$ticket->title_en.'" with a sent status of Item ID: '.$item.'  cannot be placed as refunded"';
+                                    $message = 'The ticket "'.$ticket->title_en.'" with a sent status of Item ID: '.$item['id'].'  cannot be placed as refunded"';
                                     throw new \Exception($message);
                                 }
 
