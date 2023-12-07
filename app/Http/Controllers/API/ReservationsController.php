@@ -14,6 +14,7 @@ use App\Services\Reservations\CreateByUser\ServiceCrud as ReservationByUserCrud;
 use App\Models\Reservation;
 use App\Models\ReservationSubItem;
 use App\Models\OptionSchedule;
+use App\Models\User;
 use App\Services\Reservations\ServiceGeneral;
 use App\Services\Reservations\ServiceCashPayment;
 use App\Services\Reservations\ServiceCreditCard;
@@ -53,7 +54,29 @@ class ReservationsController extends Controller
 
     public function show(Reservation $reservation)
     {
+        $search= User::with('roles')->where('email',$reservation->email)->first();
+        
+        if($search == null){
+            $user_serched = [
+                'user'=>[
+                    'id' => 'non-member',
+                    'roles' => 'non-member',
+                ]
+            ];
+        } else{
+            $user_serched = [
+                'user'=>[
+                    'id' => $search->id,
+                    'roles' => $search->roles()->first()->name,
+                ]
+            ];
+        }
+
+        $user = collect($user_serched);
+
         $response = $reservation->load(['reservationItems.reservationSubItems', 'vendorComissions','memos.user:id,name']);
+        
+        $response = collect($response)->merge($user); 
         return Response($response, 200);
     }
 
