@@ -122,6 +122,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 		Route::put('/{template}/image', 'App\Http\Controllers\API\TemplatesController@updateImage')->name('templates.image.update')->middleware();
 	});
 
+	Route::get('templates-all', 'App\Http\Controllers\API\TemplatesController@getTemplatesAndHeaders')->name('templates.show')->middleware();
+
+
 	Route::prefix('header-gallery')->group(function() {
 		Route::get('/', 'App\Http\Controllers\API\HeaderGalleryController@index')->name('header_gallery.index')->middleware();
 		Route::get('/{header_gallery}', 'App\Http\Controllers\API\HeaderGalleryController@show')->name('header_gallery.show')->middleware();

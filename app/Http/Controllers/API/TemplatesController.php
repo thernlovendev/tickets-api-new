@@ -21,9 +21,6 @@ class TemplatesController extends Controller
         $elements = ServiceGeneral::filterCustom ($params, $templates);
         $elements = $this->httpIndex($elements, ['id']);
         $response = ServiceGeneral::mapCollection($elements);
-
-        $header_galleries = HeaderGallery::get();
-
         return Response($response, 200);
     }
     
@@ -124,5 +121,26 @@ class TemplatesController extends Controller
         } else {
             return Response(['errors' => 'The ID template is Not Web Page'],422);
         }
+    }
+
+    public function getTemplatesAndHeaders(Request $request){
+        $templates = Template::get();
+        $headers_galleries = HeaderGallery::get();
+        $map_galleries = $headers_galleries->map( function($item){
+
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'type' => 'Header Gallery',
+                'status' => $item->is_show ? 'Publish' : 'Unpublish',
+                'created_by' => 'admin',
+            ];
+        })->values();
+
+
+        $response = collect($templates)->merge(collect($map_galleries));
+
+        return Response($response, 200);
+
     }
 }
