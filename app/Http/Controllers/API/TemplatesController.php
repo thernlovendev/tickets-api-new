@@ -124,23 +124,18 @@ class TemplatesController extends Controller
     }
 
     public function getTemplatesAndHeaders(Request $request){
-        $templates = Template::get();
-        $headers_galleries = HeaderGallery::get();
-        $map_galleries = $headers_galleries->map( function($item){
 
-            return [
-                'id' => $item->id,
-                'title' => $item->title,
-                'type' => 'Header Gallery',
-                'status' => $item->is_show ? 'Publish' : 'Unpublish',
-                'created_by' => 'admin',
-            ];
-        })->values();
+        $templates = Template::query()->select(['id','title','type','status','created_by'])->orderByDesc('id');
+        $headers_galleries = HeaderGallery::query()->select(['id','title',DB::raw("'Header Gallery' as type"),DB::raw("(CASE WHEN header_galleries.is_show = 1  THEN 'Publish' ELSE 'Unpublish' END) as status"),DB::raw("null as created_by")])->orderByDesc('id');
+
+        $merged = $templates->union($headers_galleries);
+
+        $response = $this->httpIndex($merged , []);
+
+        return $response;
 
 
-        $response = collect($templates)->merge(collect($map_galleries));
 
-        return Response($response, 200);
 
     }
 }
