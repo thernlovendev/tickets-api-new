@@ -24,7 +24,6 @@ class TemplatesController extends Controller
 
         $header_galleries = HeaderGallery::get();
 
-        $response = $templates_filtered->merge($header_galleries);
         return Response($response, 200);
     }
     
