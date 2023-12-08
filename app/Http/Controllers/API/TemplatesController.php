@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TemplateRequest;
 use App\Http\Requests\TemplateImageRequest;
+use App\Models\HeaderGallery;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use App\Services\Templates\ServiceGeneral;
@@ -19,7 +20,11 @@ class TemplatesController extends Controller
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom ($params, $templates);
         $elements = $this->httpIndex($elements, ['id']);
-        $response = ServiceGeneral::mapCollection($elements);
+        $templates_filtered = ServiceGeneral::mapCollection($elements);
+
+        $header_galleries = HeaderGallery::get();
+
+        $response = $templates_filtered->merge($header_galleries);
         return Response($response, 200);
     }
     
