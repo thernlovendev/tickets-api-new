@@ -375,7 +375,7 @@ class ServiceCrud
                                 if($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['TBD'] && $old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
                                 } else if ($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['SENT'] && $sub_item['refund_status'] = Reservation::TICKET_REFUNDED_STATUS['REFUNDED'] || $sub_item['refund_status'] = Reservation::TICKET_REFUNDED_STATUS['IN_PROGRESS'] || $sub_item['refund_status'] = Reservation::TICKET_REFUNDED_STATUS['PICKED_UP']){
-                                    $message = 'Item ID: '.$item['id'].'. The ticket "'.$ticket->title_en.'" cannot be placed as "'.$sub_item['refund_status'].'" because it has a send status of "Sent".';
+                                    $message = 'Item ID: '.$item['id'].'. The ticket "'.$ticket->title_en.'" cannot be placed as "'.$item['sub_items'][$index]['refund_status'].'" because it has a send status of "Sent".';
 
                                     throw new \Exception($message);
                                 }
