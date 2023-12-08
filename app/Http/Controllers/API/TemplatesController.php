@@ -20,7 +20,7 @@ class TemplatesController extends Controller
         $params = $request->query();
         $elements = ServiceGeneral::filterCustom ($params, $templates);
         $elements = $this->httpIndex($elements, ['id']);
-        $templates_filtered = ServiceGeneral::mapCollection($elements);
+        $response = ServiceGeneral::mapCollection($elements);
 
         $header_galleries = HeaderGallery::get();
 
