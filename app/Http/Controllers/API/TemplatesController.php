@@ -108,6 +108,7 @@ class TemplatesController extends Controller
             $header_gallery_images = $header ? $header->galleryImages()->get() : null;
             $first_phrase_header = $header ? $header->first_phrase : null;
             $second_phrase_header = $header ? $header->second_phrase : null;
+            $is_show_header = $header ? $header->is_show : null;
 
 
             return [
@@ -115,6 +116,7 @@ class TemplatesController extends Controller
                 'header_gallery_images' => $header_gallery_images,
                 'first_phrase_header' => $first_phrase_header,
                 'second_phrase_header' => $second_phrase_header,
+                'is_show_header' => $is_show_header,
                 'content_page' => $template->content
             ];
 
