@@ -126,7 +126,7 @@ class TemplatesController extends Controller
     public function getTemplatesAndHeaders(Request $request){
 
         $templates = Template::query()->select(['id','title','type','status','created_by'])->orderByDesc('id');
-        $headers_galleries = HeaderGallery::query()->select(['id','title',DB::raw("'Header Gallery' as type"),DB::raw("(CASE WHEN header_galleries.is_show = 1  THEN 'Publish' ELSE 'Unpublish' END) as status"),DB::raw("null as created_by")])->orderByDesc('id');
+        $headers_galleries = HeaderGallery::query()->select(['id','title',DB::raw("'Header Gallery' as type"),DB::raw("'Publish' as status"),DB::raw("null as created_by")])->orderByDesc('id');
 
         $merged = $templates->union($headers_galleries);
 
