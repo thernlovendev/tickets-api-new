@@ -154,7 +154,7 @@ class UsersDashboard extends Controller
                                 //save pdf
                                 $pdf_content = $pdf->output();
                                
-                                $temp_file_path = storage_path('app/public/'.time().'.pdf');
+                                $temp_file_path = storage_path('app/public/'.$code.'.pdf');
                                 File::put($temp_file_path, $pdf_content);
         
                                 //save pdf in TicketStock
