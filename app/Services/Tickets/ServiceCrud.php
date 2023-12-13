@@ -40,7 +40,7 @@ class ServiceCrud
             $last_ticket_order = Ticket::where('company_id', $data['company_id'])->orderByDesc('order')->first();
 
             $order = $last_ticket_order ? $last_ticket_order->order + 1 : 1;
-
+            $isBigApplePass = false;
             if(isset($data['tickets_subcategories']) && !empty($data['tickets_subcategories'])){
                 $subcategories_count = Subcategory::whereIn('id', $data['tickets_subcategories'])->get();
                 $hasPremiumPrices = collect($subcategories_count)->contains('allow_premium_prices', true);
