@@ -14,7 +14,11 @@ class MainResponseFormat
         if ($type="Select" && isset($data->NewDataSet->Outbound)) {
             return $data->NewDataSet->Outbound;
         } else {
-            return $data->NewDataSet->Table1;
+            
+            $message = $data->NewDataSet->Table1->Error;
+            
+            return Response(["error" => $message], 422);
+            // return $data->NewDataSet->Table1;
         }
 
         $resultArray = array();
