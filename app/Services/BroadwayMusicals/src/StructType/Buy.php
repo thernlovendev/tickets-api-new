@@ -237,7 +237,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: int
         if (!is_null($productId) && !(is_int($productId) || ctype_digit($productId))) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($productId, true), gettype($productId)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide an integer value, %s given', var_export($productId, true), gettype($productId));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($productId, true), gettype($productId)), __LINE__);
         }
         $this->ProductId = $productId;
         
@@ -260,7 +262,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($oneShowCode) && !is_string($oneShowCode)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($oneShowCode, true), gettype($oneShowCode)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($oneShowCode, true), gettype($oneShowCode));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($oneShowCode, true), gettype($oneShowCode)), __LINE__);
         }
         $this->OneShowCode = $oneShowCode;
         
@@ -283,7 +287,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: int
         if (!is_null($quantity) && !(is_int($quantity) || ctype_digit($quantity))) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($quantity, true), gettype($quantity)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide an integer value, %s given', var_export($quantity, true), gettype($quantity));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($quantity, true), gettype($quantity)), __LINE__);
         }
         $this->Quantity = $quantity;
         
@@ -306,7 +312,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: float
         if (!is_null($price) && !(is_float($price) || is_numeric($price))) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a float value, %s given', var_export($price, true), gettype($price)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a float value, %s given', var_export($price, true), gettype($price));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a float value, %s given', var_export($price, true), gettype($price)), __LINE__);
         }
         $this->Price = $price;
         
@@ -329,7 +337,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingLastName) && !is_string($bookingLastName)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingLastName, true), gettype($bookingLastName)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingLastName, true), gettype($bookingLastName));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingLastName, true), gettype($bookingLastName)), __LINE__);
         }
         $this->BookingLastName = $bookingLastName;
         
@@ -352,7 +362,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingFirstName) && !is_string($bookingFirstName)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingFirstName, true), gettype($bookingFirstName)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingFirstName, true), gettype($bookingFirstName));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingFirstName, true), gettype($bookingFirstName)), __LINE__);
         }
         $this->BookingFirstName = $bookingFirstName;
         
@@ -375,7 +387,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingReferenceNumber) && !is_string($bookingReferenceNumber)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingReferenceNumber, true), gettype($bookingReferenceNumber)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingReferenceNumber, true), gettype($bookingReferenceNumber));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingReferenceNumber, true), gettype($bookingReferenceNumber)), __LINE__);
         }
         $this->BookingReferenceNumber = $bookingReferenceNumber;
         
@@ -398,7 +412,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingNotes) && !is_string($bookingNotes)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingNotes, true), gettype($bookingNotes)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingNotes, true), gettype($bookingNotes));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingNotes, true), gettype($bookingNotes)), __LINE__);
         }
         $this->BookingNotes = $bookingNotes;
         
@@ -440,7 +456,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($session) && !is_string($session)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($session, true), gettype($session)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($session, true), gettype($session));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($session, true), gettype($session)), __LINE__);
         }
         $this->Session = $session;
         
@@ -463,7 +481,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingEmailAddress) && !is_string($bookingEmailAddress)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingEmailAddress, true), gettype($bookingEmailAddress)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingEmailAddress, true), gettype($bookingEmailAddress));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingEmailAddress, true), gettype($bookingEmailAddress)), __LINE__);
         }
         $this->BookingEmailAddress = $bookingEmailAddress;
         
@@ -505,7 +525,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingAddress) && !is_string($bookingAddress)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingAddress, true), gettype($bookingAddress)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingAddress, true), gettype($bookingAddress));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingAddress, true), gettype($bookingAddress)), __LINE__);
         }
         $this->BookingAddress = $bookingAddress;
         
@@ -528,7 +550,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingCity) && !is_string($bookingCity)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingCity, true), gettype($bookingCity)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingCity, true), gettype($bookingCity));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingCity, true), gettype($bookingCity)), __LINE__);
         }
         $this->BookingCity = $bookingCity;
         
@@ -551,7 +575,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingState) && !is_string($bookingState)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingState, true), gettype($bookingState)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingState, true), gettype($bookingState));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingState, true), gettype($bookingState)), __LINE__);
         }
         $this->BookingState = $bookingState;
         
@@ -574,7 +600,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingZipOrPostalCode) && !is_string($bookingZipOrPostalCode)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingZipOrPostalCode, true), gettype($bookingZipOrPostalCode)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingZipOrPostalCode, true), gettype($bookingZipOrPostalCode));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingZipOrPostalCode, true), gettype($bookingZipOrPostalCode)), __LINE__);
         }
         $this->BookingZipOrPostalCode = $bookingZipOrPostalCode;
         
@@ -597,7 +625,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($bookingCountry) && !is_string($bookingCountry)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingCountry, true), gettype($bookingCountry)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingCountry, true), gettype($bookingCountry));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($bookingCountry, true), gettype($bookingCountry)), __LINE__);
         }
         $this->BookingCountry = $bookingCountry;
         
@@ -620,7 +650,9 @@ class Buy extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($eventDateTime) && !is_string($eventDateTime)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($eventDateTime, true), gettype($eventDateTime)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($eventDateTime, true), gettype($eventDateTime));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($eventDateTime, true), gettype($eventDateTime)), __LINE__);
         }
         $this->EventDateTime = $eventDateTime;
         

@@ -104,7 +104,9 @@ class BiSeatingVerification extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($numberTickets) && !is_string($numberTickets)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($numberTickets, true), gettype($numberTickets)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($numberTickets, true), gettype($numberTickets));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($numberTickets, true), gettype($numberTickets)), __LINE__);
         }
         $this->NumberTickets = $numberTickets;
         
@@ -127,7 +129,9 @@ class BiSeatingVerification extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($area) && !is_string($area)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($area, true), gettype($area)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($area, true), gettype($area));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($area, true), gettype($area)), __LINE__);
         }
         $this->Area = $area;
         
@@ -150,7 +154,9 @@ class BiSeatingVerification extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($lowSeatNum) && !is_string($lowSeatNum)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($lowSeatNum, true), gettype($lowSeatNum)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($lowSeatNum, true), gettype($lowSeatNum));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($lowSeatNum, true), gettype($lowSeatNum)), __LINE__);
         }
         $this->LowSeatNum = $lowSeatNum;
         
@@ -173,7 +179,9 @@ class BiSeatingVerification extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($highSeatNum) && !is_string($highSeatNum)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($highSeatNum, true), gettype($highSeatNum)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($highSeatNum, true), gettype($highSeatNum));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($highSeatNum, true), gettype($highSeatNum)), __LINE__);
         }
         $this->HighSeatNum = $highSeatNum;
         
@@ -196,7 +204,9 @@ class BiSeatingVerification extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($row) && !is_string($row)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($row, true), gettype($row)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($row, true), gettype($row));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($row, true), gettype($row)), __LINE__);
         }
         $this->Row = $row;
         
@@ -219,7 +229,9 @@ class BiSeatingVerification extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($section) && !is_string($section)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($section, true), gettype($section)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($section, true), gettype($section));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($section, true), gettype($section)), __LINE__);
         }
         $this->Section = $section;
         

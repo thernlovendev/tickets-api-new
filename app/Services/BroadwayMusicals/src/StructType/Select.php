@@ -94,7 +94,9 @@ class Select extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($saleTypesCode) && !is_string($saleTypesCode)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($saleTypesCode, true), gettype($saleTypesCode)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($saleTypesCode, true), gettype($saleTypesCode));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($saleTypesCode, true), gettype($saleTypesCode)), __LINE__);
         }
         $this->SaleTypesCode = $saleTypesCode;
         
@@ -117,7 +119,9 @@ class Select extends AbstractStructBase
     {
         // validation for constraint: int
         if (!is_null($productId) && !(is_int($productId) || ctype_digit($productId))) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($productId, true), gettype($productId)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide an integer value, %s given', var_export($productId, true), gettype($productId));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($productId, true), gettype($productId)), __LINE__);
         }
         $this->ProductId = $productId;
         
@@ -140,7 +144,9 @@ class Select extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($oneShowCode) && !is_string($oneShowCode)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($oneShowCode, true), gettype($oneShowCode)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($oneShowCode, true), gettype($oneShowCode));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($oneShowCode, true), gettype($oneShowCode)), __LINE__);
         }
         $this->OneShowCode = $oneShowCode;
         
@@ -163,7 +169,9 @@ class Select extends AbstractStructBase
     {
         // validation for constraint: int
         if (!is_null($quantity) && !(is_int($quantity) || ctype_digit($quantity))) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($quantity, true), gettype($quantity)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide an integer value, %s given', var_export($quantity, true), gettype($quantity));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide an integer value, %s given', var_export($quantity, true), gettype($quantity)), __LINE__);
         }
         $this->Quantity = $quantity;
         
@@ -186,7 +194,9 @@ class Select extends AbstractStructBase
     {
         // validation for constraint: string
         if (!is_null($eventDateTime) && !is_string($eventDateTime)) {
-            throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($eventDateTime, true), gettype($eventDateTime)), __LINE__);
+            $message = sprintf('Invalid value %s, please provide a string, %s given', var_export($eventDateTime, true), gettype($eventDateTime));
+            throw new \Exception($message);
+            // throw new InvalidArgumentException(sprintf('Invalid value %s, please provide a string, %s given', var_export($eventDateTime, true), gettype($eventDateTime)), __LINE__);
         }
         $this->EventDateTime = $eventDateTime;
         
