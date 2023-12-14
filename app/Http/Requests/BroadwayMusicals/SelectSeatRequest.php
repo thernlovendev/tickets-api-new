@@ -29,7 +29,7 @@ class SelectSeatRequest extends FormRequest
             'product_id' => 'required|integer',
             'quantity' => 'required|integer',
             'show_code' => 'required|string',
-            'event_date_time' => 'required|string',
+            'event_date_time' => ['required','string','date','after:today'],
         ];
     }
 }
