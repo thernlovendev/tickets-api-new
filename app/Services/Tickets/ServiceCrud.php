@@ -124,11 +124,11 @@ class ServiceCrud
                     
                 }
             }
-            if(isset($data['wide_images']) && !empty($data['wide_images'])){
-                foreach($data['wide_images'] as $image){
-                    ImageService::attach($image, $ticket);
-                }
-            }
+            // if(isset($data['wide_images']) && !empty($data['wide_images'])){
+            //     foreach($data['wide_images'] as $image){
+            //         ImageService::attach($image, $ticket);
+            //     }
+            // }
             if(isset($data['gallery_images']) && !empty($data['gallery_images'])){
                 foreach($data['gallery_images'] as $image){
                     ImageService::attach($image, $ticket);
@@ -136,11 +136,15 @@ class ServiceCrud
             }
             if(isset($data['card_image']) && !empty($data['card_image']) && isset($data['card_image']['id'])){
                 ImageService::attach($data['card_image'], $ticket);
-            }            
+            }        
+            
+            if(isset($data['icon_image']) && !empty($data['icon_image']) && isset($data['icon_image']['id'])){
+                ImageService::attach($data['icon_image'], $ticket);
+            }        
                 
             DB::commit();
 
-            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage'
+            return $ticket->load('categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules', 'galleryImages', 'cardImage','iconImage'
             );
 
         } catch (\Exception $e){
@@ -188,32 +192,41 @@ class ServiceCrud
                 ImageService::attach($card_image, $ticket);
             } 
 
-            $wide_images = collect($data['wide_images']);
-
-            $wide_image_old = $ticket->wideImages()->pluck('id');
-
-            $wide_image_request = collect($wide_images)->whereNotNull('id')->pluck('id');
-            
-            $wide_images_to_delete = $wide_image_old->diff($wide_image_request)->all();
-            
-            //delete images gone
-
-            foreach($wide_images_to_delete as $wide_image_id) {
-                $ticket->wideImages()->where('id', $wide_image_id)->delete();
-            }
-
-            //Create or update
-            foreach ($data['wide_images'] as $wide_image) {
-                $wide_image_update = $ticket->wideImages()->find($wide_image['id']);
-                if($wide_image_update){
-                    $wide_image_update->update([
-                        'priority' => $wide_image['priority'],
-                        'priority_type' => $wide_image['priority_type'],
-                    ]); 
-                } else {
-                    ImageService::attach($wide_image, $ticket);
+            if($data['icon_image']['id'] !== null && $ticket->iconImage->id !== $data['icon_image']['id']){
+                
+                if($ticket->iconImage !== null){
+                    $ticket->iconImage->delete();
                 }
-            }
+                
+                ImageService::attach($icon_image, $ticket);
+            } 
+
+            // $wide_images = collect($data['wide_images']);
+
+            // $wide_image_old = $ticket->wideImages()->pluck('id');
+
+            // $wide_image_request = collect($wide_images)->whereNotNull('id')->pluck('id');
+            
+            // $wide_images_to_delete = $wide_image_old->diff($wide_image_request)->all();
+            
+            // //delete images gone
+
+            // foreach($wide_images_to_delete as $wide_image_id) {
+            //     $ticket->wideImages()->where('id', $wide_image_id)->delete();
+            // }
+
+            // //Create or update
+            // foreach ($data['wide_images'] as $wide_image) {
+            //     $wide_image_update = $ticket->wideImages()->find($wide_image['id']);
+            //     if($wide_image_update){
+            //         $wide_image_update->update([
+            //             'priority' => $wide_image['priority'],
+            //             'priority_type' => $wide_image['priority_type'],
+            //         ]); 
+            //     } else {
+            //         ImageService::attach($wide_image, $ticket);
+            //     }
+            // }
 
             $gallery_images = collect($data['gallery_images']);
 
@@ -243,7 +256,7 @@ class ServiceCrud
             }
 
             DB::commit();
-            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketContent', 'ticketSchedules', 'wideImages', 'galleryImages', 'cardImage');
+            return $ticket->load('categories', 'subcategories','ticketPrices', 'ticketContent', 'ticketSchedules', 'iconImage', 'galleryImages', 'cardImage');
 
         } catch (\Exception $e){
             DB::rollback();

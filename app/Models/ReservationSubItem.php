@@ -36,7 +36,8 @@ class ReservationSubItem extends Model
         'refund_status',
         'refund_sent_date',
         'pdf_path',
-        'seating_info'
+        'seating_info',
+        'musical_order'
     ];
 
     public function reservationItem()

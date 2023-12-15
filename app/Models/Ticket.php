@@ -42,9 +42,9 @@ class Ticket extends Model
     ];
 
     const TYPE_IMAGES = [
-        'WIDE' => 'Wide',
         'CARD_IMAGE' => 'Card_image',
-        'GALLERY' => 'Gallery'
+        'GALLERY' => 'Gallery',
+        'ICON' => 'Icon_image'
     ];
 
     protected $fillable = [
@@ -100,10 +100,10 @@ class Ticket extends Model
         return $this->hasMany(TicketSchedule::class);
     }
 
-    public function wideImages()
-    {
-        return $this->morphMany(Image::class, 'imageable')->where('priority_type', 'wide');
-    }
+    // public function wideImages()
+    // {
+    //     return $this->morphMany(Image::class, 'imageable')->where('priority_type', 'wide');
+    // }
 
     public function galleryImages()
     {
@@ -113,6 +113,11 @@ class Ticket extends Model
     public function cardImage()
     {
         return $this->morphOne(Image::class, 'imageable')->where('priority_type', 'card_image');
+    }
+    
+    public function iconImage()
+    {
+        return $this->morphOne(Image::class, 'imageable')->where('priority_type', 'icon_image');
     }
 
     public function inventories()

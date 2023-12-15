@@ -34,7 +34,7 @@ class TicketsController extends Controller
 
     public function show(Ticket $ticket)
     {
-        $response = $ticket->load(['categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules.ticketScheduleExceptions', 'wideImages', 'galleryImages', 'cardImage']);
+        $response = $ticket->load(['categories', 'subcategories', 'ticketPrices', 'ticketContent', 'ticketSchedules.ticketScheduleExceptions', 'galleryImages', 'cardImage','iconImage']);
         return Response($response, 200);
     }
 
