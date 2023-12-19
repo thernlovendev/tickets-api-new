@@ -22,6 +22,15 @@ class BroadwayMusicalsController extends Controller
         try {
             $jsonData = $request->json()->all();
             $response = $broadwayService->selectSeat($jsonData);
+
+            $validator = json_encode($response);
+            $validator_decode = json_decode($validator, true);
+            
+            if(isset($validator_decode['original'])){
+                 $message = $validator_decode['original']['error'];
+                 return Response(['error' => $message],400);
+            }
+            
             return response()->json(['data' => $response], 200);
         } catch(\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
