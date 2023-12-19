@@ -187,19 +187,25 @@ class ServiceCrud
             
             $card_image = collect($data['card_image']);
             
-            if($ticket->cardImage->id !== $data['card_image']['id']){
+            if(isset($ticket->cardImage->id) && $ticket->cardImage->id !== $data['card_image']['id']){
                 $ticket->cardImage->delete();
                 ImageService::attach($card_image, $ticket);
-            } 
+            } else if($ticket->cardImage == null && isset($data['card_image']['id']) && $data['card_image']['id'] !== null){
+                ImageService::attach($card_image, $ticket);
+            }else if($data['card_image'] == null){
+                $ticket->cardImage->delete();
+            }
 
-            if($data['icon_image']['id'] !== null && $ticket->iconImage->id !== $data['icon_image']['id']){
-                
-                if($ticket->iconImage !== null){
-                    $ticket->iconImage->delete();
-                }
-                
+            $icon_image = collect($data['icon_image']);
+
+            if(isset($ticket->iconImage->id) && isset($data['icon_image']) && $ticket->iconImage->id !== $data['icon_image']['id']){
+                $ticket->iconImage->delete();
                 ImageService::attach($icon_image, $ticket);
-            } 
+            }  else if($ticket->iconImage == null && isset($data['icon_image']['id']) && $data['icon_image']['id'] !== null){
+                ImageService::attach($icon_image, $ticket);
+            } else if($data['icon_image'] == null){
+                $ticket->iconImage->delete();
+            }
 
             // $wide_images = collect($data['wide_images']);
 
