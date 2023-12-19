@@ -205,6 +205,7 @@ Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name(
 Route::post('tickets-multiple', 'App\Http\Controllers\API\TicketsController@multiple')->name('tickets.multiple')->middleware();
 Route::get('tickets/{ticket}', 'App\Http\Controllers\API\TicketsController@show')->name('tickets.show')->middleware();
 Route::get('tickets/{ticket}/sold', 'App\Http\Controllers\API\TicketsController@getSold')->name('ticket.sold')->middleware();
+Route::get('tickets/{ticket}/guide-tour-pick', 'App\Http\Controllers\API\TicketsController@validatePick')->name('ticket.pick')->middleware();
 Route::get('/new-order', 'App\Http\Controllers\API\NewOrderController@index')->name('new.order')->middleware();
 Route::prefix('templates')->group(function() {
 	Route::get('/{template}/webpage', 'App\Http\Controllers\API\TemplatesController@reciveWebPage')->name('templates.web.page')->middleware();

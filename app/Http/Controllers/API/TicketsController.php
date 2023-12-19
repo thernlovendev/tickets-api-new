@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\ReservationItem;
 use App\Models\ReservationSubItem;
+use App\Models\TicketScheduleException;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
 use App\Services\Tickets\ServiceGeneral;
@@ -128,6 +129,30 @@ class TicketsController extends Controller
         $elements = $this->httpIndex($elements, ['id', 'status']);
         $response = ServiceGeneral::mapCollection($elements);
         return Response($response, 200);
+    }
+
+    public function validatePick(Ticket $ticket,Request $request){
+        
+        $quantity = $request->input('quantity');
+        $datetime = $request->input('datetime');
+        $date = date("Y-m-d", strtotime($datetime));
+        $time = date("H:i:s", strtotime($datetime));
+
+        $date_selected = TicketScheduleException::where('date',$date)->where('time',$time)->whereHas('ticketSchedule', function ($query) use ($ticket) {
+            $query->where('ticket_id', $ticket->id);
+        })->first();
+        
+        $available_seats = $date_selected->max_people - $date_selected->total_quantity_sold; 
+
+
+        if($available_seats < $quantity){
+            return Response('투어 정원 초과 
+            <br>  
+            고객님이 선택하신 날짜에는 현재 예약 가능한 인원이 '.$available_seats.' 까지 선택할수 있습니다. 다른 일정을 선택하시거나 가능한 인원으로 변경해 주십시요',422);
+        }
+
+        return Response('Successfully validated', 200);
+
     }
 
 
