@@ -155,6 +155,46 @@ class TicketsController extends Controller
 
     }
 
+    public function validatePickInBigApplePass(Request $request){
+
+        $quantity = $request->quantity;
+        $all_tickets = $request->tickets;
+        $tickets = array_filter($all_tickets, function ($ticket) {
+            return $ticket['ticket_type'] === 'Guide Tour';
+        });
+
+        $messages = [];
+
+        foreach($tickets as $index => $ticket){
+            $date = date("Y-m-d", strtotime($ticket['datetime']));
+            $time = date("H:i:s", strtotime($ticket['datetime']));
+
+            
+            $date_selected = TicketScheduleException::where('date',$date)->where('time',$time)->whereHas('ticketSchedule', function ($query) use ($ticket) {
+                $query->where('ticket_id', $ticket['ticket_id']);
+            })->first();
+
+            $available_seats = $date_selected->max_people - $date_selected->total_quantity_sold; 
+            
+            
+            if($available_seats < $quantity){
+                $ticket_name = Ticket::find($ticket['ticket_id']);
+                $number = count($messages) + 1;
+                $messages[$index] = $number.". ".$ticket_name->title_kr.": ".$available_seats." 사용가능";
+            }
+        }
+
+            if(count($messages) > 0){
+                $message = implode("<br>", $messages);
+                return Response('고객님이 선택하신 <span style="font-weight:800">투어티켓</span> 날짜에는 현재 예약 가능한 인원이 아래와 같습니다. 다른 일정을 선택하시거나 가능한 인원으로 변경해 주십시요.
+            <br> 
+
+            '.$message,422);
+            }else {
+                return Response('Successfully validated', 200);
+            }
+    }
+
 
 
 }
