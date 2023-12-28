@@ -180,7 +180,7 @@ class TicketsController extends Controller
             if($available_seats < $quantity){
                 $ticket_name = Ticket::find($ticket['ticket_id']);
                 $number = count($messages) + 1;
-                $messages[$index] = $number.". ".$ticket_name->title_kr.": ".$available_seats." 사용가능";
+                $messages[$index] = $number.". ".$ticket_name->title_kr.": ".$available_seats." 까지 예약가능";
             }
         }
 
