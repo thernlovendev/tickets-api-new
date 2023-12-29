@@ -67,7 +67,8 @@ class Ticket extends Model
         'premium_amount',
         'premium_s_amount',
         'order',
-        'single_price'
+        'single_price',
+        'musical_product_code'
     ];
 
     protected $casts = [
