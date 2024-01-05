@@ -48,7 +48,7 @@
                     text-decoration: none;
                     font-weight: bold;
                     font-size: 0.6em;
-                    margin-right: 6.6em" href="https://tamice.com/searchproduct">
+                    margin-right: 6.6em" href="{{ env('APP_URL_WEB_PAGE') }}/user/non-member-order-lookup">
                                 <img style="margin-left: 20px;" src="https://testing.thernloven.com/tickets-api-new/public/images/dashboard-square.svg" alt="icon booking" >
                     </a>
                     <br>
@@ -78,7 +78,7 @@
                         text-decoration: none;
                         font-weight: bold;
                         font-size: 0.6em;
-                        margin-right: 6.6em" href="#">
+                        margin-right: 6.6em" href="{{ env('APP_URL_WEB_PAGE') }}/webpage/80">
                                     <img style="margin-left: 30px;" src="https://testing.thernloven.com/tickets-api-new/public/images/book-open.svg" alt="icon Book Open" >
                         </a>
                         <br>
@@ -93,7 +93,7 @@
                                 text-decoration: none;
                                 font-weight: bold;
                                 font-size: 0.6em;
-                                margin-right: 6.6em" href="#">
+                                margin-right: 6.6em" href="{{ env('APP_URL_WEB_PAGE') }}/webpage/81">
                                     <img style="margin-left: 30px;" src="https://testing.thernloven.com/tickets-api-new/public/images/dollar-circle.svg" alt="icon Money" >
                         </a>
                         <br>
@@ -107,7 +107,7 @@
                                 color:#A3A3A3;
                                 text-decoration: none;
                                 font-weight: bold;
-                                font-size: 0.6em;" href="#">
+                                font-size: 0.6em;" href="{{ env('APP_URL_WEB_PAGE') }}/about">
                                     <img style="margin-left: 30px;" src="https://testing.thernloven.com/tickets-api-new/public/images/location.svg" alt="icon Location" >
                         </a>
                         <br>
