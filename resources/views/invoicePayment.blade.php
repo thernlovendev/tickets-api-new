@@ -144,7 +144,7 @@
                     <br>
                     @foreach($item->reservationSubItems as $subitem)
                         <div style="margin-left:1rem">
-                            <span style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_kr}} </span>
+                            <a href="{{env('APP_URL_WEB_PAGE')}}/product-detail/{{$subitem->ticket_id}}" style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_kr}} </a>
                             @if($subitem->ticket->ticket_type == "Musicals & Shows")
                             <span style="color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] </span>
                             @elseif($subitem->ticket->ticket_type == "Guide Tour")
