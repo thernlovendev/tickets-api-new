@@ -55,4 +55,13 @@ class BroadwayMusicalsController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getFetchTicketsMusicals(Request $request){
+
+        $xml = public_path('BIWSSimple_WSDL.xml');
+        
+        $response = file_get_contents($xml);
+
+        return $response; 
+    }
 }

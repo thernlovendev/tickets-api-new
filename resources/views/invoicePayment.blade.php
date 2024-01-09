@@ -146,9 +146,9 @@
                         <div style="margin-left:1rem">
                             <a href="{{env('APP_URL_WEB_PAGE')}}/product-detail/{{$subitem->ticket_id}}" style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_kr}} </a>
                             @if($subitem->ticket->ticket_type == "Musicals & Shows")
-                            <span style="color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] </span>
+                            <span style="color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] - [Show time: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('m/d/Y h:i A') }}]</span>
                             @elseif($subitem->ticket->ticket_type == "Guide Tour")
-                            <span style="color: #5D5D5F">- [Scheduled date: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('d/m/Y h:i A') }}] </span>
+                            <span style="color: #5D5D5F">- [Scheduled date: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('m/d/Y h:i A') }}] </span>
                             @endif
                         </div>
                     @endforeach
