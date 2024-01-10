@@ -19,7 +19,7 @@ class TicketStocksImport implements ToCollection
     {
         // Filtra los registros que contienen al menos una celda null
         $filteredRows = $rows->reject(function ($row) {
-            return in_array(null, $row->toArray(), true);
+            return $row['0'] === null;
         });
     
         Validator::make($filteredRows->toArray(), [
