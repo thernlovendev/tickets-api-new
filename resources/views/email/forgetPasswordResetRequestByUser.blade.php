@@ -152,7 +152,7 @@
                         text-decoration: none;
                         color: #fff;
                         background: #46BCF7;
-                        margin: 2em 0 2em 0;" href="{{route('reset.password.get', ['token' => $token,'email' => $email])}}">{{__('Click here to reset your password')}}</a>
+                        margin: 2em 0 2em 0;" href="{{route('reset.password.get', ['token' => $token,'email' => $email])}}">{{__('비밀번호 재설정 하기')}}</a>
                 <footer style="margin: 0;
                         box-sizing: border-box;
                         width: 100%;
