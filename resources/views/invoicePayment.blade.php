@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +7,17 @@
     
     <!-- <link href="https://file.myfontastic.com/6tkDvaBT8S52S4nU8THupM/icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="css/styles.css"> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;400&display=swap" rel="stylesheet">
+
     <title>{{__('Payment Successfully')}}</title>
     <style>
-    body { font-family: 'Poppins', sans-serif;}
+    body { font-family: 'Poppins', sans-serif, 'Noto Sans KR',}
     .invoice-text {
         position: absolute;
-        top: 16px; /* Ajusta la posición vertical según tus necesidades */
-        left: 20px; /* Ajusta la posición horizontal según tus necesidades */
+        top:100px; /* Ajusta la posición vertical según tus necesidades */
+        left: 73px; /* Ajusta la posición horizontal según tus necesidades */
         font-family: 'Poppins', sans-serif; /* Fuente personalizada */
         font-weight: bold; /* Color del texto */
     }
@@ -38,7 +42,7 @@
         box-sizing: border-box;
         width: 100%;
         align-content: center;
-        margin-bottom: 4em;margin-left: 38%;">
+        margin-bottom: 1em;margin-left: 38%;">
             <img style="margin: 0 auto;
                 box-sizing: border-box;
                 display: block;
@@ -67,35 +71,35 @@
                 line-height: 1.5">
 
                 <div>
-                    <span style="font-weight: bold;">Name: </span> <span style="color:#5D5D5F">{{$name_customer}}</span>
+                    <span style="font-weight: bold;">이름: </span> <span style="color:#5D5D5F">{{$name_customer}}</span>
                 </div>
                 <div>
-                    <span style="font-weight: bold;">Email: </span> <span style="color:#5D5D5F">{{$email_customer}}</span>
+                    <span style="font-weight: bold;">이메일: </span> <span style="color:#5D5D5F">{{$email_customer}}</span>
                 </div>
                 <div>
-                    <span style="font-weight: bold;">Order Number: </span> <span style="color:#5D5D5F">{{$orderNumber}}</span>
+                    <span style="font-weight: bold;">주문번호: </span> <span style="color:#5D5D5F">{{$orderNumber}}</span>
                 </div>
                 <div>
-                    <span style="font-weight: bold;">Order Date: </span> <span style="color:#5D5D5F">{{$orderDate}}</span>
+                    <span style="font-weight: bold;">주문날짜: </span> <span style="color:#5D5D5F">{{$orderDate}}</span>
                 </div>
                 <div>
-                    <span style="font-weight: bold;">Total: </span> <span style="color:#5D5D5F">${{$amount}}</span>
+                    <span style="font-weight: bold;">총금액: </span> <span style="color:#5D5D5F">${{$amount}}</span>
                 </div>
                 @if($cash_type == true)
                 <div>
-                    <span style="font-weight: bold;">Cash: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} </span>
+                    <span style="font-weight: bold;">현금: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} </span>
                 </div>
                 @if($auth == true)
                     <div>
-                        <span style="font-weight: bold;">Discount: </span> <span style="color:#5D5D5F">${{$discount}} </span>
+                        <span style="font-weight: bold;">디스카운트 금액: </span> <span style="color:#5D5D5F">${{$discount}} </span>
                     </div>
                 @endif
                 <div>
-                    <span style="font-weight: bold;">Debt:  </span> <span style="color:#5D5D5F">${{$bill_data->debit}}</span>
+                    <span style="font-weight: bold;">빚:  </span> <span style="color:#5D5D5F">${{$bill_data->debit}}</span>
                 </div> 
                 <br>
                 <div>
-                    <span style="font-weight: bold;">Payment: </span> <span style="color:#5D5D5F">Cash</span>
+                    <span style="font-weight: bold;">지불방법: </span> <span style="color:#5D5D5F">현금</span>
                 </div> 
                 <br>
                 <div style="border-top: 2px solid #A3A3A3"></div>
@@ -103,22 +107,22 @@
                 @elseif($credit_type == true)
                 
                 <div>
-                    <span style="font-weight: bold;">Total Paid: </span> <span style="color:#5D5D5F">${{$bill_data->total}} </span>
+                    <span style="font-weight: bold;">지불한 금액: </span> <span style="color:#5D5D5F">${{$bill_data->total}} </span>
                 </div>
                 @if($auth == true)
                     <div>
-                        <span style="font-weight: bold;">Discount: </span> <span style="color:#5D5D5F">${{$discount}} </span>
+                        <span style="font-weight: bold;">디스카운트 금액: </span> <span style="color:#5D5D5F">${{$discount}} </span>
                     </div>
                 @endif
                 <br>
                 <div>
-                    <span style="font-weight: bold;">Payment: </span> <span style="color:#5D5D5F">Credit Card</span>
+                    <span style="font-weight: bold;">지불방법: </span> <span style="color:#5D5D5F">크레딧 카드</span>
                 </div> 
                 <div>
-                    <span style="font-weight: bold;">Card Type: </span> <span style="color:#5D5D5F">{{$bill_data->card_type}}</span>
+                    <span style="font-weight: bold;">카드타입: </span> <span style="color:#5D5D5F">{{$bill_data->card_type}}</span>
                 </div> 
                 <div>
-                    <span style="font-weight: bold;">Credit Card: </span> <span style="color:#5D5D5F">xxxx-xxxx-xxxx-{{$bill_data->last_four_digits}}</span>
+                    <span style="font-weight: bold;">크레딧 카드: </span> <span style="color:#5D5D5F">xxxx-xxxx-xxxx-{{$bill_data->last_four_digits}}</span>
                     
                 </div> 
                 <br>
@@ -139,16 +143,16 @@
                     @isset($item->priceList)
                         <span>{{$item->priceList->product_type}} </span>
                     @endisset
-                       <span>(Price: ${{$item->total}}, Quantity: {{$item->quantity}})</span>
+                       <span>(가격: ${{$item->total}}, 수량: {{$item->quantity}})</span>
                     </div>
                     <br>
                     @foreach($item->reservationSubItems as $subitem)
                         <div style="margin-left:1rem">
                             <a href="{{env('APP_URL_WEB_PAGE')}}/product-detail/{{$subitem->ticket_id}}" style="text-decoration: underline;color: #5D5D5F">{{$subitem->ticket->title_kr}} </a>
                             @if($subitem->ticket->ticket_type == "Musicals & Shows")
-                            <span style="color: #5D5D5F">- [Seating info: {{$subitem->seating_info}}] - [Show time: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('m/d/Y h:i A') }}]</span>
+                            <span style="color: #5D5D5F">- [좌석정보: {{$subitem->seating_info}}] - [쇼 시간: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('m/d/Y h:i A') }}]</span>
                             @elseif($subitem->ticket->ticket_type == "Guide Tour")
-                            <span style="color: #5D5D5F">- [Scheduled date: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('m/d/Y h:i A') }}] </span>
+                            <span style="color: #5D5D5F">- [예정일: {{\Carbon\Carbon::parse($subitem->rq_schedule_datetime)->format('m/d/Y h:i A') }}] </span>
                             @endif
                         </div>
                     @endforeach

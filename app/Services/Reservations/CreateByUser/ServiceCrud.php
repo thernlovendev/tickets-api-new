@@ -24,6 +24,7 @@ use App\Exceptions\StripeTokenFailException;
 use Carbon\Carbon;
 use App\Exceptions\FailException;
 use PDF;
+use PDF2;
 use Mail;
 use App\Mail\InvoiceEmail;
 
@@ -271,9 +272,9 @@ class ServiceCrud
                         $auth = true;
                     }
 
-                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
+                    $pdf = PDF2::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
 
-                    $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
+                    $message->attachData($pdf->output(), 'Tamice-Receipt.pdf');
                 });
 
             return $reservation->load(['reservationItems.reservationSubItems','vendorComissions']);
@@ -542,9 +543,9 @@ class ServiceCrud
 
                     $auth = false;
 
-                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
+                    $pdf = PDF2::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
 
-                    $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
+                    $message->attachData($pdf->output(), 'Tamice-Receipt.pdf');
                 });
             }
             
