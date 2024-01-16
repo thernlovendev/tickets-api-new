@@ -126,7 +126,7 @@
                 color: #5D5D5F;
                 font-family: sans-serif;
                 font-size: 0.9em;
-                line-height: 1.5"> {{__('안녕하세요')}} {{$fullname}}, <br>
+                line-height: 1.5"> {{__('안녕하세요')}} {{$fullname}} 고객님 <br>
                 @if($template->content == 'default')
                 {{__('We’ve received a request to reset your password. If you didn’t make the request, just ignore this mail. Otherwise, you can reset your password using this link')}}:
             </p>
