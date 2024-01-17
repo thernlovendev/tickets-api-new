@@ -18,7 +18,8 @@ use Mail;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\HtmlString;
 
 class UsersDashboard extends Controller
 {
@@ -146,11 +147,14 @@ class UsersDashboard extends Controller
 
                                 $code_lenght = strlen($code);
 
-                                $bar_wid = 585 - $code_lenght*4;
-                                $text_wid = 668 - $code_lenght*8;
+                                $bar_wid = 621 - $code_lenght*4;
+                                $text_wid = 700 - $code_lenght*8;
 
-                                $pdf = PDF::loadView('ticketDownloadCombine',compact('code','type', 'expiration_date', 'ticket','image','reservation','bar_wid','text_wid'));
+                                $imagenBase64 = QrCode::size(135)
+                                ->generate($code);
 
+                                $svgCode =  preg_replace('/<\?xml.*\?>/', '', $imagenBase64->toHtml());
+                                $pdf = PDF::loadView('ticketDownloadCombine',compact('code','type', 'expiration_date', 'ticket','image','reservation','bar_wid','text_wid','svgCode'));
                                 //save pdf
                                 $pdf_content = $pdf->output();
                                

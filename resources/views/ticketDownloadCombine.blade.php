@@ -25,55 +25,57 @@
 </head>
 
     <body>
+            @if($type == 'QR')
+            <!-- Código QR -->
+            <div style="position: absolute; top: 92px; left: 571px;">
+            <p>{!! $svgCode !!}</p>
+
+                                                    
+            </div>
+
+            <div style="position: absolute; top: 240px; left: 552px;"> 
+            <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
+            {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
+            
+            </div>
+
+            
+            @elseif($type == 'Bar')
+            <div style="position: absolute; top: 90px; left: 528px;"> 
+            {{-- <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,48) !!}</span> --}}
+
+            <img width=178 height=50 src="data:image/png;base64,{{ DNS1D::getBarcodePNG("$code", 'C39') }}" alt="barcode" />
+            </div>
+
+            <div style="position: absolute; top: 138px; left: {{$bar_wid}}px;"> 
+            <span style="font-weight:800">{{$code}}</span>
+            
+            </div>
+
+            <div style="position: absolute; top: 155px; left: 550;"> 
+                <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
+                {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
+            
+            </div>
+            @elseif($type == 'Text')
+
+            <div style="position: absolute; top: 98px; left: {{$text_wid}}px;"> 
+            <span style="font-weight:800">{{$code}}</span>
+            
+            </div>
+            <div style="position: absolute; top: 128px; left:  552px;"> 
+            <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
+            {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
+            
+            </div>
+
+
+            @endif
                             
         <div style="position:relative;">
             <div style="position: relative;margin-bottom:50px">
                 <!-- Imagen del usuario -->
                 <img width=700 height=auto src="{{$image}}" alt="Imagen del usuario">
-                @if($type == 'QR')
-                <!-- Código QR -->
-                <div style="position: absolute; top: 32px; left: 520px;"> {!! DNS2D::getBarcodeHTML("$code", 'QRCODE',7,7) !!}
-                                                        
-                </div>
-
-                <div style="position: absolute; top: 180px; left: 509px;"> 
-                <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
-                {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
-                
-                </div>
-
-                
-                @elseif($type == 'Bar')
-                <div style="position: absolute; top: 32px; left: 492px;"> 
-                {{-- <span style="font-size:10px">{!! DNS1D::getBarcodeHTML("$code", 'C39',2,48) !!}</span> --}}
-
-                <img width=178 height=50 src="data:image/png;base64,{{ DNS1D::getBarcodePNG("$code", 'C39') }}" alt="barcode" />
-                </div>
-
-                <div style="position: absolute; top: 75px; left: {{$bar_wid}}px;"> 
-                <span style="font-weight:800">{{$code}}</span>
-                
-                </div>
-
-                <div style="position: absolute; top: 95px; left: 509px;"> 
-                    <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
-                    {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
-                
-                </div>
-                @elseif($type == 'Text')
-
-                 <div style="position: absolute; top: 38px; left: {{$text_wid}}px;"> 
-                <span style="font-weight:800">{{$code}}</span>
-                
-                </div>
-                <div style="position: absolute; top: 68px; left: 509px;"> 
-                <span style="font-weight:800">Expiration: {{$expiration_date}}</span><br>
-                {{-- <span style="font-weight:800">{{$reservation->customer_name_en}}</span> --}}
-                
-                </div>
-
-
-                @endif
             </div>
         </div>
         </div>
