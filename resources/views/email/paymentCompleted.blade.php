@@ -122,18 +122,16 @@
                 padding: 0 3em 0 3em">
             <p style="margin: 0;
                 box-sizing: border-box;
-                color: #5D5D5F;
                 font-family: sans-serif;
-                font-size: 0.9em;
+                font-size: 16px;
                 line-height: 1.5"> {{__('안녕하세요')}} {{$fullname}} 고객님 <br>
                 @if($template->content == 'default')
                 {{__('We’ve received the payment for your reservation for amount of:')}} {{$amount}}$
             </p>
                <p style="margin: 0;
                         box-sizing: border-box;
-                        color: #5D5D5F;
                         font-family: sans-serif;
-                        font-size: 0.9em;
+                        font-size: 16px;
                         line-height: 1.5;
                         padding-bottom: 1em">{{__('Thanks')}},<br>
                 {{env('APP_NAME')}} Team</p>
