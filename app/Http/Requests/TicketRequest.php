@@ -28,6 +28,7 @@ class TicketRequest extends FormRequest
     public function rules()
     {
         $days = TicketSchedule::DAYS;
+        $ticket_type_all = Ticket::TYPE;
         $ticket_type = Ticket::TYPE['GUIDE_TOUR'];
         $qr_bar = Ticket::TYPE['BAR_QR'];
         $status = Ticket::STATUS;
@@ -50,7 +51,7 @@ class TicketRequest extends FormRequest
                         'template_id' => ['nullable','required_if:ticket_type,'.$qr_bar,Rule::exists('templates', 'id')->where(function ($query) {
                             $query->where('type', 'Image');
                         }),'integer'],
-                        'ticket_type' => ['nullable'],
+                        'ticket_type' => ['nullable', Rule::in($ticket_type_all)],
                         'status' => ['nullable', Rule::in($status)],
                         'out_of_stock_alert_adult' => ['nullable', 'integer'],
                         'out_of_stock_alert_child' => ['nullable', 'integer'],
@@ -108,7 +109,7 @@ class TicketRequest extends FormRequest
                         'template_id' => ['nullable','required_if:ticket_type,'.$qr_bar,Rule::exists('templates', 'id')->where(function ($query) {
                             $query->where('type', 'Image');
                         }),'integer'],
-                        'ticket_type' => ['nullable'],
+                        'ticket_type' => ['nullable', Rule::in($ticket_type_all)],
                         'status' => ['nullable', Rule::in($status)],
                         'out_of_stock_alert_adult' => ['nullable', 'integer'],
                         'out_of_stock_alert_child' => ['nullable', 'integer'],

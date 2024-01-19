@@ -32,7 +32,8 @@ class Ticket extends Model
         'GUIDE_TOUR' => 'Guide Tour',
         'HARD_COPY' => 'Hard copy',
         'MUSICAL_SHOW' => 'Musicals & Shows',
-        'SIM_CARD' => 'SIM card'
+        'SIM_CARD' => 'SIM card',
+        'CITY_EXPLORE_PASS' => 'City Explore Pass'
     ];
 
     const ADDITIONAL_PRICE_TYPE = [

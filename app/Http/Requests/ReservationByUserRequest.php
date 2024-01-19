@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Reservation;
 use App\Models\ReservationItem;
+use App\Models\ReservationSubItem;
 
 class ReservationByUserRequest extends FormRequest
 {
@@ -47,6 +48,7 @@ class ReservationByUserRequest extends FormRequest
         $type = Reservation::PAYMENT_TYPE;
         $refund_status = Reservation::TICKET_REFUNDED_STATUS;
         $type_price_item = ReservationItem::TYPE_PRICE;
+        $sub_item_status = ReservationSubItem::SEND_STATUS;
         switch($this->method()) {
             case 'GET':
                 {
@@ -104,6 +106,7 @@ class ReservationByUserRequest extends FormRequest
                         'items.*.sub_items.*.id' => 'nullable|exists:reservation_sub_items,id',
                         'items.*.sub_items.*.refund_status' => ['nullable',Rule::in($refund_status)],
                         'items.*.sub_items.*.refund_sent_date' => ['nullable','date'],
+                        'items.*.sub_items.*.ticket_sent_status' => ['nullable',Rule::in($sub_item_status)],
                         'items.*.sub_items.*.seating_info' => ['nullable'],
                         'payment_type' => ($isAdmin) ? ['nullable', Rule::in($type)] : ['exclude'],
                         'credit' => ($isAdmin) ? ['nullable'] : ['exclude'], 

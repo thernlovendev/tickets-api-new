@@ -100,6 +100,7 @@ class ReservationRequest extends FormRequest
                     'items.*.sub_items.*.ticket_id' => ['required','exists:tickets,id'],
                     'items.*.sub_items.*.refund_status' => ['nullable',Rule::in($refund_status)],
                     'items.*.sub_items.*.refund_sent_date' => ['nullable'],
+                    'items.*.sub_items.*.ticket_sent_status' => ['nullable'],
                     'vendor_comissions' => $ignore_vendor ? ['array','nullable'] : ['exclude'],
                     'vendor_comissions.*.id' => $ignore_vendor ? ['nullable'] : ['exclude'],
                     'vendor_comissions.*.user_id' => $ignore_vendor ? ['required','exists:users,id'] : ['exclude'],
