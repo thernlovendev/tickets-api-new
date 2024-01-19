@@ -71,7 +71,7 @@
                 line-height: 1.5">
 
                 <div>
-                    <span style="font-weight: bold;">이름: </span> <span style="color:#5D5D5F">{{$name_customer}}</span>
+                    <span style="font-weight: bold;">성함: </span> <span style="color:#5D5D5F">{{$name_customer}}</span>
                 </div>
                 <div>
                     <span style="font-weight: bold;">이메일: </span> <span style="color:#5D5D5F">{{$email_customer}}</span>
@@ -87,15 +87,15 @@
                 </div>
                 @if($cash_type == true)
                 <div>
-                    <span style="font-weight: bold;">현금: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} </span>
+                    <span style="font-weight: bold;">현금: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} 결제금액 </span>
                 </div>
                 @if($auth == true)
                     <div>
-                        <span style="font-weight: bold;">디스카운트 금액: </span> <span style="color:#5D5D5F">${{$discount}} </span>
+                        <span style="font-weight: bold;">할인 금액: </span> <span style="color:#5D5D5F">${{$discount}} </span>
                     </div>
                 @endif
                 <div>
-                    <span style="font-weight: bold;">빚:  </span> <span style="color:#5D5D5F">${{$bill_data->debit}}</span>
+                    <span style="font-weight: bold;">차액:  </span> <span style="color:#5D5D5F">${{$bill_data->debit}}</span>
                 </div> 
                 <br>
                 <div>
@@ -111,7 +111,7 @@
                 </div>
                 @if($auth == true)
                     <div>
-                        <span style="font-weight: bold;">디스카운트 금액: </span> <span style="color:#5D5D5F">${{$discount}} </span>
+                        <span style="font-weight: bold;">할인 금액: </span> <span style="color:#5D5D5F">${{$discount}} </span>
                     </div>
                 @endif
                 <br>
