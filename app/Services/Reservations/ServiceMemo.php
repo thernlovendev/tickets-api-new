@@ -38,9 +38,7 @@ class ServiceMemo
         if($action == 'update'){
             $data = $model->getDirty();
         } 
-        \Log::debug(['DATA' => $data]);
         if(!empty($data)){
-            \Log::debug(['is isset' => $data]);
 
             ServiceMemo::save($data, $reservation, $action, $key);
         }
@@ -54,15 +52,12 @@ class ServiceMemo
 
                 if ($model->id === ($item['id'] ?? null)) {
                     $model->fill($item); //update
-                    \Log::debug('update');
-                    \Log::debug($model->fill($item));
                     ServiceMemo::create($model, 'update', $reservation, 'Ticket '.$model->ticket->title_en);
                     $model->save();
                     return;
                 }
             }
 
-            \Log::debug('delete');
             ServiceMemo::create($model, 'delete', $reservation, 'Ticket '.$model->ticket->title_en);
             return $model->delete();
         });
