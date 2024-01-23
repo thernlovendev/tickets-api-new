@@ -175,7 +175,7 @@ class ServiceCrud
                                 break;
                             
                             case Ticket::TYPE['CITY_EXPLORE_PASS']:
-                            $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                            $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                             break;
                             
                             
