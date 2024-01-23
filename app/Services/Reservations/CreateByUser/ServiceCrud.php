@@ -314,7 +314,7 @@ class ServiceCrud
                     $ticket = Ticket::find($sub_item['ticket_id']);
                     $previous_item = ReservationSubItem::find($sub_item['id']);
 
-                    if(!isset($sub_item['id']) || (isset($sub_item['id']) && $previous_item['ticket_id'] !== $item['sub_items'][$index]['ticket_id']) ){
+                    if(!isset($sub_item['id']) || (isset($sub_item['id']) && $previous_item['ticket_id'] != $item['sub_items'][$index]['ticket_id']) ){
                         switch ($ticket->ticket_type) {
                             case Ticket::TYPE['REGULAR']:
                                 if($sub_item['rq_schedule_datetime'] !== null){
