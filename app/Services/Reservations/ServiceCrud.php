@@ -173,7 +173,7 @@ class ServiceCrud
                                 break;
 
                             case Ticket::TYPE['CITY_EXPLORE_PASS']:
-                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 break;
                             
                            }
@@ -397,14 +397,22 @@ class ServiceCrud
     
                             case Ticket::TYPE['BAR_QR']:
                                 $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                if($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['SENT'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $message = 'Item ID: '.$item['id'].'. The ticket "'.$ticket->title_en.'" cannot be placed as "'.$item['sub_items'][$index]['refund_status'].'" because it has a send status of "Sent".';
+                                    throw new \Exception($message);
+                                }
                                 if($old_sub_item['ticket_sent_status'] !== ReservationSubItem::SEND_STATUS['SENT'] && $old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
-                                }else {
-                                    $item['sub_items'][$index]['ticket_sent_status'] = $old_sub_item['ticket_sent_status'];
                                 }
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
                                 $old_sub_item = ReservationSubItem::find($sub_item['id']);
+                                
+                                if($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['SENT'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $message = 'Item ID: '.$item['id'].'. The ticket "'.$ticket->title_en.'" cannot be placed as "'.$item['sub_items'][$index]['refund_status'].'" because it has a send status of "Sent".';
+                                    throw new \Exception($message);
+                                }
+                                
                                 if($old_sub_item['rq_schedule_datetime'] !== $sub_item['rq_schedule_datetime']){
                                     if($sub_item['rq_schedule_datetime'] !== null){
                                         $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
@@ -452,6 +460,10 @@ class ServiceCrud
                                 break;
                             
                             case Ticket::TYPE['MUSICAL_SHOW']:
+                                if($old_sub_item['ticket_sent_status'] == ReservationSubItem::SEND_STATUS['SENT'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $message = 'Item ID: '.$item['id'].'. The ticket "'.$ticket->title_en.'" cannot be placed as "'.$item['sub_items'][$index]['refund_status'].'" because it has a send status of "Sent".';
+                                    throw new \Exception($message);
+                                }
                                 $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['SENT'];
                                 break;
                             
@@ -460,6 +472,15 @@ class ServiceCrud
                                 if($item['sub_items'][$index]['ticket_sent_status'] == null){
                                     $item['sub_items'][$index]['ticket_sent_status'] = $old_sub_item['ticket_sent_status'];
                                 }
+                                if($sub_item['refund_status'] == null && $old_sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                    $old_sub_item-> update(['ticket_sent_status' => ReservationSubItem::SEND_STATUS['TBD']]); 
+                                }
+                                
+                                if($sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
+                                }
+
                                 break;
                         }
                     }
