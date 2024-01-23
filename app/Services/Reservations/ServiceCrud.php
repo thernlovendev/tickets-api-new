@@ -404,6 +404,11 @@ class ServiceCrud
                                 if($old_sub_item['ticket_sent_status'] !== ReservationSubItem::SEND_STATUS['SENT'] && $old_sub_item['refund_status'] !== $sub_item['refund_status'] && $sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['REFUNDED'];
                                 }
+
+                                if($sub_item['refund_status'] == null && $old_sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                    $old_sub_item->update(['ticket_sent_status' => ReservationSubItem::SEND_STATUS['TBD']]); 
+                                }
                                 break;
                             case Ticket::TYPE['GUIDE_TOUR']:
                                 $old_sub_item = ReservationSubItem::find($sub_item['id']);
@@ -422,6 +427,11 @@ class ServiceCrud
                                     }
                                 }else {
                                     $item['sub_items'][$index]['ticket_sent_status'] = $old_sub_item['ticket_sent_status'];
+                                }
+
+                                if($sub_item['refund_status'] == null && $old_sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
+                                    $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
+                                    $old_sub_item->update(['ticket_sent_status' => ReservationSubItem::SEND_STATUS['TBD']]); 
                                 }
                                 
                                 break;
@@ -474,7 +484,7 @@ class ServiceCrud
                                 }
                                 if($sub_item['refund_status'] == null && $old_sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
                                     $item['sub_items'][$index]['ticket_sent_status'] = ReservationSubItem::SEND_STATUS['TBD'];
-                                    $old_sub_item-> update(['ticket_sent_status' => ReservationSubItem::SEND_STATUS['TBD']]); 
+                                    $old_sub_item->update(['ticket_sent_status' => ReservationSubItem::SEND_STATUS['TBD']]); 
                                 }
                                 
                                 if($sub_item['refund_status'] == Reservation::TICKET_REFUNDED_STATUS['REFUNDED']){
