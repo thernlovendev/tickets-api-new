@@ -15,11 +15,9 @@
     <style>
     body { font-family: 'Poppins', sans-serif, 'Noto Sans KR',}
     .invoice-text {
-        position: absolute;
-        top:100px; /* Ajusta la posición vertical según tus necesidades */
-        left: 73px; /* Ajusta la posición horizontal según tus necesidades */
         font-family: 'Poppins', sans-serif; /* Fuente personalizada */
         font-weight: bold; /* Color del texto */
+        margin-top:-40px;
     }
     </style>
 </head>
@@ -42,7 +40,7 @@
         box-sizing: border-box;
         width: 100%;
         align-content: center;
-        margin-bottom: 1em;margin-left: 38%;">
+        margin-left: 38%;">
             <img style="margin: 0 auto;
                 box-sizing: border-box;
                 display: block;
@@ -51,6 +49,9 @@
                 " src="https://tamice.com/site/images/tamice/logo/tamice-logo-225px.png" alt="logo-tamice">
                 <br>
                 <br>
+        </div>
+        <div class="invoice-text" >
+            <h2>RECEIPT</h2>
         </div>
         <div style="margin: 0;
                 box-sizing: border-box;
@@ -61,6 +62,7 @@
                 
                 font-size: 0.9em;
                 line-height: 1.5">
+        
         <div style="border-top: 2px solid #A3A3A3"></div>
 
             <p style="margin-top: 0.5em;
@@ -87,7 +89,7 @@
                 </div>
                 @if($cash_type == true)
                 <div>
-                    <span style="font-weight: bold;">현금: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} 결제금액 </span>
+                    <span style="font-weight: bold;">결제금액: </span> <span style="color:#5D5D5F">${{$bill_data->credit}} </span>
                 </div>
                 @if($auth == true)
                     <div>
@@ -164,9 +166,6 @@
                 @endforeach
             </p>
         </div>
-    </div>
-    <div class="invoice-text">
-        <h2>RECEIPT</h2>
     </div>
     
 </body>

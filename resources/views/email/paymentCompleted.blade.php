@@ -9,10 +9,18 @@
     <title>{{__('Payment Successfully')}}</title>
     <style>
     body { font-family: 'Poppins', sans-serif; }
+
+    table {
+            border-collapse: collapse;
+            width: 60%; /* Ajusta el ancho según tus necesidades */
+            margin: 0 auto; /* Esto centra el elemento horizontalmente */
+        }
     </style>
 </head>
 
-<body style="margin: 0;
+<body style="
+    display: flex;
+    margin: 0;
     box-sizing: border-box;
     background-color: #fff;
     justify-content: center;
@@ -38,7 +46,7 @@
                 width: 100%;
                 max-width: 225px;" src="https://tamice.com/site/images/tamice/logo/tamice-logo-225px.png" alt="logo-joga">
         </div>
-        <table style="margin-left:-45px">
+        <table>
             <tr>
                 <td style="padding: 4px;">
                     <div style=" width: 100px; height: 100px; display: inline-block;">
@@ -63,7 +71,7 @@
                         text-decoration: none;
                         font-weight: bold;
                         font-size: 0.6em;
-                        margin-right: 6.6em" href="https://accounts.kakao.com/login/?continue=http%3A%2F%2Fpf.kakao.com%2F_AAelu%2Fchat#login">
+                        " href="https://accounts.kakao.com/login/?continue=http%3A%2F%2Fpf.kakao.com%2F_AAelu%2Fchat#login">
                                     <img style="margin-left: 15px;" src="https://testing.thernloven.com/tickets-api-new/public/images/message.svg" alt="icon Message" >
                         </a>
                         <br>
@@ -93,7 +101,7 @@
                                 text-decoration: none;
                                 font-weight: bold;
                                 font-size: 0.6em;
-                                margin-right: 6.6em" href="{{ env('APP_URL_WEB_PAGE') }}/webpage/81">
+                                " href="{{ env('APP_URL_WEB_PAGE') }}/webpage/81">
                                     <img style="margin-left: 30px;" src="https://testing.thernloven.com/tickets-api-new/public/images/dollar-circle.svg" alt="icon Money" >
                         </a>
                         <br>
@@ -116,7 +124,6 @@
                 </td>
             </tr>
         </table>
-    </div>
         <div style="margin: 0;
                 box-sizing: border-box;
                 padding: 0 3em 0 3em">
@@ -204,7 +211,7 @@
                 <div></div>
         </div>
     </div>
-    
+    </div>
 </body>
 
 </html>
