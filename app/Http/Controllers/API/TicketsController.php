@@ -146,9 +146,7 @@ class TicketsController extends Controller
 
 
         if($available_seats < $quantity){
-            return Response('투어 정원 초과 
-            <br>  
-            고객님이 선택하신 날짜에는 현재 예약 가능한 인원이 '.$available_seats.' 까지 선택할수 있습니다. 다른 일정을 선택하시거나 가능한 인원으로 변경해 주십시요',422);
+            return Response('고객님이 선택하신 날짜에는 현재 예약 가능한 인원이 '.$available_seats.' 까지 선택할수 있습니다. 다른 일정을 선택하시거나 가능한 인원으로 변경해 주십시요',422);
         }
 
         return Response('Successfully validated', 200);
