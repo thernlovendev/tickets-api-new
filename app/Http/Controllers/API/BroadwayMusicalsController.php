@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\BroadwayMusicals\ServiceGeneral;
 use App\Http\Requests\BroadwayMusicals\SelectSeatRequest;
 use App\Http\Requests\BroadwayMusicals\BuySeatRequest;
+use App\Http\Requests\BroadwayMusicals\PerformancesPOHPricesAvailability;
 
 class BroadwayMusicalsController extends Controller
 {    
@@ -64,4 +65,14 @@ class BroadwayMusicalsController extends Controller
 
         return $response; 
     }
+    
+    public function availability(ServiceGeneral $broadwayService){
+         
+        try{
+         $response = $broadwayService->availabilitySeat();
+         return $response;
+        } catch(\Exception $e) {
+           return response()->json(['error' => $e->getMessage()], 500);
+       }
+   }
 }

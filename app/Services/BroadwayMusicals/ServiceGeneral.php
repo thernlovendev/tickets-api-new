@@ -119,4 +119,8 @@ class ServiceGeneral
             throw $e;
         }
     }
+
+    public function availabilitySeat(){
+        return 'availability';
+    }
 }

@@ -200,6 +200,7 @@ Route::put('booking/{sub_item}/date-change', 'App\Http\Controllers\API\BookingCo
 
 Route::post('select-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@selectSeat')->name('select.seat')->middleware();
 Route::post('buy-seat', 'App\Http\Controllers\API\BroadwayMusicalsController@buySeat')->name('buy.seat')->middleware();
+Route::post('seat-availablity', 'App\Http\Controllers\API\BroadwayMusicalsController@availability')->name('availaviblity.seat')->middleware();
 Route::get('xml', 'App\Http\Controllers\API\BroadwayMusicalsController@getFetchTicketsMusicals')->name('featch.seat')->middleware();
 
 Route::get('tickets', 'App\Http\Controllers\API\TicketsController@index')->name('tickets.index')->middleware();
