@@ -18,6 +18,7 @@ use \ServiceType\Buy;
 use \StructType\Buy as BuyType;
 use \ServiceType\Performances;
 use \StructType\PerformancesPOHPricesAvailability;
+use \StructType\Performances as PerformanceType;
 
 
 use \StructType\MainResponseFormat;
@@ -137,11 +138,11 @@ class ServiceGeneral
         $event_date_begin = $data['event_date_begin'];
        
         try {
-            $performance->Performances(new PerformancesPOHPricesAvailability(
+            $performance->Performances(new PerformanceType(
                 $sales_type, $show_city_code, $event_date_end, $show_code, $availability_type, $best_seats_only, $last_change_date,$event_date_begin
             ));
+           
             $performance_response = $performance->getResult();
-            
             $main_response = new MainResponseFormat();
             $response = $main_response->convertXmlToJson($performance_response, 'Performances');
             return $response;
