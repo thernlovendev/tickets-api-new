@@ -16,6 +16,9 @@ use \ServiceType\Select;
 use \StructType\Select as SelectType;
 use \ServiceType\Buy;
 use \StructType\Buy as BuyType;
+use \ServiceType\Performances;
+use \StructType\PerformancesPOHPricesAvailability;
+
 
 use \StructType\MainResponseFormat;
 use \StructType\PhoneInfo;
@@ -120,7 +123,32 @@ class ServiceGeneral
         }
     }
 
-    public function availabilitySeat(){
-        return 'availability';
+    public function availabilitySeat($data){
+        $select = new Performances($this->options);
+        $select->setSoapHeaderAuthHeader($this->header);
+
+        $sales_type = $data['sales_type'];
+        $show_city_code = $data['show_city_code'];
+        $event_date_end = $data['event_date_end'];
+        $show_code = $data['show_code'];
+        $availability_type = $data['availability_type'];
+        $best_seats_only = $data['best_seats_only'];
+        $last_change_date = $data['last_change_date'];
+        $event_date_begin = $data['event_date_begin'];
+       
+        try {
+            $select->Select(new PerformancesPOHPricesAvailability(
+                $sales_type, $show_city_code, $event_date_end, $show_code, $availability_type, $best_seats_only, $last_change_date,$event_date_begin
+            ));
+            $select_response = $select->getResult();
+            
+            $main_response = new MainResponseFormat();
+            $response = $main_response->convertXmlToJson($select_response, 'Select');
+            return $response;
+        } catch (\Exception $e)
+        {
+            Log::error('Broadwaymuscials API Error: ' . $e->getMessage());
+            throw $e;
+        }
     }
 }

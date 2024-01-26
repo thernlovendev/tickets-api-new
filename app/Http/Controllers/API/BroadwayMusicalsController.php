@@ -66,13 +66,15 @@ class BroadwayMusicalsController extends Controller
         return $response; 
     }
     
-    public function availability(ServiceGeneral $broadwayService){
+    public function availability(PerformancesPOHPricesAvailability $request, ServiceGeneral $broadwayService){
          
-        try{
-         $response = $broadwayService->availabilitySeat();
-         return $response;
+        try {
+            $jsonData = $request->json()->all();
+            $response = $broadwayService->availabilitySeat($jsonData);
+            return $response;
+            return response()->json(['data' => $response], 200);
         } catch(\Exception $e) {
-           return response()->json(['error' => $e->getMessage()], 500);
-       }
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
    }
 }
