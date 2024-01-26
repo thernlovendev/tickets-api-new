@@ -124,8 +124,8 @@ class ServiceGeneral
     }
 
     public function availabilitySeat($data){
-        $select = new Performances($this->options);
-        $select->setSoapHeaderAuthHeader($this->header);
+        $performance = new Performances($this->options);
+        $performance->setSoapHeaderAuthHeader($this->header);
 
         $sales_type = $data['sales_type'];
         $show_city_code = $data['show_city_code'];
@@ -137,13 +137,13 @@ class ServiceGeneral
         $event_date_begin = $data['event_date_begin'];
        
         try {
-            $select->Select(new PerformancesPOHPricesAvailability(
+            $performance->Performances(new PerformancesPOHPricesAvailability(
                 $sales_type, $show_city_code, $event_date_end, $show_code, $availability_type, $best_seats_only, $last_change_date,$event_date_begin
             ));
-            $select_response = $select->getResult();
+            $performance_response = $performance->getResult();
             
             $main_response = new MainResponseFormat();
-            $response = $main_response->convertXmlToJson($select_response, 'Select');
+            $response = $main_response->convertXmlToJson($performance_response, 'Performances');
             return $response;
         } catch (\Exception $e)
         {
