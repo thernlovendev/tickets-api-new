@@ -106,6 +106,10 @@ class ReservationRequest extends FormRequest
                     'vendor_comissions.*.user_id' => $ignore_vendor ? ['required','exists:users,id'] : ['exclude'],
                     'vendor_comissions.*.type' => $ignore_vendor ? ['required', Rule::in('AP', 'AR')] : ['exclude'],
                     'vendor_comissions.*.comission_amount' => $ignore_vendor ? ['required','numeric'] : ['exclude'],
+                    'memos.*.id' => ['nullable','numeric'],
+                    'memos.*.description' => ['nullable','string'],
+                    'memos.*.action' => ['nullable','string'],
+                    'memos.*.key' => ['nullable','string'],
                     'payment_type' => ['nullable',Rule::in($type)],
                     'stripe_token' => ['required_if:payment_type,Credit Card'],
                     'credit' => ['required_if:payment_type,Cash']

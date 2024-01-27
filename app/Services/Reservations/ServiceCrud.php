@@ -232,13 +232,13 @@ class ServiceCrud
                 $template = Template::where('title','After Payment Completed')->first();
         
                 if($template->subject == 'default'){
-                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_kr." Payment Completed";
                 } else {
-                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
+                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_kr." ".$template->subject;
                 }
 
                 
-                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
+                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_kr, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
                     $message->to($reservation->email);
                     $message->subject($subject);
                     $fullname = $reservation->customer_name_en;
@@ -270,7 +270,9 @@ class ServiceCrud
                         $auth = true;
                     }
 
-                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth'));
+                    $name_customer = $reservation->customer_name_kr;
+                    $email_customer = $reservation->email;
+                    $pdf = PDF::loadView('invoicePayment', compact('iconDashboardSquare','iconBookOpen','iconDollarCircle','iconMessage','iconLocation','fullname','amount', 'orderNumber','orderDate','reservationItems','discount','cash_type','credit_type','bill_data', 'auth','name_customer','email_customer'));
 
                     $message->attachData($pdf->output(), 'Tamice-ticket.pdf');
                 });
@@ -287,6 +289,11 @@ class ServiceCrud
 
             $total_old = $reservation_old->total;
 
+            if(isset($data['memos'])){
+                $user_id = Auth::user()->id;
+                ServiceMemo::deleteUpdateOrCreateMemo($reservation_old->memos(), $data['memos'],$reservation_old);
+            }
+
             if(isset($data['vendor_comissions'])){
                 ModelCrud::deleteUpdateOrCreate($reservation_old->vendorComissions(), $data['vendor_comissions']);
             }
@@ -299,15 +306,10 @@ class ServiceCrud
                 if($item_model){
 
                     $item_model->fill($item);
-                    if($item_model->isDirty()){
-                        ServiceMemo::create($item_model, 'update', $reservation_old, 'Item');
-                    }
                     $item_model->save();
 
                 } else {
                     $item_model = $reservation_old->reservationItems()->create($item);
-                    ServiceMemo::create($item_model, 'create', $reservation_old, 'Item');
-
                 }
                 //Set the additional from the ticket and the status
                 
@@ -512,7 +514,7 @@ class ServiceCrud
 
                 $item_model->update(['addition' => $addition, 'total' => $total]);
                 
-                ServiceMemo::deleteUpdateOrCreateMemo($item_model->reservationSubItems(), $item['sub_items'], $reservation_old);
+                // ServiceMemo::deleteUpdateOrCreateMemo($item_model->reservationSubItems(), $item['sub_items'], $reservation_old);
             }
 
             $reservation_old->subtotal = $reservation_old->reservationItems()->sum('total');
