@@ -19,7 +19,7 @@ class ImagesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|image|max:5120',
+            'file' => 'required|image|max:10240',
         ]);
         if( $validator->fails() ){
             return response($validator->errors(), 400);
