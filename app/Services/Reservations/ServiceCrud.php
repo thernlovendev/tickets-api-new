@@ -592,7 +592,7 @@ class ServiceCrud
             }
 
             
-          return $reservation_old->load('reservationItems.reservationSubItems','vendorComissions');
+          return $reservation_old->load('reservationItems.reservationSubItems','vendorComissions','memos');
 	}
 
 	public static function delete($reservation)
