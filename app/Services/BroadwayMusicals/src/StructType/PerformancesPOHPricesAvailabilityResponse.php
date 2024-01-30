@@ -21,7 +21,7 @@ class PerformancesPOHPricesAvailabilityResponse extends AbstractStructBase
      * - minOccurs: 0
      * @var \StructType\PerformancesPOHPricesAvailabilityResult|null
      */
-    protected ?\StructType\PerformancesPOHPricesAvailabilityResult $PerformancesPOHPricesAvailabilityResult = null;
+    public ?\StructType\PerformancesPOHPricesAvailabilityResult $PerformancesPOHPricesAvailabilityResult = null;
     /**
      * Constructor method for PerformancesPOHPricesAvailabilityResponse
      * @uses PerformancesPOHPricesAvailabilityResponse::setPerformancesPOHPricesAvailabilityResult()

@@ -25,7 +25,7 @@ class PerformancesPOHPricesAvailabilityResult extends AbstractStructBase
      * The any
      * @var \DOMDocument|string|null
      */
-    protected $any = null;
+    public $any = null;
     /**
      * Constructor method for PerformancesPOHPricesAvailabilityResult
      * @uses PerformancesPOHPricesAvailabilityResult::setSchema()
