@@ -138,13 +138,13 @@ class ServiceGeneral
         $event_date_begin = $data['event_date_begin'];
        
         try {
-            $performance->Performances(new PerformanceType(
+            $performance->PerformancesPOHPricesAvailability(new PerformancesPOHPricesAvailability(
                 $sales_type, $show_city_code, $event_date_end, $show_code, $availability_type, $best_seats_only, $last_change_date,$event_date_begin
             ));
            
             $performance_response = $performance->getResult();
             $main_response = new MainResponseFormat();
-            $response = $main_response->convertXmlToJson($performance_response, 'Performances');
+            $response = $main_response->convertXmlToJson($performance_response, 'PerformancesPOHPricesAvailability');
             return $response;
         } catch (\Exception $e)
         {

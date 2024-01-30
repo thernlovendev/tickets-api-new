@@ -21,7 +21,7 @@ class PerformancesResponse extends AbstractStructBase
      * - minOccurs: 0
      * @var \StructType\PerformancesResult|null
      */
-    protected ?\StructType\PerformancesResult $PerformancesResult = null;
+    public ?\StructType\PerformancesResult $PerformancesResult = null;
     /**
      * Constructor method for PerformancesResponse
      * @uses PerformancesResponse::setPerformancesResult()

@@ -13,7 +13,9 @@ class MainResponseFormat
 
         if ($type="Select" && isset($data->NewDataSet->Outbound)) {
             return $data->NewDataSet->Outbound;
-        } else {
+        }  else if(($type="Performances" || $type="PerformancesPOHPricesAvailability") && isset($data->NewDataSet->Table)) {
+            return $data->NewDataSet->Table;
+        }else {
             
             $message = $data->NewDataSet->Table1->Error;
             

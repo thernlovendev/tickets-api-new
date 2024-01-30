@@ -25,7 +25,7 @@ class PerformancesResult extends AbstractStructBase
      * The any
      * @var \DOMDocument|string|null
      */
-    protected $any = null;
+    public $any = null;
     /**
      * Constructor method for PerformancesResult
      * @uses PerformancesResult::setSchema()
