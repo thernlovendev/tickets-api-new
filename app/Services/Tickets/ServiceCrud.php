@@ -201,7 +201,7 @@ class ServiceCrud
             }
 
             $icon_image = collect($data['icon_image']);
-            if(isset($data['card_image']['id'])){
+            if(isset($data['icon_image']['id'])){
                 
                 if(isset($ticket->iconImage->id) && isset($data['icon_image']) && $ticket->iconImage['id'] !== $data['icon_image']['id']){
                     $ticket->iconImage->delete();
