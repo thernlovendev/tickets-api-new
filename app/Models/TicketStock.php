@@ -16,8 +16,8 @@ class TicketStock extends Model
     protected $table = 'ticket_stocks';
 
     const RANGE_AGE = [
-        'ADULT' => 'Adult',
-        'CHILD' => 'Child',
+        'ADULT' => '성인',
+        'CHILD' => '아동',
         'NA' => 'N/A',
     ];
 
