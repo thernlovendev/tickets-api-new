@@ -514,6 +514,7 @@ class ServiceCrud
 
                 $item_model->update(['addition' => $addition, 'total' => $total]);
                 
+                ModelCrud::deleteUpdateOrCreate($item_model->reservationSubItems(), $item['sub_items']);
                 // ServiceMemo::deleteUpdateOrCreateMemo($item_model->reservationSubItems(), $item['sub_items'], $reservation_old);
             }
 
