@@ -20,9 +20,9 @@ class ReservationSubItem extends Model
     const SEND_STATUS = [
         'REFUNDED' => 'Refunded',
         'OFFICE_PICKUP' => 'Office Pickup',
-        'TO_DO' => 'To-Do',
+        'TO_DO' => '발권 중',
         'SENT' => 'Sent',
-        'TBD' => 'TBD',
+        'TBD' => '대기 중',
         'PICKED_UP' => 'Picked Up'
     ];
 
