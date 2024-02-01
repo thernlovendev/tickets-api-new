@@ -49,7 +49,7 @@
                     box-sizing: border-box;
                     display: block;
                     width: 100%;
-                    max-width: 225px;" src="https://tamice.com/site/images/tamice/logo/tamice-logo-225px.png" alt="logo-joga">
+                    max-width: 169px;" src="https://tamice.com/site/images/tamice/logo/tamice-logo-225px.png" alt="logo-joga">
             </div>
             <table >
                 <tr>

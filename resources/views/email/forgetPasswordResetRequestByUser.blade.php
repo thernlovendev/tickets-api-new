@@ -41,7 +41,7 @@
             margin-bottom: 0.5em;
             min-width: 320px;">
             
-            <div style="margin-left: -40px;
+            <div style="
             box-sizing: border-box;
             width: 100%;
             align-content: center;
