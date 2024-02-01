@@ -13,6 +13,23 @@ class ProductSeat extends Model
 
     protected $appends = ['product_date_time'];
 
+    protected $primaryKey = 'product_id';
+    public $incrementing = false;
+
+    public $timestamps = false; // Desactivar marcas de tiempo
+
+    protected $fillable = [
+        'product_id',
+        'price',
+        'regular_price',
+        'currency',
+        'bestseats',
+        'availability',
+        'base_price',
+        'facility_fee',
+        'supplier_fee',
+    ];
+
     public function getProductDateTimeAttribute()
     {
         $dateString = $this->product_date;
@@ -25,5 +42,11 @@ class ProductSeat extends Model
         $formattedDateTime = date("M j, Y, g:i a", $timestamp);
         
         return $formattedDateTime;
+    }
+
+    // Desactivar la actualización de 'updated_at' al guardar el modelo
+    public function touches($relation)
+    {
+        return [];
     }
 }

@@ -26,7 +26,7 @@ class Reservation extends Model
     const STATUS = [
         'NO_PAID' => 'No Paid',
         'PAID' => 'Paid',
-        'REFUNDED' => 'Refunded',
+        'REFUNDED' => '환불완료',
         'REFUNDED_IN_PROCESS' => 'Refunded in Process'
     ];
 
@@ -37,7 +37,7 @@ class Reservation extends Model
     ];
 
     const TICKET_REFUNDED_STATUS = [
-        'REFUNDED' => 'Refunded',
+        'REFUNDED' => '환불완료',
         'IN_PROGRESS' => 'In Progress',
         'PICKED_UP' => 'Picked Up'
     ];

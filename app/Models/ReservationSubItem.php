@@ -18,7 +18,7 @@ class ReservationSubItem extends Model
     protected $table = 'reservation_sub_items';
     
     const SEND_STATUS = [
-        'REFUNDED' => 'Refunded',
+        'REFUNDED' => '환불완료',
         'OFFICE_PICKUP' => 'Office Pickup',
         'TO_DO' => '발권 중',
         'SENT' => 'Sent',
