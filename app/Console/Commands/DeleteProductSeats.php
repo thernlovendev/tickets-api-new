@@ -7,21 +7,21 @@ use App\Models\ProductSeat;
 use App\Services\BroadwayMusicals\ServiceGeneral;
 use Carbon\Carbon;
 
-class SetAvailabilitySeat extends Command
+class DeleteProductSeats extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'set:AvailabilitySeat';
+    protected $signature = 'delete:productSeats';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command to set in product seat Availability';
+    protected $description = 'Delete Product Seats';
 
     /**
      * Create a new command instance.
@@ -40,119 +40,83 @@ class SetAvailabilitySeat extends Command
      */
     public function handle()
     {
-        $products = ProductSeat::get();
-        $result = [];
-        $to_delete = [];
-        foreach ($products as $key => $product) {
-            echo $key.PHP_EOL;
-            if(isset($product->product_date) && ($product->product_time)){
-                
-                $date = $product->product_date;
-                echo $date.PHP_EOL;
+        
+        $group = ProductSeat::select('product_code')->groupBy('product_code')->get();
+        $to_delete = collect([]);
+        foreach ($group as $key => $musical) {
+            $products_seat = ProductSeat::where('product_code', $musical['product_code'])->get();
+            $maxAttempts = 3; // Número máximo de intentos para cada musical
+            $attempts = 0;
+            
+            $today = Carbon::now()->addDay(1);
+            $datetime_end = $today->clone()->endOfYear();
+            $event_date_begin = $today->format('Y-m-d');
+            $event_date_end = $datetime_end->format('Y-m-d');
 
-                $datetime_begin = Carbon::createFromFormat('m/d/y', $date);
-                $datetime_end = $datetime_begin->clone()->addWeeks(1);
-                $event_date_begin = $datetime_begin->format('Y-m-d');
-                $event_date_end = $datetime_end->format('Y-m-d');
-    
-                $data = [
-                    'sales_type' => 'F',
-                    'show_code' => $product->product_code,
-                    'show_city_code' => 'NYCA',
-                    'event_date_end' => $event_date_end,
-                    'availability_type' => 'F',
-                    'best_seats_only' => $product->bestseats,
-                    'last_change_date' => '2000-01-01T19:00:00.0Z',
-                    'event_date_begin' => $event_date_begin
-                ];
+            $data = [
+                'sales_type' => 'F',
+                'show_code' => $musical['product_code'],
+                'show_city_code' => 'NYCA',
+                'event_date_end' => $event_date_end,
+                'availability_type' => 'F',
+                'best_seats_only' => '0',
+                'last_change_date' => '2000-01-01T19:00:00.0Z',
+                'event_date_begin' => $event_date_begin
+            ];
 
-                $maxAttempts = 3; // Número máximo de intentos
-                $attempts = 0;
-                // $data = [
-                //     "sales_type" => "F",
-                //     "show_code" => "KIMAKIMBO",
-                //     "show_city_code" => "NYCA",
-                //     "event_date_end" => "2024-05-05",
-                //     "availability_type" => "F",
-                //     "best_seats_only" => 0,
-                //     "last_change_date" => "2000-01-01T19:00:00.0Z",
-                //     "event_date_begin" => "2024-03-24"
-                // ];
-    
-                do {
-                    try {
-                        echo 'attempts: '.$attempts;
+            do {
+                try {
+                    echo 'attempts: '.$attempts.PHP_EOL;
+                    $service = new ServiceGeneral();
+                    $result = $service->availabilitySeat($data);
+                    // $result = $this->simulateResponse();
 
-                        $service = new ServiceGeneral();
-                        $result = $service->availabilitySeat($data);
-                        echo 'gettype before '.gettype($result).PHP_EOL;
-                        if(gettype($result) == 'object'){
-                            $result = get_object_vars($result);
+                    if(gettype($result) == 'object'){
+                        $result = get_object_vars($result);
+                    }
+                    if (isset($result['Error']) && $result['Error'] === 'No Data') {
+                        echo 'no hay data en el musical'.PHP_EOL;
+                        // ProductSeat::where('product_code', $musical['product_code'])->delete();
+                    } else if(isset($result['ProductCode'])){
+                 
+                        $response_collection = collect($result);
+                        // Verificar si la colección tiene datos
+                        if ($response_collection->isNotEmpty()) {
+                            // Utiliza diffUsing para personalizar la comparación
+                            $diff = $products_seat->filter(function ($itemA) use ($response_collection) {
+                                // Filtra los elementos que no coinciden en productTime, ProductDate y productCode
+                                return $response_collection->where('ProductTime', $itemA['product_time'])
+                                    ->where('ProductDate', $itemA['product_date'])
+                                    ->where('ProductCode', $itemA['product_code'])
+                                    ->isEmpty();
+                            });
+                            $to_delete = $to_delete->merge($diff->pluck('product_id'));
                         }
-                        echo gettype($result).PHP_EOL;
-                        // $result = $this->simulateResponse();
-        
-                        if (isset($result['Error']) && $result['Error'] === 'No Data') {
-                            echo 'no data'.PHP_EOL;
-                            $to_delete[] = $product->product_id;
-                        } else if(isset($result['ProductCode'])) {
-                                $response_collection = collect($result);
+                    }
+                    echo 'finish musical: '.$musical['product_code'].PHP_EOL;
+                    break;
+                } catch (\Exception $e) {
+                    // Manejar el error (puedes registrar o imprimir el error)
+                    echo 'Error: ' . $e->getMessage() . PHP_EOL;
+                    $attempts++;
 
-                                // Verificar si la colección tiene datos
-                                if ($response_collection->isNotEmpty()) {
-                
-                                    $product_date =$product->product_date;
-                                    $product_time = $product->product_time;
-                                    $product_code = $product->product_code;
-                
-                
-                                    $exist = $response_collection->first(function ($item) use ($product_date, $product_time, $product_code) {
-                                        return $item['ProductDate'] == $product_date 
-                                        && $item['ProductTime'] == $product_time
-                                        && $item['ProductCode'] == $product_code;
-                                    });
-                
-                                    if ($exist) {
-                                        //update price
-                                        echo 'update product '.$product->product_id.PHP_EOL;
-                                        $product->price = $exist['Price'];
-                                        $product->regular_price = $exist['RegularPrice'];
-                                        $product->currency = $exist['Currency'];
-                                        $product->bestseats = $exist['BestSeats'];
-                                        $product->availability = $exist['Availability'];
-                                        $product->base_price = $exist['BasePrice'];
-                                        $product->facility_fee = $exist['FacilityFee'];
-                                        $product->supplier_fee = $exist['SupplierFee'];
-                                        $product->save();
-                                    } else {
-                                        $to_delete[] = $product->product_id;
-                                    }
-                                }
-                            }
-                            break; // Salir del bucle si no hay errores
-                        } catch (\Exception $e) {
-                            // Manejar el error (puedes registrar o imprimir el error)
-                            echo 'Error: ' . $e->getMessage() . PHP_EOL;
-                            $attempts++;
-        
-                            if ($attempts >= $maxAttempts) {
-                                // Si se alcanza el número máximo de intentos, abortar
-                                break;
-                            }
-        
-                            // Esperar antes de volver a intentar (puedes ajustar el tiempo de espera)
-                            sleep(5); // Espera 5 segundos (ajusta según tus necesidades)
-                        }
-                    } while ($attempts < $maxAttempts);
-            }
+                    if ($attempts >= $maxAttempts) {
+                        // Si se alcanza el número máximo de intentos, abortar
+                        break;
+                    }
+                    // Esperar antes de volver a intentar (puedes ajustar el tiempo de espera)
+                    sleep(5); // Espera 5 segundos (ajusta según tus necesidades)
+                }
+            } while ($attempts < $maxAttempts); 
+
         }
 
         //delete products no finded
-        if(isset($to_delete)){
+        if($to_delete->isNotEmpty()){
             echo 'Delete products'.PHP_EOL;
-            ProductSeat::whereIn('product_id', $to_delete)->delete();
+
+            ProductSeat::whereIn('product_id', $to_delete->toArray())->delete();
         }
-        return 'command';
     }
 
     private function simulateResponse($exists = true){
@@ -161,7 +125,7 @@ class SetAvailabilitySeat extends Command
             return [
                 [
                     "ProductId" => "12374159",
-                    "ProductCode" => "KIMAKIMBO",
+                    "ProductCode" => "CHICAGO",
                     "ProductDate" => "08/09/24",
                     "ProductTime" => "8:00PM",
                     "Description" => "Mezzanine Side Rows D-F",
