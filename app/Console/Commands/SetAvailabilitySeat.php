@@ -68,16 +68,6 @@ class SetAvailabilitySeat extends Command
 
                 $maxAttempts = 3; // Número máximo de intentos
                 $attempts = 0;
-                // $data = [
-                //     "sales_type" => "F",
-                //     "show_code" => "KIMAKIMBO",
-                //     "show_city_code" => "NYCA",
-                //     "event_date_end" => "2024-05-05",
-                //     "availability_type" => "F",
-                //     "best_seats_only" => 0,
-                //     "last_change_date" => "2000-01-01T19:00:00.0Z",
-                //     "event_date_begin" => "2024-03-24"
-                // ];
     
                 do {
                     try {
