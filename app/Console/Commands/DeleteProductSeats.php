@@ -77,8 +77,7 @@ class DeleteProductSeats extends Command
                     if (isset($result['Error']) && $result['Error'] === 'No Data') {
                         echo 'no hay data en el musical'.PHP_EOL;
                         // ProductSeat::where('product_code', $musical['product_code'])->delete();
-                    } else if(isset($result['ProductCode'])){
-                 
+                    } else {
                         $response_collection = collect($result);
                         // Verificar si la colección tiene datos
                         if ($response_collection->isNotEmpty()) {
