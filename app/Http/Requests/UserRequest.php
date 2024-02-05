@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'fullname' => ['nullable','max:55'],
+                        'koreanFullName' => ['nullable','max:55'],
                         'firstname' => ['required','max:55'],
                         'lastname' => ['required','max:55'],
                         'email' => ['required','email','unique:users,email','max:255','confirmed'],

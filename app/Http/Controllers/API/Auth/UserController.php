@@ -77,8 +77,8 @@ class UserController extends Controller
     {
         $response = $request->validated();
 
-        if(isset($response['fullname'])){
-            $name = $response['fullname'];
+        if(isset($response['koreanFullName'])){
+            $name = $response['koreanFullName'];
         }else{ 
             $name = null;
         }
