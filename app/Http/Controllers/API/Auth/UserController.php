@@ -77,8 +77,13 @@ class UserController extends Controller
     {
         $response = $request->validated();
 
+        if(isset($response['fullname'])){
+            $name = $response['fullname'];
+        }else{ 
+            $name = null;
+        }
         $user = User::create([
-            'name' => $response['firstname'].' '.$response['lastname'],
+            'name' =>  $name !== null ? $name : $response['firstname'].' '.$response['lastname'],
             'firstname' => $response['firstname'],
             'lastname' => $response['lastname'],
             'email' => $response['email'],
