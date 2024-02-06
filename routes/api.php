@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TicketsExport;
 
 /*
 |--------------------------------------------------------------------------
@@ -214,7 +216,6 @@ Route::prefix('templates')->group(function() {
 	Route::get('/{template}/webpage', 'App\Http\Controllers\API\TemplatesController@reciveWebPage')->name('templates.web.page')->middleware();
 });
 
-Route::get('/test-pdf', function(){
-	$file = '/home/flopez/Documentos/Repositorios/tickets-api-new/storage/app/public/stock_pdfs/20230818201518/C245878.pdf';
-	return Response::download($file);
-});
+Route::get('/tickets-export', 'App\Http\Controllers\API\ExportDataController@ticketsExport')->name('ticket.export')->middleware();
+
+

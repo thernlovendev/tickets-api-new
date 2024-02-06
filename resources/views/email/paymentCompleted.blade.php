@@ -106,7 +106,7 @@
                                         text-decoration: none;
                                         font-weight: bold;
                                         font-size: 0.6em;
-                                        " href="{{ env('APP_URL_WEB_PAGE') }}/webpage/52">
+                                        " href="{{ env('APP_URL_WEB_PAGE') }}/webpage/56">
                                             <img style="margin-left: 30px;" src="https://testing.thernloven.com/tickets-api-new/public/images/dollar-circle.svg" alt="icon Money" >
                                 </a>
                                 <br>
