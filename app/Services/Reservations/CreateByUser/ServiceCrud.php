@@ -236,16 +236,16 @@ class ServiceCrud
                 $template = Template::where('title','After Payment Completed')->first();
         
                 if($template->subject == 'default'){
-                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." Payment Completed";
+                    $subject = '타미스 주문번호 # '.$reservation->order_number.' '.$reservation->customer_name_kr." Payment Completed";
                 } else {
-                    $subject = '[타마스] Order Confirmation: # '.$reservation->order_number.' '.$reservation->customer_name_en." ".$template->subject;
+                    $subject = '타미스 주문번호 # '.$reservation->order_number.' '.$reservation->customer_name_kr." ".$template->subject;
                 }
 
                 
-                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
+                Mail::send('email.paymentCompleted', ['fullname' => $reservation->customer_name_kr, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation, $template, $subject, $data){
                     $message->to($reservation->email);
                     $message->subject($subject);
-                    $fullname = $reservation->customer_name_en;
+                    $fullname = $reservation->customer_name_kr;
                     $orderNumber = $reservation->order_number;
                     $orderDate = $reservation->created_at->format('Y-m-d g:i A');
                     $discount = $reservation->discount_amount;
@@ -548,16 +548,16 @@ class ServiceCrud
                 $template = Template::where('title','After Upgraded Order')->first();
 
                 if($template->subject == 'default'){
-                    $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_en." Payment Completed";
+                    $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_kr." Payment Completed";
                 } else {
-                    $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_en." ".$template->subject;
+                    $subject = '[타마스] Order Upgraded: # '.$reservation_old->order_number.' '.$reservation_old->customer_name_kr." ".$template->subject;
                 }
 
 
-                Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_en, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation_old, $template, $subject, $data){
+                Mail::send('email.upgradedOrder', ['fullname' => $reservation_old->customer_name_kr, 'amount'=> $data['total'], 'template' => $template], function($message) use($reservation_old, $template, $subject, $data){
                     $message->to($reservation_old->email);
                     $message->subject($subject);
-                    $fullname = $reservation_old->customer_name_en;
+                    $fullname = $reservation_old->customer_name_kr;
                     $orderNumber = $reservation_old->order_number;
                     $email_customer = $reservation_old->email;
                     $orderDate = $reservation_old->created_at->format('Y-m-d g:i A');

@@ -66,7 +66,7 @@
                                     <img style="margin-left: 20px;" src="https://testing.thernloven.com/tickets-api-new/public/images/dashboard-square.svg" alt="icon booking" >
                         </a>
                         <br>
-                        <span>My Page</span>
+                        <span>마이페이지</span>
                         </div>
                     </td>
                     <td style="padding: 4px;">
