@@ -29,7 +29,7 @@ class ScheduleOverviewController extends Controller
             ->whereBetween('rq_schedule_datetime', [$start_date, $end_date])
             ->get()
             ->groupBy(function ($item) {
-                return $item->ticket->title_en;
+                return $item->ticket ? $item->ticket->title_en : 'Ticket Deleted';
             })->map(function ($item, $key) {
                 foreach ($item as $index => $value) {
                     if($value->reservationItem->adult_child_type == 'Child'){
