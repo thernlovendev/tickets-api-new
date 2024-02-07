@@ -217,5 +217,6 @@ Route::prefix('templates')->group(function() {
 });
 
 Route::get('/tickets-export', 'App\Http\Controllers\API\ExportDataController@ticketsExport')->name('ticket.export')->middleware();
+Route::get('/reservations-export', 'App\Http\Controllers\API\ExportDataController@reservationsExport')->name('reservation.export')->middleware();
 
 
