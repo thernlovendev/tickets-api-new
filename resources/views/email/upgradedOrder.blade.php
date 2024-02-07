@@ -58,7 +58,7 @@
                         text-decoration: none;
                         font-weight: bold;
                         font-size: 0.6em;
-                        margin-right: 6.6em" href="{{ env('APP_URL_WEB_PAGE') }}/webpage/83">
+                        margin-right: 6.6em" href="{{ env('APP_URL_WEB_PAGE') }}/webpage/80">
                                     <img style="margin-left: 20px;" src="https://testing.thernloven.com/tickets-api-new/public/images/dashboard-square.svg" alt="icon booking" >
                         </a>
                         <br>
