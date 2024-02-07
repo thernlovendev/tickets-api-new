@@ -27,8 +27,9 @@ class ScheduleOverviewController extends Controller
         }, 'ticket:id,product_code,title_en,title_kr,show_in_schedule_page,ticket_type'])->orderBy('rq_schedule_datetime', 'asc') 
             ->select('id','rq_schedule_datetime','ticket_sent_status','reservation_item_id','ticket_id')
             ->whereBetween('rq_schedule_datetime', [$start_date, $end_date])
-            ->get()
-            ->groupBy(function ($item) {
+            ->get()->filter(function ($item) {
+                return $item->ticket !== null;
+            })->groupBy(function ($item) {
                 return $item->ticket ? $item->ticket->title_en : 'Ticket Deleted';
             })->map(function ($item, $key) {
                 foreach ($item as $index => $value) {
