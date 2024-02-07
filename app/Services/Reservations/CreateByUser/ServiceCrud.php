@@ -236,9 +236,9 @@ class ServiceCrud
                 $template = Template::where('title','After Payment Completed')->first();
         
                 if($template->subject == 'default'){
-                    $subject = '타미스 주문번호 # '.$reservation->order_number.' '.$reservation->customer_name_kr." Payment Completed";
+                    $subject = '[타미스] 주문번호 # '.$reservation->order_number.' '.$reservation->customer_name_kr." Payment Completed";
                 } else {
-                    $subject = '타미스 주문번호 # '.$reservation->order_number.' '.$reservation->customer_name_kr." ".$template->subject;
+                    $subject = '[타미스] 주문번호 # '.$reservation->order_number.' '.$reservation->customer_name_kr." ".$template->subject;
                 }
 
                 
