@@ -27,8 +27,8 @@ class ServiceGeneral
 
             if($used > 0){
                 $stock = $item->stocksUsed->first();
-                $reservation = Reservation::find($stock->reservation_id);
-                $sub_item = ReservationSubItem::find($stock->reservation_sub_item_id);
+                $reservation = Reservation::withTrashed()->find($stock->reservation_id);
+                $sub_item = ReservationSubItem::withTrashed()->find($stock->reservation_sub_item_id);
 
                 $item_number = $sub_item ? $sub_item->reservation_item_id : null;
                 $customer_name = $reservation->customer_name_en;

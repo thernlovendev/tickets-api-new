@@ -187,7 +187,8 @@ class UsersDashboard extends Controller
                         // });
         
                         $oMerger->merge();
-                        $result_file_name = 'tickets_all_' . time() . '.pdf';
+                        $now = Carbon::now()->format('Y_m_d_H_i_s');
+                        $result_file_name = $ticket->title_kr .'_'. $now . '.pdf';
         
                         // Save Pdf result
                         $save_path = storage_path('app/public/' . $result_file_name);
@@ -201,7 +202,9 @@ class UsersDashboard extends Controller
                         return response()->download($save_path, $result_file_name)->deleteFileAfterSend(false);
                 }
             } else {
-                $result_file_name = 'tickets_all_' . time() . '.pdf';
+                $ticket = $reservationSubItem->ticket;
+                $now = Carbon::now()->format('Y_m_d_H_i_s');
+                $result_file_name = $ticket->title_kr.'_'. $now . '.pdf';
                 $path = $reservationSubItem->pdf_path;
                 return response()->download($path, $result_file_name)->deleteFileAfterSend(false);
             }            
