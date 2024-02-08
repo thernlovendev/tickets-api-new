@@ -14,7 +14,7 @@ class ServiceGeneral
         $data_map = $request->per_page ? $data['data'] : $data;
 
         $mapCollection = $data_map->map( function($item){
-            $ticket = Ticket::find($item->ticket_id);
+            $ticket = Ticket::withTrashed()->find($item->ticket_id);
             $used = count($item->stocksUsed);
 
             $customer_name = null;
