@@ -39,7 +39,9 @@ class InventoriesController extends Controller
 
     public function index(Request $request)
     {
-        $stock = TicketStock::query();
+        $stock = TicketStock::whereHas('ticket', function($query){ 
+            $query->where('deleted_at', null);
+        });
         $params = $request->query();
 
         if($stock->count() > 0){
